@@ -83,7 +83,6 @@ if ($fm_res = mysqli_query($conn, $fm_sql)) {
 }
 $fm_categories = array_values($fm_categories);
 
-require_once((__DIR__ . "/includes/header-inc.php"));
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -110,7 +109,9 @@ require_once((__DIR__ . "/includes/header-inc.php"));
 		gtag('config', 'G-ZPRWMT85SP');
 	</script>
 </head>
-<body id="url_div">
+
+<?php /* header-inc.php ouvre <body id="url_div"> et affiche le menu. */
+require_once(__DIR__ . "/includes/header-inc.php"); ?>
 
 <!-- =============================================================== HERO -->
 <section class="fm-hero">
@@ -121,7 +122,7 @@ require_once((__DIR__ . "/includes/header-inc.php"));
 		<p class="fm-hero-kicker">From Morocco to the World</p>
 		<h1 class="fm-hero-title">Freshness, quality and trust</h1>
 		<p class="fm-hero-text">
-			FoodMax Group works with growers across southern Morocco to bring you
+			FoodMax Group works with growers across Morocco to bring you
 			fresh fruits and vegetables of consistent quality. Every shipment is
 			selected, checked, packed and shipped under a cold chain we keep
 			unbroken from the packing facility to your warehouse.
@@ -287,6 +288,10 @@ require_once((__DIR__ . "/includes/header-inc.php"));
 				</p>
 				<?php } ?>
 
+				<p class="fm-cat-meta">
+					Origin, season and packing options: ask us for the current details.
+				</p>
+
 				<a class="fm-cat-link" href="<?php echo $fm_lien; ?>">
 					Discover products <i class="fa fa-arrow-right" aria-hidden="true"></i>
 				</a>
@@ -418,6 +423,87 @@ require_once((__DIR__ . "/includes/header-inc.php"));
 	<p class="fm-note">
 		Documentation and third-party certifications are available on request for
 		each shipment and destination. Ask us for what applies to your market.
+	</p>
+</section>
+
+<!-- ====================================================== COMMITMENT -->
+<section class="fm-section" id="commitment">
+	<div class="fm-section-head">
+		<p class="fm-eyebrow">Our commitment</p>
+		<h2>Doing this responsibly, and improving as we go</h2>
+		<p class="fm-section-sub">
+			Fresh produce depends on land, water and people. These are the
+			principles we work by. They are commitments to keep improving, not
+			labels we claim to have already earned.
+		</p>
+	</div>
+
+	<div class="fm-commit-grid">
+		<article class="fm-commit">
+			<span class="fm-commit-icon"><i class="fa fa-fw fa-tree" aria-hidden="true"></i></span>
+			<h3>Responsible agriculture</h3>
+			<p>
+				We prefer to work with growers who look after their land, because
+				good soil is what the next season depends on. We talk about
+				farming practices openly and tell you what we can document.
+			</p>
+		</article>
+
+		<article class="fm-commit">
+			<span class="fm-commit-icon"><i class="fa fa-fw fa-tint" aria-hidden="true"></i></span>
+			<h3>Sensible use of resources</h3>
+			<p>
+				Water, energy and packaging all have a cost. We aim to use what a
+				shipment really needs: packing suited to the product and loads
+				planned with care, rather than more material than necessary.
+			</p>
+		</article>
+
+		<article class="fm-commit">
+			<span class="fm-commit-icon"><i class="fa fa-fw fa-recycle" aria-hidden="true"></i></span>
+			<h3>Less waste</h3>
+			<p>
+				Throwing away good produce is a loss for the grower and for
+				everyone after them. When a lot does not suit one order, we look
+				for another outlet before we treat it as waste.
+			</p>
+		</article>
+
+		<article class="fm-commit">
+			<span class="fm-commit-icon"><i class="fa fa-fw fa-pagelines" aria-hidden="true"></i></span>
+			<h3>Respect for the environment</h3>
+			<p>
+				Our activity depends on nature, so we try to limit what we leave
+				behind. We know it is a long road, and we prefer to say so
+				honestly rather than announce results we cannot back up.
+			</p>
+		</article>
+
+		<article class="fm-commit">
+			<span class="fm-commit-icon"><i class="fa fa-fw fa-refresh" aria-hidden="true"></i></span>
+			<h3>Continuous improvement</h3>
+			<p>
+				After each season we look at what worked and what did not, and we
+				adjust: selection, packing, transport. Small, regular
+				improvements matter more to us than big announcements.
+			</p>
+		</article>
+
+		<article class="fm-commit">
+			<span class="fm-commit-icon"><i class="fa fa-fw fa-handshake-o" aria-hidden="true"></i></span>
+			<h3>Lasting relationships with growers</h3>
+			<p>
+				Growers who know they will be working with us next season can
+				plan, invest and farm with a longer view. That stability is good
+				for the land and good for the quality we receive.
+			</p>
+		</article>
+	</div>
+
+	<p class="fm-note">
+		We do not display environmental labels or certifications on this site. If
+		one applies to a product or a grower, we will tell you exactly which one
+		and provide the document.
 	</p>
 </section>
 
@@ -604,6 +690,5 @@ require_once((__DIR__ . "/includes/header-inc.php"));
 
 <?php require_once((__DIR__ . "/includes/footer.php")); ?>
 
-<script type="text/javascript" src="<?php echo $fm_app; ?>js/nav.js"></script>
 </body>
 </html>

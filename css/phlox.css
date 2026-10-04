@@ -2550,6 +2550,13 @@ a.fm-pager-item:hover {
   color: var(--phlox-muted);
   }
 .fm-cat-varieties-empty { font-style: italic; }
+.fm-cat-meta {
+  margin: 0 0 16px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--phlox-muted);
+  opacity: .85;
+  }
 .fm-cat-link {
   display: inline-flex;
   align-items: center;

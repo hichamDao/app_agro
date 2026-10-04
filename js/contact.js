@@ -75,7 +75,7 @@ var FM_BASE = (function () {
 					'<div class="fm-form-alert fm-form-alert-error" id="message">'
 					+ '<a href="#" id="hide-message" aria-label="Close"><i class="fa fa-times" aria-hidden="true"></i></a>'
 					+ '<i class="fa fa-exclamation-circle" aria-hidden="true"></i>'
-					+ '<span>Sorry, the message could not be sent. Please try again or call us.</span>'
+					+ '<span>Sorry, the message could not be sent. Please try again or email us at info@foodmax-group.com.</span>'
 					+ '</div>'
 				);
 			}).always(function () {

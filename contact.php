@@ -196,7 +196,7 @@ require_once((__DIR__ . "/includes/header-inc.php")); ?>
 						<label for="fm-message">Message <span aria-hidden="true">*</span></label>
 						<textarea id="fm-message" name="message" class="form-textarea" rows="7"
 						          placeholder="Products, quantities, packing and destination&hellip;"
-						          minlength="10" required></textarea>
+						          minlength="20" required></textarea>
 						<p class="fm-field-hint">
 							A few lines are enough, but please describe your needs: the
 							products, the quantities and where they should be delivered.
@@ -296,7 +296,7 @@ require_once((__DIR__ . "/includes/header-inc.php")); ?>
 		<h2>Prefer to talk it through?</h2>
 		<p>Our phone line is reserved for clients, so the quickest way to reach us is
 		   the form above or a direct email. We answer within one business day.</p>
-		<a class="btn" href="mailto:contact@foodmax-group.com">Email us</a>
+		<a class="btn" href="mailto:info@foodmax-group.com">Email us</a>
 	</div>
 </section>
 
