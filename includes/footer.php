@@ -3,6 +3,16 @@ require_once(__DIR__ . "/paths.php");
 
 /* Année courante : on ne fige plus "2025" en dur. */
 $fm_annee = date('Y');
+
+/* Reseaux sociaux : renseigner ici l'adresse COMPLETE de chaque page officielle
+   (ex. 'https://www.linkedin.com/company/...'). Une icone n'apparait que si
+   son adresse est remplie : aucun lien factice vers la page d'accueil d'un
+   reseau. Laisser vide tant que le compte n'existe pas. */
+$fm_social = array(
+    'linkedin'  => array('url' => '', 'icon' => 'fa-linkedin',  'label' => 'LinkedIn'),
+    'facebook'  => array('url' => '', 'icon' => 'fa-facebook',  'label' => 'Facebook'),
+    'instagram' => array('url' => '', 'icon' => 'fa-instagram', 'label' => 'Instagram'),
+);
 ?>
 <footer class="fm-footer">
 	<div class="fm-footer-inner">
@@ -14,29 +24,33 @@ $fm_annee = date('Y');
 			</a>
 
 			<p class="fm-footer-desc">
-				Foodmax Group is a Moroccan company specialising in the export and
-				distribution of fresh food. We grow, pack and ship our produce to
-				distributors worldwide, with full traceability and a cold chain that
-				never breaks.
+				FoodMax Group is a Moroccan company that loves fresh food and the
+				people who grow it. We select, pack and ship our produce to
+				distributors around the world, keeping track of where it comes from
+				and keeping it cold all the way, because that is how a good product
+				stays good.
 			</p>
 
-			<!-- Pas de liens Facebook / LinkedIn : aucun compte officiel n existe
-			     pour FoodMax Group, et un lien vers facebook.com/ mènerait le
-			     visiteur vers la page d'accueil de Facebook. Seule l'adresse e-mail,
-			     réelle, est proposée. Les réseaux sociaux pourront être ajoutés
-			     quand leurs adresses seront connues. -->
 			<ul class="fm-footer-social">
 				<li>
 					<a href="mailto:info@foodmax-group.com" aria-label="E-mail">
 						<i class="fa fa-envelope" aria-hidden="true"></i>
 					</a>
 				</li>
+				<?php foreach ($fm_social as $fm_r) { if ($fm_r['url'] === '') { continue; } ?>
+				<li>
+					<a href="<?php echo htmlspecialchars($fm_r['url'], ENT_QUOTES, 'UTF-8'); ?>"
+					   target="_blank" rel="noopener" aria-label="<?php echo $fm_r['label']; ?>">
+						<i class="fa <?php echo $fm_r['icon']; ?>" aria-hidden="true"></i>
+					</a>
+				</li>
+				<?php } ?>
 			</ul>
 		</div>
 
 		<!-- --------------------------------------------------------- navigation -->
 		<nav class="fm-footer-col" aria-label="Footer navigation">
-			<h2 class="fm-footer-title">Company</h2>
+			<h2 class="fm-footer-title">FoodMax Group</h2>
 			<ul class="fm-footer-links">
 				<li><a href="<?php echo $fm_app; ?>about-us/">About us</a></li>
 				<li><a href="<?php echo $fm_app; ?>products/">Products</a></li>
@@ -47,13 +61,13 @@ $fm_annee = date('Y');
 			<h2 class="fm-footer-title fm-footer-title-spaced">Legal</h2>
 			<ul class="fm-footer-links">
 				<li><a href="<?php echo $fm_app; ?>privacy-policy/">Privacy policy</a></li>
-				<li><a href="<?php echo $fm_app; ?>terms/">Terms of sale</a></li>
+				<li><a href="<?php echo $fm_app; ?>terms/">Terms</a></li>
 			</ul>
 		</nav>
 
 		<!-- ------------------------------------------------------------ contact -->
 		<div class="fm-footer-col">
-			<h2 class="fm-footer-title">Morocco office</h2>
+			<h2 class="fm-footer-title">Contact</h2>
 			<ul class="fm-footer-info">
 				<li>
 					<i class="fa fa-map-marker" aria-hidden="true"></i>
@@ -61,7 +75,7 @@ $fm_annee = date('Y');
 				</li>
 				<li>
 					<i class="fa fa-phone" aria-hidden="true"></i>
-					<span>Reserved for clients only</span>
+					<span>Phone line reserved for our clients</span>
 				</li>
 				<li>
 					<i class="fa fa-envelope" aria-hidden="true"></i>
@@ -103,9 +117,10 @@ $fm_annee = date('Y');
 	<div class="fm-footer-bottom">
 		<div class="fm-footer-bottom-inner">
 			<p>&copy; <?php echo $fm_annee; ?> Foodmax Group. All rights reserved.</p>
-			<p>Fresh produce exported from Morocco.</p>
+			<p>From Morocco to the world, with care.</p>
 		</div>
 	</div>
 </footer>
 
 <script type="text/javascript" src="<?php echo $fm_app; ?>js/newsletter.js"></script>
+<script type="text/javascript" src="<?php echo $fm_app; ?>js/reveal.js"></script>

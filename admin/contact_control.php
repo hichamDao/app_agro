@@ -31,8 +31,8 @@ $date    = isset($_POST['date']) && $_POST['date'] !== ''
 if (mb_strlen($message, 'UTF-8') < 20) {
     exit('<div class="fm-form-alert fm-form-alert-warn" id="message">'
         . '<a href="#" id="hide-message" aria-label="Close"><i class="fa fa-times" aria-hidden="true"></i></a>'
-        . '<i class="fa fa-frown" aria-hidden="true"></i>'
-        . '<span>Sorry, your message is too short. Please add a little more detail.</span>'
+        . '<i class="fa fa-frown-o" aria-hidden="true"></i>'
+        . '<span>Thank you for writing, but your message is a little short for us to answer properly. Could you add a few more details, such as the product, the quantity and the destination?</span>'
         . '</div>');
 }
 
@@ -56,7 +56,7 @@ if (mysqli_stmt_execute($stmt)) {
     exit('<div class="fm-form-alert fm-form-alert-ok" id="message">'
         . '<a href="#" id="hide-message" aria-label="Close"><i class="fa fa-times" aria-hidden="true"></i></a>'
         . '<i class="fa fa-check" aria-hidden="true"></i>'
-        . '<span>Your message has been sent successfully. We will reply shortly.</span>'
+        . '<span>Thank you, your message has reached us. A member of our team will reply within one business day.</span>'
         . '</div>');
 }
 

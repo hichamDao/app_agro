@@ -2770,3 +2770,68 @@ a.fm-pager-item:hover {
   .fm-cat-media img,
   .fm-cat-link .fa { transition: none; }
   }
+/* ------------------------------------------------ contact : "what to ask" --- */
+
+.fm-topic-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 24px;
+  max-width: 1120px;
+  margin: 0 auto;
+  }
+.fm-topic {
+  padding: 30px 28px;
+  background: var(--phlox-bg);
+  border: 1px solid var(--phlox-border);
+  border-radius: var(--phlox-radius-lg);
+  box-shadow: var(--phlox-shadow);
+  transition: var(--phlox-tr);
+  }
+.fm-topic:hover {
+  border-color: var(--phlox-primary);
+  box-shadow: var(--phlox-shadow-hover);
+  transform: translateY(-3px);
+  }
+.fm-topic-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  margin-bottom: 16px;
+  font-size: 19px;
+  color: var(--phlox-primary);
+  background: var(--phlox-primary-soft);
+  border-radius: 50%;
+  transition: var(--phlox-tr);
+  }
+.fm-topic:hover .fm-topic-icon { color: #fff; background: var(--phlox-primary); }
+.fm-topic h3 { margin: 0 0 10px; font-size: 18px; }
+.fm-topic p { margin: 0; font-size: 14.5px; line-height: 1.7; color: var(--phlox-muted); }
+
+/* ---------------------------------------------------- petits ajouts divers --- */
+
+.fm-footer-title-spaced { margin-top: 28px; }
+.fm-cat-meta strong { color: var(--phlox-heading); font-weight: 600; }
+
+/* --------------------------------------------- apparition douce au defilement --- */
+/* Les classes .fm-rv / .in sont posees par js/reveal.js uniquement si le
+   navigateur le permet : sans JavaScript, tout reste visible. */
+
+.fm-rv {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 700ms var(--phlox-ease), transform 700ms var(--phlox-ease);
+  }
+.fm-rv.in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fm-rv { opacity: 1; transform: none; transition: none; }
+}
+
+.fm-cat-intro {
+  margin: 0 0 12px;
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--phlox-text);
+  }

@@ -36,12 +36,13 @@ require_once((__DIR__ . "/includes/header-inc.php")); ?>
 <section class="fm-pagehead fm-pagehead-contact">
 	<div class="fm-pagehead-inner">
 		<span class="fm-eyebrow">Start a conversation</span>
-		<h1>Let's talk about your next order</h1>
+		<h1>Let's Talk About Your Next Order</h1>
 		<p>
-			Tell us what you are looking for and we will come back to you with what
-			is actually possible. You can ask us about our products, their
-			availability, the season, the packing, the volumes or simply whether we
-			could work together. Our team answers within one business day.
+			Whether you already know exactly what you need or you are only starting
+			to look around, we would love to hear from you. You can ask us about our
+			products, what is available and when, the packing, the volumes, or simply
+			whether we could work together, and a real person from our team will
+			reply within one business day.
 		</p>
 
 		<nav class="fm-crumbs" aria-label="Fil d'Ariane">
@@ -59,8 +60,9 @@ require_once((__DIR__ . "/includes/header-inc.php")); ?>
 		<span class="fm-eyebrow">How we can help</span>
 		<h2>What to ask us about</h2>
 		<p class="fm-section-sub">
-			Every request is read by a person. Depending on the product and the
-			season, we can answer on most of the following.
+			Every message is read by a person, never by a robot, and depending on
+			the product and the season we can help you with most of the things
+			below.
 		</p>
 	</div>
 
@@ -69,48 +71,48 @@ require_once((__DIR__ . "/includes/header-inc.php")); ?>
 			<span class="fm-topic-icon"><i class="fa fa-fw fa-cube" aria-hidden="true"></i></span>
 			<h3>Products and varieties</h3>
 			<p>
-				Which varieties we currently handle, and which ones we can develop
-				with a grower for a specific market.
+				Which varieties we handle at the moment, and which ones we might be
+				able to develop together with a grower for a particular market.
 			</p>
 		</article>
 		<article class="fm-topic">
 			<span class="fm-topic-icon"><i class="fa fa-fw fa-calendar" aria-hidden="true"></i></span>
 			<h3>Availability and seasons</h3>
 			<p>
-				When a product starts, when it peaks, and when it is easier to get
-				than at other times of the year.
+				When a product begins, when it is at its best, and when it is simply
+				easier to find than at other times of the year.
 			</p>
 		</article>
 		<article class="fm-topic">
 			<span class="fm-topic-icon"><i class="fa fa-fw fa-cogs" aria-hidden="true"></i></span>
 			<h3>Packing and conditioning</h3>
 			<p>
-				Which formats suit your distribution, labelling requirements, and
-				how a product should be packed for its destination.
+				Which formats suit the way you distribute, what your labels need to
+				say, and how a product should be packed for the journey ahead.
 			</p>
 		</article>
 		<article class="fm-topic">
 			<span class="fm-topic-icon"><i class="fa fa-fw fa-truck" aria-hidden="true"></i></span>
 			<h3>Volumes and logistics</h3>
 			<p>
-				Realistic quantities per container, and how a shipment is organised
-				to reach your warehouse.
+				What quantities are realistic for a container, and how a shipment is
+				organised so that it reaches your warehouse in good shape.
 			</p>
 		</article>
 		<article class="fm-topic">
 			<span class="fm-topic-icon"><i class="fa fa-fw fa-file-text-o" aria-hidden="true"></i></span>
 			<h3>Documentation</h3>
 			<p>
-				Which documents accompany a shipment for your market, and how far
-				in advance they can be prepared.
+				Which documents travel with a shipment for your market, and how far
+				in advance we can have them ready for you.
 			</p>
 		</article>
 		<article class="fm-topic">
 			<span class="fm-topic-icon"><i class="fa fa-fw fa-handshake-o" aria-hidden="true"></i></span>
 			<h3>Working together</h3>
 			<p>
-				How a first trial shipment works, and what a regular supply
-				relationship looks like on our side.
+				How a first trial shipment works, and what a regular relationship with
+				us feels like once you have worked with us for a while.
 			</p>
 		</article>
 	</div>
@@ -124,10 +126,10 @@ require_once((__DIR__ . "/includes/header-inc.php")); ?>
 		<div class="fm-contact-form-col">
 			<div class="fm-card">
 				<span class="fm-eyebrow">Send a request</span>
-				<h2>Tell us about your needs</h2>
+				<h2>Tell us what you have in mind</h2>
 				<p class="fm-card-lead">
-					Fields marked with an asterisk are required. We only use your details
-					to answer your request.
+					The fields with an asterisk are the only ones we really need. We use
+					your details only to answer you, and nothing else.
 				</p>
 
 				<div id="resultContact" role="status" aria-live="polite"></div>
@@ -198,14 +200,14 @@ require_once((__DIR__ . "/includes/header-inc.php")); ?>
 						          placeholder="Products, quantities, packing and destination&hellip;"
 						          minlength="20" required></textarea>
 						<p class="fm-field-hint">
-							A few lines are enough, but please describe your needs: the
-							products, the quantities and where they should be delivered.
+							A few lines are plenty, just tell us a little about what you need,
+							for example the products, the quantities and where they should go.
 						</p>
 					</div>
 
 					<button type="submit" class="btn fm-btn-send">
 						<i class="fa fa-paper-plane" aria-hidden="true"></i>
-						<span class="fm-btn-label">Send request</span>
+						<span class="fm-btn-label">Send Message</span>
 					</button>
 				</form>
 			</div>
@@ -235,7 +237,7 @@ require_once((__DIR__ . "/includes/header-inc.php")); ?>
 				<span class="fm-info-icon"><i class="fa fa-phone"></i></span>
 				<div>
 				<h3>Phone</h3>
-				<p class="fm-info-line">Reserved for clients only</p>
+				<p class="fm-info-line">Kept for our existing clients</p>
 				</div>
 			</div>
 
@@ -250,7 +252,7 @@ require_once((__DIR__ . "/includes/header-inc.php")); ?>
 
 			<div class="fm-info-note">
 				<h3>Looking for our products?</h3>
-				<p>Browse the catalogue to check availability and grades before you write.</p>
+				<p>Take a look at the catalogue first if you like, it may answer some of your questions before you write.</p>
 				<a class="btn btn-outline btn-sm" href="<?php echo $fm_app; ?>products/">
 					See all products
 				</a>
@@ -271,31 +273,32 @@ require_once((__DIR__ . "/includes/header-inc.php")); ?>
 		<div class="fm-quality">
 			<span class="fm-quality-icon"><i class="fa fa-leaf"></i></span>
 			<h3>Freshness</h3>
-			<p>Time is the main enemy of produce quality, so we organise the chain around it.</p>
+			<p>Time is the biggest enemy of quality, so we build everything around it.</p>
 		</div>
 		<div class="fm-quality">
 			<span class="fm-quality-icon"><i class="fa fa-check-circle-o"></i></span>
 			<h3>Selection</h3>
-			<p>What does not match your specification is set aside, not mixed into your order.</p>
+			<p>What does not match your specification is set aside, never slipped into your order.</p>
 		</div>
 		<div class="fm-quality">
 			<span class="fm-quality-icon"><i class="fa fa-map-marker"></i></span>
 			<h3>Traceability</h3>
-			<p>We keep the link between the grower, the lot and your shipment as clear as we can.</p>
+			<p>We keep the path from grower to lot to shipment as clear as we can.</p>
 		</div>
 		<div class="fm-quality">
 			<span class="fm-quality-icon"><i class="fa fa-repeat"></i></span>
 			<h3>Consistency</h3>
-			<p>Professional buyers plan around us, so the same specification has to arrive every week.</p>
+			<p>You plan around us, so the same specification has to arrive every week.</p>
 		</div>
 	</div>
 </section>
 
 <section class="fm-cta" style="background-image:url('<?php echo $fm_app; ?>img/banner-cta.jpg');">
 	<div class="fm-cta-inner">
-		<h2>Prefer to talk it through?</h2>
-		<p>Our phone line is reserved for clients, so the quickest way to reach us is
-		   the form above or a direct email. We answer within one business day.</p>
+		<h2>Prefer to write to us directly?</h2>
+		<p>Our phone line is kept for existing clients, so the easiest way to reach
+		   us is the form above or a simple email, and we will get back to you
+		   within one business day.</p>
 		<a class="btn" href="mailto:info@foodmax-group.com">Email us</a>
 	</div>
 </section>
