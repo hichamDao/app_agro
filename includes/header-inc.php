@@ -14,6 +14,12 @@ require_once(__DIR__ . "/paths.php");
 /* Onglet courant mis en avant dans le menu. */
 $fm_self = basename($_SERVER['SCRIPT_FILENAME']);
 $fm_path = str_replace('\\', '/', isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '');
+
+/* Onglet "About us" actif sur sa page et sur les pages de presentation. */
+$fm_about_actif = false;
+foreach (array('about-us', 'how-we-work', 'quality', 'morocco', 'why-foodmax') as $fm_slug) {
+    if (strpos($fm_path, $fm_slug) !== false) { $fm_about_actif = true; }
+}
 ?>
 <body id='url_div'>
 
@@ -34,8 +40,17 @@ $fm_path = str_replace('\\', '/', isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQ
 				<li<?php echo ($fm_self === 'index.php' && $fm_path === '/') ? ' class="is-current"' : ''; ?>>
 					<a href="<?php echo $fm_app; ?>">Home</a>
 				</li>
-				<li<?php echo (strpos($fm_path, 'about-us') !== false) ? ' class="is-current"' : ''; ?>>
-					<a href="<?php echo $fm_app; ?>about-us/">About us</a>
+				<li class="has-sub<?php echo $fm_about_actif ? ' is-current' : ''; ?>">
+					<a href="<?php echo $fm_app; ?>about-us/" class="fm-sub-toggle">
+						About us <i class="fa fa-angle-down" aria-hidden="true"></i>
+					</a>
+					<ul class="fm-sub">
+						<li><a href="<?php echo $fm_app; ?>about-us/">Our story</a></li>
+						<li><a href="<?php echo $fm_app; ?>how-we-work/">How we work</a></li>
+						<li><a href="<?php echo $fm_app; ?>quality/">Quality and commitment</a></li>
+						<li><a href="<?php echo $fm_app; ?>morocco/">FoodMax Group and Morocco</a></li>
+						<li><a href="<?php echo $fm_app; ?>why-foodmax/">Why work with us</a></li>
+					</ul>
 				</li>
 				<li class="has-sub<?php echo (strpos($fm_path, 'products') !== false || strpos($fm_path, 'offers') !== false) ? ' is-current' : ''; ?>">
 					<a href="<?php echo $fm_app; ?>products/" class="fm-sub-toggle">

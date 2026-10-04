@@ -21,6 +21,11 @@ RewriteRule ^products/([0-9]+)/([A-Za-z0-9-]+)/?$ products/products.php?idCat=$1
 RewriteRule ^home/?$ index.php [L]
 RewriteRule ^about-us/?$ about-us.php [L]
 RewriteRule   about-us$  about-us.php [L]
+# Pages de presentation
+RewriteRule ^how-we-work/?$   how-we-work.php [L]
+RewriteRule ^quality/?$       quality.php [L]
+RewriteRule ^morocco/?$       morocco.php [L]
+RewriteRule ^why-foodmax/?$   why-foodmax.php [L]
 RewriteRule   ^privacy-policy/?$  privacy-policy.php [L]
 RewriteRule   ^terms/?$  terms.php [L]
 RewriteRule   shop-cart/$   Shop-cart.php [L]

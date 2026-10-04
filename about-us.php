@@ -2,7 +2,8 @@
 /* _header.php ouvre la session : il doit etre inclus AVANT tout affichage,
    sinon les en-tetes HTTP sont deja partis et session_start() echoue. */
 require_once(__DIR__ . "/includes/paths.php");
-require_once(__DIR__ . "/includes/_header.php"); ?>
+require_once(__DIR__ . "/includes/_header.php");
+require_once(__DIR__ . "/includes/explore.php"); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -147,9 +148,15 @@ require_once(__DIR__ . "/includes/_header.php"); ?>
 			   on established quality control measures at every stage of the
 			   distribution process, designed to have a positive impact on the
 			   health and safety of consumers and on the environment.</p>
-			<p>Behind that sentence there is a very simple wish, that the person
-			   who finally eats what we sent enjoys it, and that the customer who
-			   trusted us with the order never regrets it.</p>
+			<p>In practice, that means supplying quality agricultural products,
+			   being straightforward about what is available and what is not, and
+			   building relationships with our partners that last well beyond a
+			   single shipment, with seriousness, transparency and professionalism.</p>
+			<p>Behind all of this there is a very simple wish, that the person who
+			   finally eats what we sent enjoys it, and that the customer who trusted
+			   us with the order never regrets it. We would rather build a business
+			   people can depend on than a big one built on promises we could not
+			   keep.</p>
 		</div>
 
 		<div class="fm-mission-list">
@@ -249,9 +256,12 @@ require_once(__DIR__ . "/includes/_header.php"); ?>
 			feels at home, and the people who farm it know things no book can
 			teach.
 		</p>
-		<a class="btn" href="<?php echo $fm_app; ?>products/">Discover our products</a>
+		<a class="btn" href="<?php echo $fm_app; ?>morocco/">More about Morocco</a>
 	</div>
 </section>
+
+<?php fm_explore(array('about-us'), 'Keep exploring', 'Read more about how we work',
+	'Each of these pages covers one subject, so you can go straight to what interests you.'); ?>
 
 <!-- ================================================================== CTA -->
 <section class="fm-cta" style="background-image:url('<?php echo $fm_app; ?>img/banner-cta.jpg');">

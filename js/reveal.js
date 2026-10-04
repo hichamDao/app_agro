@@ -16,7 +16,7 @@
 	var SELECTOR = [
 		'.fm-section-head', '.fm-about-body', '.fm-about-media',
 		'.fm-philo', '.fm-cat', '.fm-step', '.fm-commit', '.fm-why',
-		'.fm-partner', '.fm-topic', '.fm-quality', '.fm-strategy-item',
+		'.fm-partner', '.fm-explore-card', '.fm-topic', '.fm-quality', '.fm-strategy-item',
 		'.fm-morocco-map', '.fm-morocco-body', '.fm-mission-text',
 		'.fm-mission-body', '.fm-mission-list', '.fm-cta-inner', '.fm-note'
 	].join(',');
