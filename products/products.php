@@ -1,0 +1,506 @@
+<?php
+require_once((__DIR__ . "/../includes/_header.php"));
+require_once((__DIR__ . "/../includes/paths.php"));
+
+/* ------------------------------------------------------------------ entrees
+   Les valeurs sont normalisees puis injectees via requetes preparees :
+   aucune variable utilisateur n'est concatenee dans une chaine SQL. */
+$idCat    = isset($_GET['idCat'])    ? intval($_GET['idCat'])                 : 0;
+$motCle   = isset($_GET['motCle'])   ? trim(stripslashes((string) $_GET['motCle'])) : '';
+$tag      = isset($_GET['tags'])     ? trim(stripslashes((string) $_GET['tags']))   : '';
+$featured = isset($_GET['featured']) ? 1                                   : 0;
+$page     = isset($_GET['page'])     ? max(1, intval($_GET['page']))         : 1;
+
+$perPage = 12;
+$offset  = ($page - 1) * $perPage;
+
+/* -------------------------------------------------------------- categories */
+$categories = array();
+$rsCat = mysqli_query($conn, "SELECT Code_cat, Nom_cat FROM categories ORDER BY Nom_cat ASC");
+if ($rsCat) {
+    while ($c = mysqli_fetch_assoc($rsCat)) {
+        $c['Code_cat'] = (int) $c['Code_cat'];
+        $c['label']    = str_replace('_', ' ', $c['Nom_cat']);
+        $c['slug']     = str_replace('_', '', $c['Nom_cat']);
+        $categories[]  = $c;
+    }
+}
+
+$catCourante = null;
+if ($idCat > 0) {
+    foreach ($categories as $c) {
+        if ($c['Code_cat'] === $idCat) { $catCourante = $c; }
+    }
+    /* categorie inexistante : on retombe sur le catalogue complet */
+    if ($catCourante === null) { $idCat = 0; }
+}
+
+/* ------------------------------------------------------- construction WHERE */
+$where  = array();
+$params = array();
+$types  = '';
+
+if ($idCat > 0) {
+    $where[]  = 'Code_cat = ?';
+    $params[] = $idCat;
+    $types   .= 'i';
+}
+if ($motCle !== '') {
+    $like     = '%' . $motCle . '%';
+    $where[]  = 'Designation LIKE ?';
+    $params[] = $like;
+    $types   .= 's';
+}
+if ($tag !== '') {
+    $where[]  = 'tags LIKE ?';
+    $params[] = '%' . $tag . '%';
+    $types   .= 's';
+}
+if ($featured) {
+    $where[] = 'Selectionne = 1';
+}
+
+$sqlWhere = $where ? ' WHERE ' . implode(' AND ', $where) : '';
+/* en recherche on trie par designation, sinon par famille puis par nom */
+$sqlOrder = ($motCle !== '' || $tag !== '')
+    ? ' ORDER BY Designation ASC'
+    : ' ORDER BY Code_cat ASC, Designation ASC';
+
+/* ------------------------------------------------------------------ total */
+$stmt = mysqli_prepare($conn, 'SELECT COUNT(*) FROM produits' . $sqlWhere);
+if ($stmt) {
+    if ($types !== '') { mysqli_stmt_bind_param($stmt, $types, ...$params); }
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_store_result($stmt);
+    mysqli_stmt_bind_result($stmt, $nombreTotal);
+    mysqli_stmt_fetch($stmt);
+    $nombreTotal = (int) $nombreTotal;
+    mysqli_stmt_close($stmt);
+} else {
+    $nombreTotal = 0;
+}
+
+$nombreDePages = max(1, (int) ceil($nombreTotal / $perPage));
+if ($page > $nombreDePages) { $page = $nombreDePages; }
+$offset = ($page - 1) * $perPage;
+
+/* --------------------------------------------------------------- produits */
+$produits = array();
+$stmt = mysqli_prepare(
+    $conn,
+    'SELECT id_prod, Ref_prod, Designation, description, Photo, Disponible, Promotion, Selectionne, Code_cat, tags'
+        . ' FROM produits' . $sqlWhere . $sqlOrder . ' LIMIT ? OFFSET ?'
+);
+if ($stmt) {
+    $limit = $perPage;
+    $off   = $offset;
+    $bindTypes = $types . 'ii';
+    $bindVals  = $params;
+    $bindVals[] = $limit;
+    $bindVals[] = $off;
+
+    mysqli_stmt_bind_param($stmt, $bindTypes, ...$bindVals);
+    mysqli_stmt_execute($stmt);
+
+    $res = mysqli_stmt_get_result($stmt);
+    if ($res) {
+        while ($p = mysqli_fetch_assoc($res)) { $produits[] = $p; }
+    }
+    mysqli_stmt_close($stmt);
+}
+
+/* Map Code_cat => label, pour afficher la famille sur chaque carte. */
+$catLabels = array();
+foreach ($categories as $c) { $catLabels[$c['Code_cat']] = $c['label']; }
+
+/* Suggestions affichees quand une recherche ne renvoie rien. */
+$suggestions = array();
+if ($motCle !== '' && $nombreTotal === 0 && strlen($motCle) >= 3) {
+    $pref = '%' . substr($motCle, 0, 3) . '%';
+    $rsSug = mysqli_query(
+        $conn,
+        "SELECT id_prod, Designation FROM produits WHERE Designation LIKE '"
+            . mysqli_real_escape_string($conn, $pref)
+            . "' ORDER BY Designation ASC LIMIT 4"
+    );
+    if ($rsSug) {
+        while ($s = mysqli_fetch_assoc($rsSug)) { $suggestions[] = $s; }
+    }
+}
+
+/* ------------------------------------------------------------------ titre */
+if ($motCle !== '') {
+    $fm_titre    = 'Search results';
+    $fm_sousTitre = $nombreTotal . ' product' . ($nombreTotal > 1 ? 's' : '')
+        . ' matching &laquo;&nbsp;' . htmlspecialchars($motCle, ENT_QUOTES, 'UTF-8') . '&nbsp;&raquo;';
+} elseif ($tag !== '') {
+    $fm_titre    = 'Products tagged &laquo;&nbsp;' . htmlspecialchars($tag, ENT_QUOTES, 'UTF-8') . '&nbsp;&raquo;';
+    $fm_sousTitre = $nombreTotal . ' product' . ($nombreTotal > 1 ? 's' : '') . ' found.';
+} elseif ($catCourante) {
+    $fm_titre    = $catCourante['label'];
+    $fm_sousTitre = 'Browse our ' . strtolower($catCourante['label']) . ' range, packed and exported from Morocco.';
+} elseif ($featured) {
+    $fm_titre     = 'Featured products';
+    $fm_sousTitre = 'The selection our customers reorder most often.';
+} else {
+    $fm_titre     = 'Our products';
+    $fm_sousTitre = 'Fresh fruits and vegetables grown in Morocco, packed for export.';
+}
+
+/* Filtre actif, pour surligner le bon lien dans la barre de navigation. */
+$fm_lienActif = 'products/';
+if ($catCourante) { $fm_lienActif = 'products/' . $catCourante['Code_cat'] . '/'; }
+if ($motCle !== '' || $tag !== '' || $featured) { $fm_lienActif = 'products/'; }
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title><?php echo strip_tags($fm_titre); ?> | Foodmax</title>
+	<meta name="description" content="<?php echo htmlspecialchars(strip_tags($fm_sousTitre), ENT_QUOTES, 'UTF-8'); ?>">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" type="text/css" href="<?php echo $fm_app; ?>css/phlox.css">
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,600i,700,700i">
+	<link rel="stylesheet" type="text/css" href="<?php echo $fm_app; ?>css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="<?php echo $fm_app; ?>css/fancybox/jquery.fancybox.css" />
+	<link rel="stylesheet" type="text/css" href="<?php echo $fm_app; ?>css/fancybox/helpers/jquery.fancybox-thumbs.css" />
+
+	<script type="text/javascript" src="<?php echo $fm_app; ?>js/jquery.min.js"></script>
+	<script type="text/javascript" src="<?php echo $fm_app; ?>js/setting.js"></script>
+
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZPRWMT85SP"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+		gtag('config', 'G-ZPRWMT85SP');
+	</script>
+</head>
+
+<?php
+/* $fm_app est calcule par header-inc.php : toutes les URL ci-dessous l'utilise. */
+require_once((__DIR__ . "/../includes/header-inc.php"));
+
+/* Construit une URL de catalogue ; la page 1 reste sur /products/. */
+function fm_lien_produit($qs, $page) {
+    global $fm_app;
+    $base = $fm_app . 'products/';
+    if ($qs === '') {
+        return $page > 1 ? $base . '?page=' . $page : $base;
+    }
+    return $base . '?' . $qs . ($page > 1 ? '&page=' . $page : '');
+}
+
+/* URL d'une categorie, sous forme lisible : /products/8/Peppers/ et
+   /products/8/Peppers/2/ pour la page suivante (route ajoutee dans .htaccess).
+   Si le libelle ne contient aucun caractere utilisable dans une URL, on
+   retombe sur la forme avec parametres, qui fonctionne toujours. */
+function fm_lien_categorie($code, $slug, $page) {
+    global $fm_app;
+    $code = (int) $code;
+    $slug = preg_replace('/[^A-Za-z0-9-]/', '', (string) $slug);
+    if ($slug === '') {
+        return fm_lien_produit('idCat=' . $code, $page);
+    }
+    return $fm_app . 'products/' . $code . '/' . $slug . '/' . ($page > 1 ? $page . '/' : '');
+}
+
+function fm_echapper($v) { return htmlspecialchars((string) $v, ENT_QUOTES, 'UTF-8'); }
+
+/* Premiere photo du produit, avec repli sur une image generique. */
+function fm_photo_produit($prod, $up) {
+    $photos = array_filter(array_map('trim', explode(',', (string) $prod['Photo'])));
+    if ($photos) {
+        foreach ($photos as $ph) {
+            $f = $up . 'images/' . $prod['Ref_prod'] . '/' . $ph;
+	if (is_file(__DIR__ . '/../images/' . $prod['Ref_prod'] . '/' . $ph)) { return $f; }
+        }
+    }
+    return $up . 'img/product-placeholder.svg';
+}
+
+/* Extrait lisible d'une description, sans casser les balises eventuelles. */
+function fm_resume($texte, $long = 96) {
+    $t = trim(preg_replace('/\s+/u', ' ', strip_tags((string) $texte)));
+    if (function_exists('mb_strlen')) {
+        if (mb_strlen($t, 'UTF-8') <= $long) { return $t; }
+        return rtrim(mb_substr($t, 0, $long, 'UTF-8')) . '&hellip;';
+    }
+    if (strlen($t) <= $long) { return $t; }
+    return rtrim(substr($t, 0, $long)) . '&hellip;';
+}
+?>
+
+<!-- ============================================================ EN-TETE PAGE -->
+<section class="fm-pagehead">
+	<div class="fm-pagehead-inner">
+		<span class="fm-eyebrow">Our catalogue</span>
+		<h1><?php echo $fm_titre; ?></h1>
+		<p><?php echo $fm_sousTitre; ?></p>
+
+		<nav class="fm-crumbs" aria-label="Fil d'Ariane">
+			<ol>
+				<li><a href="<?php echo $fm_app; ?>">Home</a></li>
+				<li><?php echo $catCourante ? fm_echapper($catCourante['label']) : 'Products'; ?></li>
+			</ol>
+		</nav>
+	</div>
+</section>
+
+<!-- =============================================================== CATALOGUE -->
+<section class="fm-catalog">
+	<div class="fm-catalog-inner">
+
+		<!-- --------------------------------------------------------- filtres -->
+		<aside class="fm-catalog-side" aria-label="Product categories">
+			<h2 class="fm-side-title">Categories</h2>
+			<ul class="fm-catside-list">
+				<li>
+					<a href="<?php echo fm_lien_produit('', 1); ?>"
+					   class="<?php echo (!$idCat && !$motCle && !$tag && !$featured) ? 'is-active' : ''; ?>">
+						All products <span class="fm-side-count"><?php echo (int) $nombreTotal; ?></span>
+					</a>
+				</li>
+				<li>
+					<a href="<?php echo fm_lien_produit('featured=1', 1); ?>"
+					   class="<?php echo $featured ? 'is-active' : ''; ?>">
+						<i class="fa fa-star" aria-hidden="true"></i> Featured
+					</a>
+				</li>
+				<?php foreach ($categories as $c) { ?>
+					<li>
+						<a href="<?php echo fm_lien_categorie($c['Code_cat'], $c['slug'], 1); ?>"
+						   class="<?php echo ($idCat === $c['Code_cat']) ? 'is-active' : ''; ?>">
+							<?php echo fm_echapper($c['label']); ?>
+						</a>
+					</li>
+				<?php } ?>
+			</ul>
+
+			<div class="fm-side-cta">
+				<h3>Need a specific grade?</h3>
+				<p>Our export team prepares custom specifications, packing and documentation.</p>
+				<a class="btn btn-sm" href="<?php echo $fm_app; ?>contact/">Request a quote</a>
+			</div>
+		</aside>
+
+		<!-- ------------------------------------------------------------ grille -->
+		<div class="fm-catalog-main">
+
+			<div class="fm-toolbar">
+				<p class="fm-toolbar-count">
+					<?php if ($nombreTotal > 0) { ?>
+						Showing <strong><?php echo $offset + 1; ?>&ndash;<?php echo min($offset + $perPage, $nombreTotal); ?></strong>
+						of <strong><?php echo $nombreTotal; ?></strong> product<?php echo $nombreTotal > 1 ? 's' : ''; ?>
+					<?php } else { ?>
+						<strong>No products</strong> found
+					<?php } ?>
+				</p>
+
+				<?php if ($motCle !== '' || $tag !== '' || $idCat > 0 || $featured) { ?>
+					<a class="fm-toolbar-reset" href="<?php echo fm_lien_produit('', 1); ?>">
+						<i class="fa fa-times-circle" aria-hidden="true"></i> Clear filters
+					</a>
+				<?php } ?>
+			</div>
+
+			<?php if (!$produits) { ?>
+
+				<div class="fm-empty">
+					<span class="fm-empty-icon"><i class="fa fa-leaf"></i></span>
+					<h2>Nothing to show here yet</h2>
+					<?php if ($motCle !== '') { ?>
+						<p>No product matches &laquo;&nbsp;<?php echo fm_echapper($motCle); ?>&nbsp;&raquo;.
+						   Try a shorter keyword, or browse the full catalogue.</p>
+					<?php } else { ?>
+						<p>This selection is empty for now. Browse the other categories to find what you need.</p>
+					<?php } ?>
+					<a class="btn" href="<?php echo fm_lien_produit('', 1); ?>">View all products</a>
+				</div>
+
+				<?php if ($suggestions) { ?>
+					<div class="fm-suggest">
+						<h3>Did you mean</h3>
+						<ul>
+							<?php foreach ($suggestions as $s) { ?>
+								<li>
+									<a href="<?php echo $fm_app; ?>products_detail/<?php echo (int) $s['id_prod']; ?>/">
+										<?php echo fm_echapper($s['Designation']); ?>
+									</a>
+								</li>
+							<?php } ?>
+						</ul>
+					</div>
+				<?php } ?>
+
+			<?php } else { ?>
+
+				<div class="fm-pgrid">
+					<?php foreach ($produits as $prod) {
+						$id       = (int) $prod['id_prod'];
+						$lien     = $fm_app . 'products_detail/' . $id . '/';
+						$famille  = isset($catLabels[(int) $prod['Code_cat']])
+						          ? $catLabels[(int) $prod['Code_cat']] : '';
+					?>
+					<article class="fm-pcard">
+						<a class="fm-pcard-media" href="<?php echo $lien; ?>" tabindex="-1" aria-hidden="true">
+							<img src="<?php echo fm_photo_produit($prod, $fm_app); ?>"
+							     alt="<?php echo fm_echapper($prod['Designation']); ?>" loading="lazy">
+							<?php if ($famille !== '') { ?>
+								<span class="fm-pcard-tag"><?php echo fm_echapper($famille); ?></span>
+							<?php } ?>
+						</a>
+
+						<div class="fm-pcard-body">
+							<div class="fm-pcard-flags">
+								<?php if ((int) $prod['Selectionne'] === 1) { ?>
+									<span class="fm-flag fm-flag-star"><i class="fa fa-star" aria-hidden="true"></i> Featured</span>
+								<?php } ?>
+								<?php if ((int) $prod['Promotion'] === 1) { ?>
+									<span class="fm-flag fm-flag-promo">Promotion</span>
+								<?php } ?>
+								<?php if ((int) $prod['Disponible'] === 1) { ?>
+									<span class="fm-flag fm-flag-stock">In stock</span>
+								<?php } ?>
+							</div>
+
+							<h3 class="fm-pcard-title">
+								<a href="<?php echo $lien; ?>"><?php echo fm_echapper($prod['Designation']); ?></a>
+							</h3>
+
+							<p class="fm-pcard-desc"><?php echo fm_resume($prod['description']); ?></p>
+
+							<div class="fm-pcard-foot">
+								<span class="fm-pcard-ref">Ref. <?php echo fm_echapper($prod['Ref_prod']); ?></span>
+								<a class="fm-pcard-link" href="<?php echo $lien; ?>">
+									Details <i class="fa fa-angle-right" aria-hidden="true"></i>
+								</a>
+							</div>
+						</div>
+					</article>
+					<?php } ?>
+				</div>
+
+				<?php
+				/* ------------------------------------------------------ pagination */
+				$qs = array();
+				if ($idCat > 0)   { $qs[] = 'idCat=' . $idCat; }
+				if ($motCle !== '') { $qs[] = 'motCle=' . rawurlencode($motCle); }
+				if ($tag !== '')   { $qs[] = 'tags=' . rawurlencode($tag); }
+				if ($featured)     { $qs[] = 'featured=1'; }
+				$qs = implode('&', $qs);
+
+				/* Sur une categorie seule, on garde la forme lisible
+				   /products/8/Peppers/2/ ; sinon on retombe sur les parametres. */
+				$lienPage = function ($p) use ($qs, $idCat, $motCle, $tag, $featured) {
+					if ($idCat > 0 && $motCle === '' && $tag === '' && !$featured && $catCourante) {
+						return fm_lien_categorie($catCourante['Code_cat'], $catCourante['slug'], $p);
+					}
+					return fm_lien_produit($qs, $p);
+				};
+
+				if ($nombreDePages > 1) {
+					/* fenetre glissante de 5 pages autour de la page courante */
+					$debut = max(1, $page - 2);
+					$fin   = min($nombreDePages, $debut + 4);
+					$debut = max(1, $fin - 4);
+				?>
+				<nav class="fm-pager" aria-label="Product pagination">
+					<ul class="fm-pager-list">
+						<li>
+							<?php if ($page > 1) { ?>
+								<a class="fm-pager-item" href="<?php echo $lienPage($page - 1); ?>" rel="prev">
+									<i class="fa fa-angle-left" aria-hidden="true"></i> Previous
+								</a>
+							<?php } else { ?>
+								<span class="fm-pager-item is-disabled"><i class="fa fa-angle-left" aria-hidden="true"></i> Previous</span>
+							<?php } ?>
+						</li>
+
+						<?php for ($i = $debut; $i <= $fin; $i++) { ?>
+							<li>
+								<?php if ($i === $page) { ?>
+									<span class="fm-pager-item is-active" aria-current="page"><?php echo $i; ?></span>
+								<?php } else { ?>
+									<a class="fm-pager-item" href="<?php echo $lienPage($i); ?>"><?php echo $i; ?></a>
+								<?php } ?>
+							</li>
+						<?php } ?>
+
+						<li>
+							<?php if ($page < $nombreDePages) { ?>
+								<a class="fm-pager-item" href="<?php echo $lienPage($page + 1); ?>" rel="next">
+									Next <i class="fa fa-angle-right" aria-hidden="true"></i>
+								</a>
+							<?php } else { ?>
+								<span class="fm-pager-item is-disabled">Next <i class="fa fa-angle-right" aria-hidden="true"></i></span>
+							<?php } ?>
+						</li>
+					</ul>
+				</nav>
+				<?php } ?>
+
+			<?php } ?>
+
+		</div>
+	</div>
+</section>
+
+<!-- ============================================================ AUTRES PAGES -->
+<section class="fm-section fm-section-alt">
+	<div class="fm-section-head">
+		<span class="fm-eyebrow">Why Foodmax</span>
+		<h2>What you get with every order</h2>
+	</div>
+
+	<div class="fm-quality-grid">
+		<div class="fm-quality">
+			<span class="fm-quality-icon"><i class="fa fa-leaf"></i></span>
+			<h3>Fresh</h3>
+			<p>Harvested and packed within hours of picking.</p>
+		</div>
+		<div class="fm-quality">
+			<span class="fm-quality-icon"><i class="fa fa-leaf"></i></span>
+			<h3>Traceable</h3>
+			<p>Every pallet is traced back to its field.</p>
+		</div>
+		<div class="fm-quality">
+			<span class="fm-quality-icon"><i class="fa fa-snowflake-o"></i></span>
+			<h3>Cold chain</h3>
+			<p>Refrigerated containers door to door.</p>
+		</div>
+		<div class="fm-quality">
+<span class="fm-quality-icon"><i class="fa fa-check-circle-o"></i></span>
+			<h3>Documented</h3>
+			<p>Documentation is prepared for each shipment and destination.</p>
+		</div>
+		<div class="fm-quality">
+			<span class="fm-quality-icon"><i class="fa fa-cube"></i></span>
+			<h3>Custom packing</h3>
+			<p>Private label and retail-ready formats.</p>
+		</div>
+		<div class="fm-quality">
+			<span class="fm-quality-icon"><i class="fa fa-ship"></i></span>
+			<h3>Worldwide</h3>
+			<p>Shipped to Europe, Asia, Africa and the Gulf.</p>
+		</div>
+	</div>
+</section>
+
+<section class="fm-cta" style="background-image:url('<?php echo $fm_app; ?>img/banner-cta.jpg');">
+	<div class="fm-cta-inner">
+		<h2>Looking for a specific variety?</h2>
+		<p>Send us the product, the volume and the destination &mdash; we reply within one business day.</p>
+		<a class="btn" href="<?php echo $fm_app; ?>contact/">Talk to our team</a>
+	</div>
+</section>
+
+<?php require_once((__DIR__ . "/../includes/footer.php")); ?>
+
+<?php require_once((__DIR__ . "/../includes/analyticstracking.php")); ?>
+
+</body>
+</html>

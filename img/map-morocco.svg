@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 640" role="img" aria-label="Carte du Maroc, region du Souss et Marrakech">
+  <title>FoodMax Group — From Morocco to the World</title>
+  <defs>
+    <linearGradient id="land" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f4f7ee"/>
+      <stop offset="100%" stop-color="#e4ebd6"/>
+    </linearGradient>
+    <linearGradient id="sea" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#eef4f7"/>
+      <stop offset="100%" stop-color="#dfeaef"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="520" height="640" fill="url(#sea)"/>
+
+  <!-- silhouette du Maroc -->
+  <path fill="url(#land)" stroke="#9db06a" stroke-width="2" d="
+    M 120,58
+    L 176,74 L 214,86 L 252,110 L 262,148
+    L 250,182 L 268,214 L 262,250 L 246,278
+    L 258,306 L 250,338 L 236,368 L 246,398
+    L 238,432 L 252,462 L 258,496 L 244,530
+    L 252,560 L 236,586
+    L 214,566 L 200,538 L 188,506 L 176,474
+    L 164,440 L 152,406 L 140,372 L 128,336
+    L 118,300 L 112,262 L 118,224 L 112,186
+    L 120,148 L 112,112 Z"/>
+
+  <!-- Souss / Agadir (basse Souss, cote atlantique) -->
+  <circle cx="132" cy="330" r="7" fill="#a13a20"/>
+  <text x="150" y="328" font-family="Open Sans, sans-serif" font-size="15" font-weight="700" fill="#2f5010">Souss</text>
+  <text x="150" y="344" font-family="Open Sans, sans-serif" font-size="12" fill="#5c6b45">Cote atlantique</text>
+
+  <!-- Marrakech -->
+  <circle cx="222" cy="316" r="7" fill="#a13a20"/>
+  <text x="240" y="314" font-family="Open Sans, sans-serif" font-size="15" font-weight="700" fill="#2f5010">Marrakech</text>
+  <text x="240" y="330" font-family="Open Sans, sans-serif" font-size="12" fill="#5c6b45">Zone industrielle</text>
+
+  <!-- Casablanca -->
+  <circle cx="186" cy="252" r="5" fill="#4a7a18"/>
+  <text x="200" y="250" font-family="Open Sans, sans-serif" font-size="12" fill="#5c6b45">Casablanca</text>
+
+  <!-- Tanger -->
+  <circle cx="222" cy="112" r="5" fill="#4a7a18"/>
+  <text x="236" y="110" font-family="Open Sans, sans-serif" font-size="12" fill="#5c6b45">Tanger</text>
+
+  <!-- trait maritime vers l'Europe -->
+  <path d="M 268,250 C 330,214 392,166 470,132" fill="none" stroke="#a13a20"
+        stroke-width="1.8" stroke-dasharray="6 5" opacity="0.65"/>
+  <polygon points="470,132 456,126 458,138" fill="#a13a20" opacity="0.65"/>
+
+  <!-- routes vers le reste du monde -->
+  <path d="M 268,250 C 356,286 440,318 508,352" fill="none" stroke="#a13a20"
+        stroke-width="1.8" stroke-dasharray="6 5" opacity="0.65"/>
+  <polygon points="508,352 494,344 495,357" fill="#a13a20" opacity="0.65"/>
+
+  <text x="30" y="612" font-family="Open Sans, sans-serif" font-size="15"
+        font-weight="700" letter-spacing="2.5" fill="#2f5010">FROM MOROCCO TO THE WORLD</text>
+</svg>

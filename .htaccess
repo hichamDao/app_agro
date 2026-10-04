@@ -1,0 +1,62 @@
+# Activer la réécriture d'URL
+RewriteEngine On
+
+# Redirection HTTPS désactivée en local
+# RewriteCond %{HTTPS} !=on
+# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# Sécurité
+<IfModule mod_headers.c>
+    Header set Content-Security-Policy "upgrade-insecure-requests;"
+</IfModule>
+
+# Bloquer l'accès direct aux includes
+RewriteRule ^includes/ - [F,L]
+
+# Routes du site
+RewriteRule ^products/([0-9]+)/([A-Za-z0-9-]+)/([0-9]+)/?$ products/products.php?idCat=$1&name=$2&page=$3 [NC,L,QSA]
+
+RewriteRule ^products/([0-9]+)/([A-Za-z0-9-]+)/?$ products/products.php?idCat=$1&name=$2 [NC,L,QSA]
+
+RewriteRule ^home/?$ index.php [L]
+RewriteRule ^about-us/?$ about-us.php [L]
+RewriteRule   about-us$  about-us.php [L]
+RewriteRule   ^privacy-policy/?$  privacy-policy.php [L]
+RewriteRule   ^terms/?$  terms.php [L]
+RewriteRule   shop-cart/$   Shop-cart.php [L]
+RewriteRule   gallery/$  gallery.php [L]
+RewriteRule   gallery$  gallery.php [L]
+RewriteRule   ^contact/$  contact.php [L]
+RewriteRule   ^contact$  contact.php [L]
+RewriteRule   dbproducts/$  products/dbproducts.php [L]
+RewriteRule   dbproducts$  products/dbproducts.php [L]
+RewriteRule   products/$  products/products.php [L]
+RewriteRule   products$  products/products.php [L]
+RewriteRule   offers/$  offers.php [L]
+RewriteRule  offers-online/$ offers-online.php [L]
+RewriteRule  offers/Tomatoes/$  products/Tomatoes-detail.php [L]
+RewriteRule  offers/Citrus/$  products/Citrus-detail.php [L]
+RewriteRule  offers/Cereals/$  products/Cereals-detail.php [L]
+RewriteRule  offers/Watermelon/$  products/Watermelon-detail.php [L]
+RewriteRule  offers/Fish/$  products/Fish-detail.php [L]
+RewriteRule  offers/Olives/$  products/Olives-detail.php [L]
+RewriteRule  offers/Peppers/$  products/Peppers-detail.php [L]
+RewriteRule  offers/Valencia/$  products/Valencia-detail.php [L]
+RewriteRule  offers/Canned_fish/$  products/canned_fish.php [L]
+RewriteRule  offers/Cashew/$  products/Cashew-detail.php [L]
+RewriteRule  ^products/search/([A-Za-z0-9-]+)/?$  products/products.php?motCle=$1 [NC,L]
+RewriteRule   ^dbproducts/tags/([A-Za-z0-9-]+)/([0-9]+)/?$  products/dbproducts.php?tags=$1&page=$2 [NC,L]
+RewriteRule   ^products/tags/([A-Za-z0-9-]+)/?$  products/products.php?tags=$1 [NC,L]
+RewriteRule   ^dbproducts/([0-9]+)/([A-Za-z0-9-]+)/?$  products/dbproducts.php?idCat=$1&name=$2 [NC,L]
+RewriteRule   ^dbproducts/([0-9]+)/([A-Za-z0-9-]+)/([0-9]+)/?$  products/dbproducts.php?idCat=$1&name=$2&page=$3 [NC,L]
+RewriteRule   ^dbproducts/([0-9]+)/?$  products/products.php?page=$1 [NC,L]
+RewriteRule   ^products_detail/([0-9]+)/?$  products/products_detail.php?prod_id=$1 [NC,L]
+RewriteRule   ^dbproducts/search/([A-Za-z0-9-]+)/([0-9]+)/?$  products/dbproducts.php?motCle=$1&page=$2 [NC,L]
+RewriteRule   ^dbGallery/([0-9]+)/?$  dbGallery.php?page=$1 [NC,L]
+RewriteRule   ^gallery/([0-9]+)/?$  gallery.php?page=$1
+RewriteRule   ^offers/([0-9]+)/?$  offers.php?page=$1 [NC,L]
+RewriteRule   ^offers-online/([0-9]+)/?$  offers-online.php?page=$1 [NC,L]
+RewriteRule   ^offers-online/([A-Za-z0-9-]+)/([0-9]+)/?$  offers-online.php?update=$1&page=$2 [NC,L]
+RewriteRule   ^offers-online/([A-Za-z0-9-]+)/?$  offers-online.php?update [NC,L]
+RewriteRule   ^detail-view/([0-9]+)/([A-Za-z0-9-]+)/?$  products/detail-view.php?w=$1&name=$2 [NC,L] ]
+
