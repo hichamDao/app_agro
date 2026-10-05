@@ -2915,45 +2915,70 @@ a.fm-pager-item:hover {
 .fm-explore-card:hover .fm-explore-more .fa { margin-left: 11px; }
 
 /* =====================================================================
-   HERO - version finale : l'image entiere doit toujours se voir
+   HERO - version finale : meme principe partout, la photo est le FOND
    ---------------------------------------------------------------------
    L'image (2048 x 768) contient deja son propre texte "Vegetables" et ses
-   trois icones, a DROITE. On ne doit donc jamais les rogner ni les assombrir.
+   trois icones, a DROITE. Elle ne doit jamais etre rognee de facon a les
+   couper, ni assombrie a cet endroit.
 
-   - Grand ecran (>= 1280 px) : le texte du site est superpose a GAUCHE, sur
-     les legumes, avec un voile noir semi-transparent qui s'efface avant le
-     logo. L'image est alignee a droite : si l'ecran est moins large que
-     l'image, c'est la gauche (les legumes) qui est rognee, jamais le logo.
-   - Tablette et telephone (< 1280 px) : l'image s'affiche en entier, a sa
-     proportion, et le texte vient en dessous sur fond vert fonce. Plus aucun
-     recadrage, quel que soit l'appareil ou l'orientation.
-   Ce bloc remplace les anciens reglages du hero (ils sont en amont dans ce
-   fichier et sont ici neutralises).
+   - PC (>= 1280 px) : texte superpose a GAUCHE, sur les legumes, avec un voile
+     noir semi-transparent qui s'efface avant le logo. Image alignee a droite.
+   - Tablette et telephone (< 1280 px) : la photo reste en fond, ancree en haut
+     a droite a une hauteur fixe (--fm-hero-h) : le logo et les icones sont
+     toujours entiers et grands. Sous les icones, la photo se fond dans un vert
+     fonce, et le texte et les boutons sont superposes a cette zone.
+
+   Reglage : --fm-hero-h est la hauteur de la photo (min 300px, 72 % de la
+   largeur de l'ecran, max 520px). Le texte commence a 74 % de cette hauteur,
+   juste sous les icones.
    ===================================================================== */
 
 .fm-hero {
+  --fm-hero-h: clamp(300px, 72vw, 520px);
+  --fm-hero-bg: 16, 32, 15;
+  position: relative;
   display: block;
   min-height: 0;
   padding: 0;
-  background: #10200f;
+  background: rgb(var(--fm-hero-bg));
   overflow: hidden;
   }
-.fm-hero-bg { position: relative; inset: auto; z-index: 0; }
+.fm-hero-bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
 .fm-hero-bg img {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: auto;
   display: block;
-  width: 100%;
-  height: auto;
-  min-height: 150px;           /* petits telephones : legere mise a l'echelle */
-  object-fit: cover;
-  object-position: 100% 50%;   /* on garde toujours la droite : logo et icones */
+  width: auto;                 /* la largeur suit la proportion de l'image */
+  max-width: none;
+  height: var(--fm-hero-h);
+  min-height: 0;
+  object-fit: fill;
   }
-.fm-hero::before { display: none; }
+.fm-hero::before {
+  content: '';
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  /* transparent sur le logo et les icones, puis fondu vers le vert fonce sous
+     eux : le texte est lisible sans cacher ce que dit l'image */
+  background: linear-gradient(180deg,
+    rgba(var(--fm-hero-bg), 0) 0,
+    rgba(var(--fm-hero-bg), 0) calc(var(--fm-hero-h) * 0.60),
+    rgba(var(--fm-hero-bg), 0.55) calc(var(--fm-hero-h) * 0.72),
+    rgba(var(--fm-hero-bg), 0.86) calc(var(--fm-hero-h) * 0.86),
+    rgb(var(--fm-hero-bg)) calc(var(--fm-hero-h) * 1.02),
+    rgb(var(--fm-hero-bg)) 100%);
+  }
 .fm-hero-inner {
   position: relative;
   z-index: 2;
   max-width: 720px;
   margin: 0 auto;
-  padding: 34px 22px 46px;
+  padding: calc(var(--fm-hero-h) * 0.74) 22px 46px;
   text-align: left;
   }
 .fm-hero-title { font-size: 38px; }
@@ -2961,7 +2986,7 @@ a.fm-pager-item:hover {
 .fm-hero-points { margin-top: 26px; }
 
 @media (max-width: 640px) {
-  .fm-hero-inner { text-align: center; padding: 28px 18px 38px; }
+  .fm-hero-inner { text-align: center; padding-left: 18px; padding-right: 18px; padding-bottom: 38px; }
   .fm-hero-title { font-size: 30px; }
   .fm-hero-actions .btn { width: 100%; }
   .fm-hero-actions { flex-direction: column; }
@@ -2977,16 +3002,14 @@ a.fm-pager-item:hover {
     min-height: max(620px, 37.5vw);
     padding: 40px clamp(32px, 5vw, 88px);
     }
-  .fm-hero-bg { position: absolute; inset: 0; }
   .fm-hero-bg img {
+    position: static;
+    width: 100%;
     height: 100%;
-    min-height: 0;
     object-fit: cover;
     object-position: 100% 50%;
     }
   .fm-hero::before {
-    display: block;
-    z-index: 1;
     /* noir semi-transparent a gauche, derriere le texte ; transparent avant
        le logo "Vegetables" et les icones pour qu'ils restent bien visibles */
     background: linear-gradient(90deg,
