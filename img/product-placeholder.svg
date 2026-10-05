@@ -1,11 +1,49 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" role="img" aria-label="Produit sans photographie">
-  <rect width="600" height="400" fill="#f4f7ee"/>
-  <g stroke="#c9d6ab" stroke-width="2" fill="none" opacity="0.7">
-    <circle cx="300" cy="196" r="86"/>
-    <path d="M300 110 C300 150 336 168 336 196 C336 224 300 242 300 282"/>
-    <path d="M300 110 C300 150 264 168 264 196 C264 224 300 242 300 282"/>
-    <path d="M214 196 H386"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" width="600" height="450" role="img" aria-label="Photographie non disponible">
+  <title>Photographie a venir</title>
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0%" stop-color="#f5f8ee"/>
+      <stop offset="100%" stop-color="#e4ecd6"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.46" r="0.55">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="weave" width="26" height="26" patternUnits="userSpaceOnUse"
+             patternTransform="rotate(38)">
+      <line x1="0" y1="0" x2="0" y2="26" stroke="#4a7a18" stroke-width="1.4" opacity="0.07"/>
+    </pattern>
+  </defs>
+
+  <rect width="600" height="450" fill="url(#bg)"/>
+  <rect width="600" height="450" fill="url(#weave)"/>
+  <rect width="600" height="450" fill="url(#glow)"/>
+
+  <!-- halo derriere le motif -->
+  <circle cx="300" cy="238" r="132" fill="#ffffff" opacity="0.42"/>
+
+  <!-- feuillage -->
+  <g fill="none" stroke="#7f9c52" stroke-width="3.2"
+     stroke-linecap="round" stroke-linejoin="round" opacity="0.82">
+    <path d="M300 252 C250 238 214 200 232 166 C277 172 307 210 300 252 Z"/>
+    <path d="M300 252 C350 238 386 200 368 166 C323 172 293 210 300 252 Z"/>
+    <path d="M300 252 L240 176" stroke-width="1.8" opacity="0.7"/>
+    <path d="M300 252 L360 176" stroke-width="1.8" opacity="0.7"/>
   </g>
-  <text x="300" y="332" text-anchor="middle" font-family="Open Sans, sans-serif"
-        font-size="17" fill="#7d8b63">Photographie a venir</text>
+
+  <!-- cageot -->
+  <g fill="none" stroke="#6f8a45" stroke-width="3.4"
+     stroke-linecap="round" stroke-linejoin="round" opacity="0.88">
+    <path d="M206 256 L394 256 L372 336 L228 336 Z"/>
+    <path d="M212 284 L388 284" stroke-width="2.4" opacity="0.75"/>
+    <path d="M219 311 L381 311" stroke-width="2.4" opacity="0.75"/>
+    <path d="M300 258 L300 334" stroke-width="2" opacity="0.55"/>
+  </g>
+
+  <!-- mention discrete, en bas -->
+  <text x="300" y="392" text-anchor="middle"
+        font-family="Open Sans, Helvetica, Arial, sans-serif"
+        font-size="13" font-weight="600" letter-spacing="2.4"
+        fill="#8a9a6b" opacity="0.85">PHOTOGRAPHY TO COME</text>
 </svg>

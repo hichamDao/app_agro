@@ -92,7 +92,7 @@ $offset = ($page - 1) * FM_CONTACTS_PAR_PAGE;
 $contacts = array();
 $stmt = mysqli_prepare(
     $conn,
-    'SELECT contact_id, name, email, phone, message, date
+    'SELECT contact_id, name, email, phone, message, date, company, country, product
      FROM contact' . $sqlWhere
         . ' ORDER BY contact_id DESC LIMIT ? OFFSET ?'
 );
@@ -215,10 +215,19 @@ admin_entete(
                             </a>
                         </div>
                         <div class="fm-adm-detail" style="grid-template-columns:130px 1fr;margin-bottom:12px;">
-                            <dt>Expediteur</dt><dd><?php echo fm_admin_echapper($c['name']); ?></dd>
-                            <dt>E-mail</dt><dd><a href="mailto:<?php echo fm_admin_echapper($c['email']); ?>"><?php echo fm_admin_echapper($c['email']); ?></a></dd>
-                            <dt>Telephone</dt><dd><?php echo fm_admin_echapper($c['phone'] !== '' ? $c['phone'] : '&mdash;'); ?></dd>
-                            <dt>Recu le</dt><dd><?php echo fm_admin_echapper($formatDate($c['date'])); ?></dd>
+<dt>Expediteur</dt><dd><?php echo fm_admin_echapper($c['name']); ?></dd>
+                        <?php if (trim((string) $c['company']) !== '') { ?>
+                        <dt>Societe</dt><dd><?php echo fm_admin_echapper($c['company']); ?></dd>
+                        <?php } ?>
+                        <dt>E-mail</dt><dd><a href="mailto:<?php echo fm_admin_echapper($c['email']); ?>"><?php echo fm_admin_echapper($c['email']); ?></a></dd>
+                        <dt>Telephone</dt><dd><?php echo fm_admin_echapper($c['phone'] !== '' ? $c['phone'] : '&mdash;'); ?></dd>
+                        <?php if (trim((string) $c['country']) !== '') { ?>
+                        <dt>Pays</dt><dd><?php echo fm_admin_echapper($c['country']); ?></dd>
+                        <?php } ?>
+                        <?php if (trim((string) $c['product']) !== '') { ?>
+                        <dt>Produit</dt><dd><?php echo fm_admin_echapper($c['product']); ?></dd>
+                        <?php } ?>
+                        <dt>Recu le</dt><dd><?php echo fm_admin_echapper($formatDate($c['date'])); ?></dd>
                         </div>
                         <div class="fm-adm-message"><?php echo fm_admin_echapper(trim((string) $c['message'])); ?></div>
                     </td>

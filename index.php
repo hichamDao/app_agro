@@ -292,6 +292,6 @@ require_once(__DIR__ . "/includes/header-inc.php"); ?>
 </section>
 
 <?php require_once((__DIR__ . "/includes/footer.php")); ?>
-
+<?php require_once((__DIR__ . "/includes/analyticstracking.php")); ?>
 </body>
 </html>
