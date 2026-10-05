@@ -3001,3 +3001,125 @@ a.fm-pager-item:hover {
   .fm-hero-text { font-size: 17px; margin-bottom: 30px; }
   .fm-hero-points { margin-top: 32px; }
   }
+
+/* =====================================================================
+   SLIDER DES PRODUITS (accueil)
+   ---------------------------------------------------------------------
+   Reglages faciles, tout en haut de .fm-slider :
+     --fm-n            nombre de cartes visibles (decimal = la suivante dépasse
+                       un peu, ce qui montre qu'on peut glisser)
+     --fm-gap          espace entre les cartes
+     --fm-photo-ratio  proportion des photos (largeur / hauteur) :
+                       4 / 3 = classique, 1 / 1 = carree, 16 / 9 = tres large,
+                       3 / 4 = en hauteur
+   Le defilement est natif (scroll-snap) : fluide au doigt sur Android et iOS.
+   ===================================================================== */
+
+.fm-slider {
+  --fm-n: 1.15;
+  --fm-gap: 18px;
+  --fm-photo-ratio: 16 / 11;
+  position: relative;
+  max-width: 1320px;
+  margin: 0 auto;
+  }
+
+.fm-slider-track {
+  display: flex;
+  gap: var(--fm-gap);
+  padding: 14px 6px 30px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  outline: none;
+  }
+.fm-slider-track::-webkit-scrollbar { display: none; }
+.fm-slider-track:focus-visible { box-shadow: 0 0 0 3px var(--phlox-primary-soft); border-radius: 12px; }
+
+.fm-slider-track > .fm-cat {
+  flex: 0 0 calc((100% - var(--fm-gap) * (var(--fm-n) - 1)) / var(--fm-n));
+  min-width: 0;
+  scroll-snap-align: start;
+  }
+.fm-slider .fm-cat-media { aspect-ratio: var(--fm-photo-ratio); }
+
+/* telephone paysage et petite tablette */
+@media (min-width: 600px) {
+  .fm-slider { --fm-n: 2.2; --fm-gap: 20px; --fm-photo-ratio: 4 / 3; }
+}
+/* tablette */
+@media (min-width: 900px) {
+  .fm-slider { --fm-n: 3; --fm-gap: 22px; }
+}
+/* ordinateur */
+@media (min-width: 1200px) {
+  .fm-slider { --fm-n: 4; --fm-gap: 24px; }
+}
+
+/* fleches */
+.fm-slider-btn {
+  position: absolute;
+  top: calc(var(--fm-arrow-top, 38%));
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  font-size: 26px;
+  line-height: 1;
+  color: var(--phlox-primary-dark);
+  background: #fff;
+  border: 0;
+  border-radius: 50%;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: var(--phlox-tr);
+  }
+.fm-slider-btn:hover { color: #fff; background: var(--phlox-primary); }
+.fm-slider-btn:focus-visible { outline: 3px solid var(--phlox-primary-soft); outline-offset: 2px; }
+.fm-slider-btn[disabled] { opacity: 0; pointer-events: none; }
+.fm-slider-prev { left: -8px; }
+.fm-slider-next { right: -8px; }
+.fm-slider.is-static .fm-slider-btn,
+.fm-slider.is-static .fm-slider-dots { display: none; }
+
+@media (max-width: 599px) {
+  .fm-slider-btn { width: 38px; height: 38px; font-size: 22px; --fm-arrow-top: 30%; }
+  .fm-slider-prev { left: 2px; }
+  .fm-slider-next { right: 2px; }
+}
+@media (min-width: 1380px) {
+  .fm-slider-prev { left: -58px; }
+  .fm-slider-next { right: -58px; }
+}
+
+/* points de pagination */
+.fm-slider-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 4px;
+  }
+.fm-slider-dots[hidden] { display: none; }
+.fm-slider-dots button {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  background: var(--phlox-border);
+  border: 0;
+  border-radius: 100em;
+  cursor: pointer;
+  transition: var(--phlox-tr);
+  }
+.fm-slider-dots button.is-on { width: 26px; background: var(--phlox-primary); }
+
+@media (prefers-reduced-motion: reduce) {
+  .fm-slider-track { scroll-behavior: auto; }
+}

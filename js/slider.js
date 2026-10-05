@@ -1,127 +1,118 @@
 /**
- * Slider "Products we export" — page d'accueil
- * - defilement automatique (data-autoplay, en ms ; 0 pour desactiver)
- * - fleches precedent / suivante
- * - pastilles de navigation generees automatiquement
- * - swipe tactile
- * - pause quand l'onglet est en arriere-plan ou au survol de la souris
+ * Slider horizontal des produits (accueil).
  *
- * Deux precautions :
- *  - jQuery peut etre charge apres ce script : on lit window.jQuery au moment
- *    de demarrer et on retente au DOMContentLoaded / load.
- *  - DOMContentLoaded peut ne jamais survenir si une feuille de style externe
- *    (police Google) ne repond pas ; le document resterait alors a readyState
- *    "interactive" et tous les callbacks ready seraient ignores. Si l'element
- *    cible est deja dans le DOM, on demarre donc immediatement.
+ * Le defilement lui-meme est fait par le navigateur (CSS scroll-snap) : le
+ * glissement au doigt marche donc nativement sur Android, iPhone et tablette.
+ * Ce script ajoute seulement les fleches, les points de pagination et la
+ * navigation au clavier. Sans JavaScript, le slider reste utilisable en
+ * glissant ou avec la barre de defilement.
+ *
+ * Utilisation : un conteneur [data-fm-slider] avec
+ *   .fm-slider-track (les cartes), .fm-slider-prev, .fm-slider-next,
+ *   .fm-slider-dots (rempli ici).
+ * Le nombre de cartes visibles se regle uniquement dans le CSS (--fm-n).
  */
 (function () {
 	'use strict';
 
-	function init() {
-		var $ = window.jQuery;
-		if (!$) { return; }
-		var $slider = $('#fmSlider .fm-slider');
-		if (!$slider.length) { return; }
+	var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-		var $track = $('.fm-slider-track', $slider);
-		var $slides = $track.children('.fm-slide');
-		var $dots = $('.fm-slider-dots', $slider);
-		var $prev = $('.fm-slider-prev', $slider);
-		var $next = $('.fm-slider-next', $slider);
-		var count = $slides.length;
-		var index = 0;
-		var timer = null;
-		var delay = parseInt($slider.data('autoplay'), 10) || 0;
+	function init(root) {
+		var track = root.querySelector('.fm-slider-track');
+		var prev  = root.querySelector('.fm-slider-prev');
+		var next  = root.querySelector('.fm-slider-next');
+		var dots  = root.querySelector('.fm-slider-dots');
+		if (!track || !track.children.length) { return; }
 
-		if (count < 2) {
-			$prev.add($next).remove();
-			return;
+		var ticking = false;
+
+		function metrics() {
+			var card = track.children[0];
+			var cs   = window.getComputedStyle(track);
+			var gap  = parseFloat(cs.columnGap || cs.gap) || 0;
+			var step = card.getBoundingClientRect().width + gap;      /* une carte */
+			var per  = Math.max(1, Math.floor((track.clientWidth + gap) / step));
+			var max  = Math.max(0, track.scrollWidth - track.clientWidth);
+			return { step: step, page: step * per, max: max };
 		}
 
-		/* ---------------------------------------------------- pastilles */
-		$slides.each(function (i) {
-			var $b = $('<button type="button" role="tab"></button>')
-				.attr('aria-label', 'Produit ' + (i + 1));
-			$b.on('click', function () {
-				go(i);
-				restart();
-			});
-			$dots.append($b);
-		});
-		var $dotItems = $dots.children('button');
-
-		/* ------------------------------------------------------ affichage */
-		function render() {
-			/* La piste fait 100% du cadre (voir CSS) et chaque slide occupe
-			   100% de cette piste : -index * 100% decale donc d'exactement
-			   un cadre vers la gauche. */
-			$track.css('transform', 'translateX(' + (-index * 100) + '%)');
-
-			$slides.removeClass('is-active');
-			$slides.eq(index).addClass('is-active');
-
-			$dotItems.removeClass('is-active').attr('aria-selected', 'false');
-			$dotItems.eq(index).addClass('is-active').attr('aria-selected', 'true');
+		function go(dir) {
+			var m = metrics();
+			track.scrollBy({ left: dir * m.page, behavior: reduce ? 'auto' : 'smooth' });
 		}
 
-		function go(i) {
-			index = ((i % count) + count) % count;
-			render();
+		function goTo(i) {
+			var m = metrics();
+			track.scrollTo({ left: Math.min(i * m.page, m.max), behavior: reduce ? 'auto' : 'smooth' });
 		}
 
-		function next() { go(index + 1); }
-		function prev() { go(index - 1); }
-
-		/* -------------------------------------------------- commandes */
-		$next.on('click', function () { next(); restart(); });
-		$prev.on('click', function () { prev(); restart(); });
-
-		$slider.on('keydown', function (e) {
-			if (e.key === 'ArrowRight') { next(); restart(); }
-			if (e.key === 'ArrowLeft')  { prev(); restart(); }
-		});
-
-		/* ------------------------------------------------------ swipe */
-		var x0 = null;
-		$track.on('touchstart', function (e) {
-			x0 = e.originalEvent.touches[0].clientX;
-		});
-		$track.on('touchend', function (e) {
-			if (x0 === null) { return; }
-			var dx = e.originalEvent.changedTouches[0].clientX - x0;
-			if (Math.abs(dx) > 45) { if (dx < 0) { next(); } else { prev(); } restart(); }
-			x0 = null;
-		});
-
-		/* -------------------------------------------------- autoplay */
-		function start() {
-			if (!delay) { return; }
-			timer = setInterval(function () {
-				if (!document.hidden) { next(); }
-			}, delay);
+		function buildDots() {
+			if (!dots) { return; }
+			var m = metrics();
+			var n = m.max > 2 ? Math.ceil(m.max / m.page) + 1 : 1;
+			dots.innerHTML = '';
+			dots.hidden = n < 2;
+			for (var i = 0; i < n; i++) {
+				var b = document.createElement('button');
+				b.type = 'button';
+				b.setAttribute('aria-label', 'Go to page ' + (i + 1));
+				b.tabIndex = -1;
+				(function (k) { b.addEventListener('click', function () { goTo(k); }); })(i);
+				dots.appendChild(b);
+			}
+			dots.setAttribute('aria-hidden', 'false');
 		}
-		function stop() {
-			if (timer) { clearInterval(timer); timer = null; }
-		}
-		function restart() { stop(); start(); }
 
-		$slider.on('mouseenter', stop).on('mouseleave', start);
-		$(document).on('visibilitychange', function () {
-			if (document.hidden) { stop(); } else { start(); }
+		function update() {
+			ticking = false;
+			var m = metrics();
+			var atStart = track.scrollLeft <= 2;
+			var atEnd   = track.scrollLeft >= m.max - 2;
+			root.classList.toggle('is-static', m.max <= 2);       /* tout tient : pas de fleches */
+			if (prev) { prev.disabled = atStart; }
+			if (next) { next.disabled = atEnd; }
+
+			if (dots && dots.children.length) {
+				var n = dots.children.length;
+				var cur = atEnd ? n - 1 : Math.min(n - 1, Math.round(track.scrollLeft / m.page));
+				for (var i = 0; i < n; i++) { dots.children[i].classList.toggle('is-on', i === cur); }
+			}
+		}
+
+		function onScroll() {
+			if (!ticking) { ticking = true; window.requestAnimationFrame(update); }
+		}
+
+		if (prev) { prev.addEventListener('click', function () { go(-1); }); }
+		if (next) { next.addEventListener('click', function () { go(1); }); }
+
+		track.addEventListener('scroll', onScroll, { passive: true });
+		track.addEventListener('keydown', function (e) {
+			if (e.key === 'ArrowRight') { e.preventDefault(); go(1); }
+			if (e.key === 'ArrowLeft')  { e.preventDefault(); go(-1); }
 		});
 
-		render();
+		var t;
+		window.addEventListener('resize', function () {
+			clearTimeout(t);
+			t = setTimeout(function () { buildDots(); update(); }, 120);
+		});
+
+		/* les images changent la largeur utile : on recalcule apres chargement */
+		window.addEventListener('load', function () { buildDots(); update(); });
+
+		buildDots();
+		update();
+	}
+
+	function start() {
+		var roots = document.querySelectorAll('[data-fm-slider]');
+		for (var i = 0; i < roots.length; i++) { init(roots[i]); }
+	}
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', start);
+	} else {
 		start();
-	}
-
-	function boot() {
-		var $ = window.jQuery;
-		if (!$ || !$.fn) { return false; }
-		if ($('#fmSlider .fm-slider').length) { init(); } else { $(init); }
-		return true;
-	}
-	if (!boot()) {
-		document.addEventListener('DOMContentLoaded', boot);
-		window.addEventListener('load', boot);
 	}
 })();

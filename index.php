@@ -220,7 +220,12 @@ require_once(__DIR__ . "/includes/header-inc.php"); ?>
 		</p>
 	</div>
 
-	<div class="fm-cat-grid">
+	<div class="fm-slider" data-fm-slider>
+	<button type="button" class="fm-slider-btn fm-slider-prev" aria-label="Previous products">
+		<i class="fa fa-angle-left" aria-hidden="true"></i>
+	</button>
+
+	<div class="fm-slider-track" role="region" aria-label="Product families" tabindex="0">
 		<?php foreach ($fm_categories as $fm_cat):
 			$fm_lien = $fm_app . 'products/' . $fm_cat['code'] . '/' . rawurlencode($fm_cat['nom']) . '/';
 			$fm_photo = $fm_cat['photo'] !== null
@@ -268,6 +273,13 @@ require_once(__DIR__ . "/includes/header-inc.php"); ?>
 			</div>
 		</article>
 		<?php endforeach; ?>
+	</div>
+
+	<button type="button" class="fm-slider-btn fm-slider-next" aria-label="Next products">
+		<i class="fa fa-angle-right" aria-hidden="true"></i>
+	</button>
+
+	<div class="fm-slider-dots" aria-hidden="true"></div>
 	</div>
 </section>
 
