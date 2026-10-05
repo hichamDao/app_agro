@@ -1,31 +1,28 @@
 <?php
-/* Identifiants lus dans includes/connection.secret.php (jamais dans le code). */
+/**
+ * Recherche d'une "work" par son nom puis redirection vers sa page.
+ *
+ * Securise : requete preparee, nom encode dans l'adresse, redirection par
+ * en-tete HTTP (plus de JavaScript compose avec des donnees), et un resultat
+ * vide renvoie vers le catalogue au lieu d'une adresse cassee.
+ */
+require_once(__DIR__ . "/../includes/paths.php");
 require_once(__DIR__ . "/../includes/connection.php");
 
-if(isset($_POST["Search"])){
+if (isset($_POST["Search"]) && is_string($_POST["Search"])) {
+    $stmt = mysqli_prepare($conn, "SELECT namew FROM works WHERE namew LIKE ? LIMIT 1");
+    $n = '';
 
-	$connect = new PDO("mysql:host=" . $fm_config['host'] . "; dbname=" . $fm_config['db'], $fm_config['user'], $fm_config['pass']);
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, 's', $_POST["Search"]);
+        mysqli_stmt_execute($stmt);
+        $res = mysqli_stmt_get_result($stmt);
+        if ($row = mysqli_fetch_assoc($res)) {
+            $n = str_replace(" ", "_", (string) $row['namew']);
+        }
+        mysqli_stmt_close($stmt);
+    }
 
-$search= $_POST["Search"];
-$query = " 
-SELECT * FROM works where namew like '$search'";
-
-    $statement = $connect->prepare($query);
-
-	$statement->execute();
-
-	$result = $statement->fetchAll();
-	foreach ($result as $row) {
-
-		$title=$row["namew"];
-	
-      $n= str_replace(" ","_", $title); 
-      
-
-	}
-
-		
-    
-	echo"<script>window.location.href='https://foodmax-group.com/offers/$n/'</script>";
-			
+    header('Location: ' . $fm_app . ($n !== '' ? 'offers/' . rawurlencode($n) . '/' : 'products/'));
+    exit;
 }

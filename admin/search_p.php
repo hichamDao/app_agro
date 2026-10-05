@@ -1,31 +1,28 @@
 <?php
-/* Identifiants lus dans includes/connection.secret.php (jamais dans le code). */
+/**
+ * Recherche d'un produit par son nom puis redirection vers sa fiche.
+ *
+ * Securise : requete preparee, identifiant force en entier, redirection par
+ * en-tete HTTP (plus de JavaScript compose avec des donnees), et un resultat
+ * vide renvoie vers le catalogue au lieu d'une adresse cassee.
+ */
+require_once(__DIR__ . "/../includes/paths.php");
 require_once(__DIR__ . "/../includes/connection.php");
 
-if(isset($_POST["Search"])){
+if (isset($_POST["Search"]) && is_string($_POST["Search"])) {
+    $stmt = mysqli_prepare($conn, "SELECT id_prod FROM produits WHERE Designation LIKE ? LIMIT 1");
+    $id = 0;
 
-	$connect = new PDO("mysql:host=" . $fm_config['host'] . "; dbname=" . $fm_config['db'], $fm_config['user'], $fm_config['pass']);
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, 's', $_POST["Search"]);
+        mysqli_stmt_execute($stmt);
+        $res = mysqli_stmt_get_result($stmt);
+        if ($row = mysqli_fetch_assoc($res)) {
+            $id = (int) $row['id_prod'];
+        }
+        mysqli_stmt_close($stmt);
+    }
 
-$search= $_POST["Search"];
-$query = " 
-SELECT * FROM produits where Designation like '$search'";
-
-    $statement = $connect->prepare($query);
-
-	$statement->execute();
-
-	$result = $statement->fetchAll();
-	foreach ($result as $row) {
-
-		$id=$row["id_prod"];
-	
-
-      
-
-	}
-
-		
-    
-	echo"<script>window.location.href='https://foodmax-group.com/products_detail/$id/'</script>";
-			
+    header('Location: ' . $fm_app . ($id > 0 ? 'products_detail/' . $id . '/' : 'products/'));
+    exit;
 }
