@@ -1,10 +1,12 @@
 <?php
+/* Identifiants lus dans includes/connection.secret.php (jamais dans le code). */
+require_once(__DIR__ . "/../includes/connection.php");
 
 
 
 if(isset($_GET["term"]))
 {
-	$connect = new PDO("mysql:host=wm133.wedos.net; dbname=d150242_foodmax", "a150242_foodmax", "48HsUqeq");
+	$connect = new PDO("mysql:host=" . $fm_config['host'] . "; dbname=" . $fm_config['db'], $fm_config['user'], $fm_config['pass']);
 
 	$query = "
 	SELECT * FROM produits
