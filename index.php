@@ -142,7 +142,7 @@ require_once(__DIR__ . "/includes/header-inc.php"); ?>
 <!-- =============================================================== HERO -->
 <section class="fm-hero">
 	<div class="fm-hero-bg">
-		<img src="<?php echo $fm_app; ?>images/banniere.png" alt="Fresh fruits and vegetables from Morocco" fetchpriority="high">
+		<img src="<?php echo $fm_app; ?>images/banniere.png" alt="Fresh fruits and vegetables from Morocco" width="2048" height="768" fetchpriority="high">
 	</div>
 	<div class="fm-hero-inner">
 		<p class="fm-hero-kicker">From Morocco to the World</p>

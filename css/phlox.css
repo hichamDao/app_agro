@@ -2913,3 +2913,91 @@ a.fm-pager-item:hover {
 .fm-explore-more { font-size: 13px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; color: var(--phlox-primary); }
 .fm-explore-more .fa { margin-left: 6px; transition: var(--phlox-tr); }
 .fm-explore-card:hover .fm-explore-more .fa { margin-left: 11px; }
+
+/* =====================================================================
+   HERO - version finale : l'image entiere doit toujours se voir
+   ---------------------------------------------------------------------
+   L'image (2048 x 768) contient deja son propre texte "Vegetables" et ses
+   trois icones, a DROITE. On ne doit donc jamais les rogner ni les assombrir.
+
+   - Grand ecran (>= 1280 px) : le texte du site est superpose a GAUCHE, sur
+     les legumes, avec un voile noir semi-transparent qui s'efface avant le
+     logo. L'image est alignee a droite : si l'ecran est moins large que
+     l'image, c'est la gauche (les legumes) qui est rognee, jamais le logo.
+   - Tablette et telephone (< 1280 px) : l'image s'affiche en entier, a sa
+     proportion, et le texte vient en dessous sur fond vert fonce. Plus aucun
+     recadrage, quel que soit l'appareil ou l'orientation.
+   Ce bloc remplace les anciens reglages du hero (ils sont en amont dans ce
+   fichier et sont ici neutralises).
+   ===================================================================== */
+
+.fm-hero {
+  display: block;
+  min-height: 0;
+  padding: 0;
+  background: #10200f;
+  overflow: hidden;
+  }
+.fm-hero-bg { position: relative; inset: auto; z-index: 0; }
+.fm-hero-bg img {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 150px;           /* petits telephones : legere mise a l'echelle */
+  object-fit: cover;
+  object-position: 100% 50%;   /* on garde toujours la droite : logo et icones */
+  }
+.fm-hero::before { display: none; }
+.fm-hero-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 34px 22px 46px;
+  text-align: left;
+  }
+.fm-hero-title { font-size: 38px; }
+.fm-hero-text { font-size: 16px; margin-bottom: 26px; }
+.fm-hero-points { margin-top: 26px; }
+
+@media (max-width: 640px) {
+  .fm-hero-inner { text-align: center; padding: 28px 18px 38px; }
+  .fm-hero-title { font-size: 30px; }
+  .fm-hero-actions .btn { width: 100%; }
+  .fm-hero-actions { flex-direction: column; }
+  .fm-hero-points { flex-direction: column; align-items: center; gap: 8px; }
+  }
+
+@media (min-width: 1280px) {
+  .fm-hero {
+    display: flex;
+    align-items: center;
+    /* la hauteur suit la proportion de l'image (768/2048 = 37,5 %) pour
+       qu'elle s'affiche entiere, avec un minimum pour loger le texte */
+    min-height: max(620px, 37.5vw);
+    padding: 40px clamp(32px, 5vw, 88px);
+    }
+  .fm-hero-bg { position: absolute; inset: 0; }
+  .fm-hero-bg img {
+    height: 100%;
+    min-height: 0;
+    object-fit: cover;
+    object-position: 100% 50%;
+    }
+  .fm-hero::before {
+    display: block;
+    z-index: 1;
+    /* noir semi-transparent a gauche, derriere le texte ; transparent avant
+       le logo "Vegetables" et les icones pour qu'ils restent bien visibles */
+    background: linear-gradient(90deg,
+      rgba(8, 18, 8, 0.88) 0%,
+      rgba(8, 18, 8, 0.80) 34%,
+      rgba(8, 18, 8, 0.52) 50%,
+      rgba(8, 18, 8, 0.12) 63%,
+      rgba(8, 18, 8, 0) 72%);
+    }
+  .fm-hero-inner { margin: 0; max-width: 560px; padding: 0; }
+  .fm-hero-title { font-size: 52px; }
+  .fm-hero-text { font-size: 17px; margin-bottom: 30px; }
+  .fm-hero-points { margin-top: 32px; }
+  }
