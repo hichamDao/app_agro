@@ -9,6 +9,7 @@ require_once(__DIR__ . "/includes/paths.php");
 require_once(__DIR__ . "/includes/_header.php");
 
 $fm_page_title = 'How we work';
+$fm_page_path  = 'how-we-work/';
 $fm_page_desc  = 'Five steps from the grower to your warehouse: production, selection, quality control, packing and delivery.';
 require_once(__DIR__ . "/includes/page-open.php");
 

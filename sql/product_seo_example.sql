@@ -1,214 +1,378 @@
 /**
- * Donnees d'exemple pour la table product_seo.
+ * Fiches produit SEO de FoodMax Group (table product_seo) : textes reecrits.
  *
- * 9 produits avec leur fiche SEO complete : origine, varietes, saison,
- * tailles, conditionnement, disponibilite, transport, marches de destination,
- * qualite, certifications.
+ * - Chaque fiche est rattachee a son "slug" : en executant ce fichier, les fiches
+ *   existantes sont MISES A JOUR et celles qui manquent sont creees.
+ * - Les textes restent generaux et factuels (culture, saison, conservation).
+ *   Aucune certification, aucun pays livre, aucune region precise, aucun
+ *   equipement n'y est affirme : completez ces champs vous-meme, uniquement
+ *   avec des informations vraies et que vous pouvez prouver.
+ * - Dans un champ, une barre verticale "|" separe les elements d'une liste, et
+ *   un saut de ligne vide separe deux paragraphes.
+ * - Les saisons sont indicatives : relisez-les avec votre calendrier reel.
  *
- * Chaque slug correspond a une URL publique :
- *   /products/tomatoes, /products/oranges, etc.
- *
- * Executer APRES product_seo.sql.
+ * A executer APRES product_seo.sql, avec phpMyAdmin (onglet SQL).
+ * Sauvegardez avant :  CREATE TABLE product_seo_backup AS SELECT * FROM product_seo;
  */
 
-INSERT INTO `product_seo`
-    (`slug`, `title`, `subtitle`, `origin`, `varieties`, `season`, `sizes`,
-     `packaging`, `availability`, `transportation`, `destinations`, `quality`,
-     `certifications`, `meta_title`, `meta_description`, `status`, `created_at`, `updated_at`)
-VALUES
+SET NAMES utf8mb4;
 
-(
+-- Tomatoes from Morocco
+INSERT INTO `product_seo`
+    (`slug`, `title`, `subtitle`, `origin`, `varieties`, `season`, `sizes`, `packaging`, `availability`, `transportation`, `destinations`, `quality`, `certifications`, `meta_title`, `meta_description`, `status`, `created_at`, `updated_at`)
+VALUES (
     'tomatoes',
     'Tomatoes from Morocco',
-    'Fresh Moroccan tomatoes, sorted by size and color, packed for European markets.',
-    'Morocco — Souss-Massa and Meknes-Saïss regions, grown in greenhouse and open field.',
-    'Cherry tomatoes (red, yellow, striped) | Round plum tomatoes (Roma) | Colored tomatoes (Kumato purple, Bamano yellow)',
-    'October to May. Peak volumes: January to March.',
-    'Cherry: 18–22mm diameter | Round: 4–6cm diameter | Plum: 5–7cm length',
-    'Shaker 250g (10x250g bottles/tray) | Bucket 500g (12x500g punnets/crate) | Loose 4kg carton | Tray 250g (15x250g)',
-    'Weekly shipments available. Container loads (20ft/40ft) and LCL options.',
-    'Packed at 10–12°C. Transported in refrigerated 40" high-cube containers with continuous temperature monitoring.',
-    'France, Spain, Germany, Netherlands, UK. Also shipping to the Gulf and West Africa.',
-    'Hand-harvested at peak ripeness. Hydrocooled within 2 hours. Optical sorting removes any misshapen fruit.',
-    'GlobalGAP, ISO 22000, BRC, IFS. EU phytosanitary certificate included with every shipment.',
-    'Moroccan Tomatoes: Varieties, Season & Export Guide',
-    'Fresh Moroccan tomatoes packed and exported to Europe. Varieties, harvest season, packaging and cold chain details.',
+    'Fresh Moroccan tomatoes, sorted by size and colour and packed to arrive firm and ready to sell.',
+    'Morocco. A large share of the country''s winter and spring tomatoes are grown in greenhouses in the south, where the weather stays mild when it is cold elsewhere, and the warmer months bring field-grown fruit.',
+    'Round tomatoes: the all-purpose tomato for slicing and salads | Cherry tomatoes: small and sweet, often sold in punnets | Plum tomatoes: firm and meaty, good for cooking | Truss tomatoes: sold on the vine | Coloured and specialty types: ask us what is available',
+    'The main season generally runs from October to May, with the biggest volumes in the middle of winter. The exact dates change a little every year with the weather, so ask us what is available right now.',
+    'Tomatoes are sorted by size and by colour stage, and we aim to match the range you specify. Cherry tomatoes are usually sold by the weight of the punnet rather than by size.',
+    'Loose in cartons | Trays | Punnets and baskets for retail | Private label on request',
+    'Supply follows the season. Tell us the quantity and how often you would like to receive it, and we will tell you honestly what we can commit to.',
+    'Tomatoes travel best at around 10 to 12 degrees, and never in a cold fridge, because below about 10 degrees they lose flavour and firmness. Depending on the distance and how soon you need them, the load goes by truck or by container.',
+    'We supply professional buyers in Europe and in other markets. Tell us where the goods should go and we will explain what is possible, including labelling and documents.',
+    'Tomatoes are hand-picked at the colour stage that suits the journey, then sorted so that size, colour and firmness are even in every box. Anything that does not match your specification is set aside.',
+    'We do not list certificates on this page. If a certificate applies to a product or to a grower, we will tell you exactly which one it is and send you the document with your quote.',
+    'Moroccan Tomatoes: Types, Season and Export Guide',
+    'Moroccan tomatoes for professional buyers: types, the October to May season, packing and how they travel. Ask FoodMax Group for a quote.',
     'published',
     '2026-05-10 08:00:00',
-    '2026-05-10 08:00:00'
-),
+    NOW()
+)
+ON DUPLICATE KEY UPDATE
+    `title` = VALUES(`title`),
+    `subtitle` = VALUES(`subtitle`),
+    `origin` = VALUES(`origin`),
+    `varieties` = VALUES(`varieties`),
+    `season` = VALUES(`season`),
+    `sizes` = VALUES(`sizes`),
+    `packaging` = VALUES(`packaging`),
+    `availability` = VALUES(`availability`),
+    `transportation` = VALUES(`transportation`),
+    `destinations` = VALUES(`destinations`),
+    `quality` = VALUES(`quality`),
+    `certifications` = VALUES(`certifications`),
+    `meta_title` = VALUES(`meta_title`),
+    `meta_description` = VALUES(`meta_description`),
+    `status` = VALUES(`status`);
 
-(
+-- Oranges from Morocco
+INSERT INTO `product_seo`
+    (`slug`, `title`, `subtitle`, `origin`, `varieties`, `season`, `sizes`, `packaging`, `availability`, `transportation`, `destinations`, `quality`, `certifications`, `meta_title`, `meta_description`, `status`, `created_at`, `updated_at`)
+VALUES (
     'oranges',
     'Oranges from Morocco',
-    'Sweet Moroccan oranges, exported in ventilated containers throughout the European season.',
-    'Morocco — Citrus Saiss NV (Saïss plain) and Tadla-Azilal region. Sandy-limestone soils.',
-    'Navel oranges (Washington Navel, Late Newham) | Blood oranges (Moro, Tarocco) | Esla (early season)',
-    'November to April. Navel peak: December–March. Blood orange peak: January–February.',
-    'Class I: 85–95mm diameter (large) | Class II: 75–85mm (medium) | Class III: 65–75mm (standard)',
-    '8kg mesh bags | 4kg cardboard trays | 1.5kg clamshells (retail) | 1kg flow-wrap punnets | Bulk bins (foodservice)',
-    'Year-round supply of seedless varieties (Eurogold) from October to March.',
-    'Pre-cooled to 4–6°C. Shipped in refrigerated containers at 2–4°C with ethylene absorption pads.',
-    'France, Spain, Germany, Netherlands, UK, Italy, Belgium, Luxembourg, Scandinavia.',
-    'Fruit is tree-ripened before harvest. Internal quality checked by Brix measurement (>11°). External sorting includes weight, color, and blemish detection.',
-    'GlobalGAP, ISO 22000, BRC, IFS, EU Organic (on request). Integrated pest management (IPM) with pheromone traps.',
-    'Moroccan Oranges: Navel and Blood Orange Export Guide',
-    'Sweet Moroccan oranges exported to Europe. Varieties, harvest calendar, packaging and shipping details.',
+    'Sweet, juicy Moroccan oranges, picked by hand and packed for the European season.',
+    'Morocco, where mild winters, bright sun and cool nights suit citrus very well. Citrus is one of the most important crops of the country.',
+    'Navel oranges: seedless and easy to peel, the classic orange for eating fresh | Blood oranges: red flesh and a winter speciality | Valencia oranges: late-season and very juicy, good for juice | Other varieties: ask us what is available',
+    'Oranges are generally available from autumn to spring. Navels come in the middle of the season, blood oranges in winter and Valencias at the end, from spring into early summer. Dates vary with the weather each year.',
+    'Oranges are graded by size, from smaller fruit for bags to large fruit for the shelf. Tell us the size you want and we will sort to it.',
+    'Mesh bags | Cartons and trays | Retail packs | Loose in bulk, for processing or foodservice',
+    'Supply follows the season. Tell us the quantity and how often you would like to receive it, and we will tell you honestly what we can commit to.',
+    'Citrus is a hardy fruit and travels well when it is kept cool and the air can move around it, which is why ventilated packing matters. We plan the load so the fruit arrives in good shape.',
+    'We supply professional buyers in Europe and in other markets. Tell us where the goods should go and we will explain what is possible, including labelling and documents.',
+    'Oranges are picked by hand when they are ripe, because they do not get sweeter after picking, then sorted by size, colour and appearance.',
+    'We do not list certificates on this page. If a certificate applies to a product or to a grower, we will tell you exactly which one it is and send you the document with your quote.',
+    'Moroccan Oranges: Navel, Blood and Valencia Guide',
+    'Navel, blood and Valencia oranges from Morocco: season, sizes, packing and how they travel. Ask FoodMax Group for availability and a quote.',
     'published',
     '2026-05-08 08:00:00',
-    '2026-05-08 08:00:00'
-),
+    NOW()
+)
+ON DUPLICATE KEY UPDATE
+    `title` = VALUES(`title`),
+    `subtitle` = VALUES(`subtitle`),
+    `origin` = VALUES(`origin`),
+    `varieties` = VALUES(`varieties`),
+    `season` = VALUES(`season`),
+    `sizes` = VALUES(`sizes`),
+    `packaging` = VALUES(`packaging`),
+    `availability` = VALUES(`availability`),
+    `transportation` = VALUES(`transportation`),
+    `destinations` = VALUES(`destinations`),
+    `quality` = VALUES(`quality`),
+    `certifications` = VALUES(`certifications`),
+    `meta_title` = VALUES(`meta_title`),
+    `meta_description` = VALUES(`meta_description`),
+    `status` = VALUES(`status`);
 
-(
+-- Lemons from Morocco
+INSERT INTO `product_seo`
+    (`slug`, `title`, `subtitle`, `origin`, `varieties`, `season`, `sizes`, `packaging`, `availability`, `transportation`, `destinations`, `quality`, `certifications`, `meta_title`, `meta_description`, `status`, `created_at`, `updated_at`)
+VALUES (
     'lemons',
     'Lemons from Morocco',
-    'Premium Moroccan lemons, thin-skinned and aromatic, available year-round.',
-    'Morocco — Tadla-Azilal and Rif regions. Mild Mediterranean climate with cool, wet winters.',
-    'Eureka lemons (year-round) | Europagold (seedless, October–March) | Verna (late-season, April–May)',
-    'Eureka: November to April (peak). Europagold: October to March. Verna: April to May.',
-    'Class I: 55–70mm diameter (large) | Class II: 45–55mm (medium) | Class III: 35–45mm (standard)',
-    '6kg mesh bags | 4kg cardboard trays | 1kg flow-wrap punnets | Bulk bins (12kg) for foodservice',
-    'Continuous supply from October to April, with limited volumes of Verna in May–June.',
-    'Stored at 2–4°C. Exported in refrigerated 40" containers with ethylene absorption and CO2 scrubbing.',
-    'France, Spain, Germany, Netherlands, UK, Portugal, Scandinavia, Middle East (UAE, Saudi Arabia).',
-    'Harvested by hand with half the leaf for natural fragrance. Fruit is washed, sorted by size and color, and waxed.',
-    'GlobalGAP, ISO 22000, BRC, IFS. IPM-certified growers. EU phytosanitary certificate per shipment.',
-    'Moroccan Lemons: Eureka and Seedless Export Guide',
-    'Premium Moroccan lemons, thin-skinned and aromatic. Varieties, season, packaging and export markets.',
+    'Fresh Moroccan lemons, aromatic and juicy, for retail, foodservice and processing.',
+    'Morocco, where mild winters and plenty of sun suit lemon trees well.',
+    'Eureka and Verna types: two lemons commonly grown around the Mediterranean | Seedless types: ask us what is available | Colour: from green to yellow, depending on the stage of harvest',
+    'Lemons are available over a long period of the year, with the best supply generally in the cooler months. Ask us what is available right now.',
+    'Lemons are graded by size, and we can sort to the range you ask for.',
+    'Mesh bags | Cartons and trays | Retail packs | Bulk for foodservice',
+    'Supply follows the season. Tell us the quantity and how often you would like to receive it, and we will tell you honestly what we can commit to.',
+    'Lemons like a little more warmth than other citrus, at around 10 to 13 degrees, and they are damaged by colder storage. Good ventilation around the fruit keeps them in good shape.',
+    'We supply professional buyers in Europe and in other markets. Tell us where the goods should go and we will explain what is possible, including labelling and documents.',
+    'Lemons are picked by hand and sorted for size, colour and skin. We set aside fruit that does not match your specification.',
+    'We do not list certificates on this page. If a certificate applies to a product or to a grower, we will tell you exactly which one it is and send you the document with your quote.',
+    'Moroccan Lemons: Season, Sizes and Export Guide',
+    'Fresh Moroccan lemons for professional buyers: season, sizes, packing and how to keep them. Ask FoodMax Group for availability and a quote.',
     'published',
-    '2026-05-08 09:00:00',
-    '2026-05-08 09:00:00'
-),
+    '2026-05-08 08:30:00',
+    NOW()
+)
+ON DUPLICATE KEY UPDATE
+    `title` = VALUES(`title`),
+    `subtitle` = VALUES(`subtitle`),
+    `origin` = VALUES(`origin`),
+    `varieties` = VALUES(`varieties`),
+    `season` = VALUES(`season`),
+    `sizes` = VALUES(`sizes`),
+    `packaging` = VALUES(`packaging`),
+    `availability` = VALUES(`availability`),
+    `transportation` = VALUES(`transportation`),
+    `destinations` = VALUES(`destinations`),
+    `quality` = VALUES(`quality`),
+    `certifications` = VALUES(`certifications`),
+    `meta_title` = VALUES(`meta_title`),
+    `meta_description` = VALUES(`meta_description`),
+    `status` = VALUES(`status`);
 
-(
+-- Watermelon from Morocco
+INSERT INTO `product_seo`
+    (`slug`, `title`, `subtitle`, `origin`, `varieties`, `season`, `sizes`, `packaging`, `availability`, `transportation`, `destinations`, `quality`, `certifications`, `meta_title`, `meta_description`, `status`, `created_at`, `updated_at`)
+VALUES (
     'watermelon',
     'Watermelon from Morocco',
-    'Sweet Moroccan watermelons, grown for export with continuous cold chain protection.',
-    'Morocco — Souss-Massa and Meknes regions. Sandy soil with controlled irrigation.',
-    'Seedless: Sugar Tripplesweet, Mini Love | Seeded: Crimson Sweet, Yellow Crimson',
-    'March to August. Peak: May–June.',
-    'Seedless: 3–5kg (Mini Love), 7–11kg (Sugar Tripplesweet) | Seeded: 6–9kg (Crimson Sweet), 5–8kg (Yellow Crimson)',
-    'Individual poly sleeves | Half-trays (6–8 fruits/master case) | Bulk bins (12kg) | Retail clamshells (3 per master case)',
-    'Weekly shipments from March to August, with extended season (October–December) for storage varieties.',
-    'Hydrocooled to 10–12°C immediately after harvest. Transported in refrigerated containers at 10–12°C.',
-    'France, Spain, UK, Netherlands, Germany, Nordic countries, Middle East (Gulf states).',
-    'Hand-harvested in the early morning. Field heat removed within 1 hour. Sugar content tested before packing (Brix >10°).',
-    'GlobalGAP, ISO 22000, BRC, IFS. Traceability from field to shipment.',
-    'Moroccan Watermelon: Season, Varieties & Packaging Guide',
-    'Sweet Moroccan watermelons exported with cold chain protection. Season, varieties, packaging and shipping details.',
+    'Seeded, seedless and mini watermelons, picked ripe and loaded with care.',
+    'Morocco, in the warm areas of the country where watermelon grows best.',
+    'Seeded watermelon: the large traditional fruit | Seedless watermelon: popular in supermarkets | Mini watermelon: a small fruit for one or two people | Yellow-fleshed types: a specialty, ask us',
+    'Watermelon is a warm-season crop. Early fruit comes from the warmest areas in spring and the main season runs through the summer, generally between March and August.',
+    'Fruit weight varies a lot between types, from small mini watermelons to large traditional fruit. We sort by weight to your specification.',
+    'Loose on pallets | Bulk bins | Cartons for mini watermelons | Individual labelling for retail',
+    'Supply follows the season. Tell us the quantity and how often you would like to receive it, and we will tell you honestly what we can commit to.',
+    'Watermelons are heavy and bulky, so loading matters as much as temperature: the fruit needs to be well supported, with nothing pressing on it. Around 10 to 15 degrees is a good range, since storage that is too cold can damage the fruit.',
+    'We supply professional buyers in Europe and in other markets. Tell us where the goods should go and we will explain what is possible, including labelling and documents.',
+    'A watermelon does not ripen after it is cut, so it is picked only when it is ready, judged by the pale patch where it rested on the ground, the dried tendril near the stem and the hollow sound when tapped.',
+    'We do not list certificates on this page. If a certificate applies to a product or to a grower, we will tell you exactly which one it is and send you the document with your quote.',
+    'Moroccan Watermelon: Season, Types and Packing Guide',
+    'Seeded, seedless and mini watermelons from Morocco: season from spring to summer, packing and transport. Ask FoodMax Group for a quote.',
     'published',
     '2026-05-05 08:00:00',
-    '2026-05-05 08:00:00'
-),
+    NOW()
+)
+ON DUPLICATE KEY UPDATE
+    `title` = VALUES(`title`),
+    `subtitle` = VALUES(`subtitle`),
+    `origin` = VALUES(`origin`),
+    `varieties` = VALUES(`varieties`),
+    `season` = VALUES(`season`),
+    `sizes` = VALUES(`sizes`),
+    `packaging` = VALUES(`packaging`),
+    `availability` = VALUES(`availability`),
+    `transportation` = VALUES(`transportation`),
+    `destinations` = VALUES(`destinations`),
+    `quality` = VALUES(`quality`),
+    `certifications` = VALUES(`certifications`),
+    `meta_title` = VALUES(`meta_title`),
+    `meta_description` = VALUES(`meta_description`),
+    `status` = VALUES(`status`);
 
-(
+-- Peppers from Morocco
+INSERT INTO `product_seo`
+    (`slug`, `title`, `subtitle`, `origin`, `varieties`, `season`, `sizes`, `packaging`, `availability`, `transportation`, `destinations`, `quality`, `certifications`, `meta_title`, `meta_description`, `status`, `created_at`, `updated_at`)
+VALUES (
     'peppers',
     'Peppers from Morocco',
-    'Colorful Moroccan peppers, from greenhouse to European markets in 5–7 days.',
-    'Morocco — Tadla-Azilal and Meknes-Saïss regions. Greenhouse cultivation for consistent quality.',
-    'Red bell peppers (California Wonder, California Wonder 301) | Yellow peppers (loco) | Orange peppers (California Wonder)',
-    'October to June. Peak: November–April.',
-    'Medium: 3–5 fruits per kg | Large: 2–3 fruits per kg | Extra-large: 1–2 fruits per kg',
-    '500g clamshells (4 per master case) | 1kg flow-wrap punnets (2 per master case) | Loose 5kg cartons | 10kg bulk bins',
-    'Regular weekly shipments from October to June, with increased volumes during peak season (December–March).',
-    'Pre-cooled to 8–10°C. Shipped in refrigerated containers at 8–10°C with humidity control (80–90%).',
-    'France, Spain, Germany, Netherlands, UK, Italy, Belgium, Nordic countries.',
-    'Harvested at full color maturity. Sorted by size and color. Wax-coated for extended shelf life (7+ days at 10°C).',
-    'GlobalGAP, ISO 22000, BRC, IFS. IPM with beneficial insects (no chemical pesticides).',
-    'Moroccan Peppers: Varieties, Season & Export Guide',
-    'Colorful Moroccan peppers packed and exported to Europe. Varieties, harvest season, packaging and cold chain.',
+    'Crisp, colourful Moroccan peppers, graded carefully so every box is even.',
+    'Morocco. Peppers are a warm-season crop and are often grown in greenhouses or under tunnels in the south, which gives steady conditions and a long harvest.',
+    'Bell peppers: green, red, yellow and orange | Sweet pointed peppers | Mini sweet peppers | Chilli peppers: ask us what is available',
+    'The main season generally runs from autumn to early summer. Ask us what is available right now.',
+    'Peppers are sorted by size and by colour. Tell us the size range you prefer.',
+    'Cartons | Trays | Retail packs | Mixed-colour packs on request',
+    'Supply follows the season. Tell us the quantity and how often you would like to receive it, and we will tell you honestly what we can commit to.',
+    'Peppers keep best in a cool place, at around 7 to 10 degrees, and do not enjoy being stored too cold. Kept at the right temperature they stay fresh for a week or two.',
+    'We supply professional buyers in Europe and in other markets. Tell us where the goods should go and we will explain what is possible, including labelling and documents.',
+    'A green pepper is picked before it is ripe, while a red, yellow or orange one is left on the plant to ripen fully, which takes several more weeks and gives a sweeter, softer flavour. Peppers are picked by hand with a little stem attached to protect the fruit.',
+    'We do not list certificates on this page. If a certificate applies to a product or to a grower, we will tell you exactly which one it is and send you the document with your quote.',
+    'Moroccan Peppers: Colours, Season and Export Guide',
+    'Green, red, yellow and orange peppers from Morocco: season, sizes, packing and how they travel. Ask FoodMax Group for a quote.',
     'published',
-    '2026-05-12 08:00:00',
-    '2026-05-12 08:00:00'
-),
+    '2026-05-04 08:00:00',
+    NOW()
+)
+ON DUPLICATE KEY UPDATE
+    `title` = VALUES(`title`),
+    `subtitle` = VALUES(`subtitle`),
+    `origin` = VALUES(`origin`),
+    `varieties` = VALUES(`varieties`),
+    `season` = VALUES(`season`),
+    `sizes` = VALUES(`sizes`),
+    `packaging` = VALUES(`packaging`),
+    `availability` = VALUES(`availability`),
+    `transportation` = VALUES(`transportation`),
+    `destinations` = VALUES(`destinations`),
+    `quality` = VALUES(`quality`),
+    `certifications` = VALUES(`certifications`),
+    `meta_title` = VALUES(`meta_title`),
+    `meta_description` = VALUES(`meta_description`),
+    `status` = VALUES(`status`);
 
-(
+-- Courgettes from Morocco
+INSERT INTO `product_seo`
+    (`slug`, `title`, `subtitle`, `origin`, `varieties`, `season`, `sizes`, `packaging`, `availability`, `transportation`, `destinations`, `quality`, `certifications`, `meta_title`, `meta_description`, `status`, `created_at`, `updated_at`)
+VALUES (
     'courgettes',
     'Courgettes from Morocco',
-    'Fresh Moroccan zucchinis, cultivated year-round in controlled greenhouse conditions.',
-    'Morocco — Souss-Massa and Meknes-Saïss regions. Greenhouse-grown for consistent supply.',
-    'Green zucchini (Black Beauty) | Yellow crookneck (Sunburst) | Patty pan (Sunburst) | Round (Rugosa) ',
-    'Year-round production. Peak season: October to May. Summer harvest is lighter due to heat.',
-    'Small: 8–12cm (100–150g each) | Medium: 12–16cm (150–250g each) | Large: 16–20cm (250–350g each)',
-    '1kg clamshells (6 per master case) | 500g flow-wrap punnets | 5kg loose cartons with internal foam | 10kg bulk bins',
-    'Daily harvesting possible (greenhouse). Shipments available 6 days per week.',
-    'Pre-cooled to 8–10°C. Transported in perforated refrigerated containers with humidity control (85–90%).',
-    'France, Spain, Netherlands, Germany, UK, Middle East (UAE, Qatar).',
-    'Hand-harvested daily. Washed and sorted by size and color. Skin integrity checked to prevent bruising.',
-    'GlobalGAP, ISO 22000, BRC. IPM-certified greenhouses with biological pest control.',
-    'Moroccan Courgettes/Zucchini: Year-Round Supply Guide',
-    'Fresh Moroccan zucchinis and courgettes, greenhouse-grown for year-round supply to European markets.',
+    'Fresh Moroccan courgettes, firm and smooth, picked young and handled gently.',
+    'Morocco, where courgettes are grown in greenhouses and in the open, depending on the time of year.',
+    'Green courgettes (zucchini): the standard type | Light-green courgettes | Round and yellow types: ask us what is available',
+    'Courgettes are generally available from autumn to late spring. Ask us what is available right now.',
+    'Courgettes are graded by length and thickness. Tell us the range you need and we will sort to it.',
+    'Cartons | Trays | Retail packs',
+    'Supply follows the season. Tell us the quantity and how often you would like to receive it, and we will tell you honestly what we can commit to.',
+    'Courgettes are kept cool but not cold, because they do not like temperatures much below 7 degrees. Fresh, they stay at their best for about a week.',
+    'We supply professional buyers in Europe and in other markets. Tell us where the goods should go and we will explain what is possible, including labelling and documents.',
+    'Courgettes grow very fast and are harvested young, while they are tender and the seeds are small, so the fields are visited every day or two during the season. The skin is thin and marks easily, so they are picked and packed with care.',
+    'We do not list certificates on this page. If a certificate applies to a product or to a grower, we will tell you exactly which one it is and send you the document with your quote.',
+    'Moroccan Courgettes: Season and Export Guide',
+    'Fresh Moroccan courgettes for professional buyers: season, sizes, packing and handling. Ask FoodMax Group for availability and a quote.',
     'published',
-    '2026-05-14 08:00:00',
-    '2026-05-14 08:00:00'
-),
+    '2026-05-03 08:00:00',
+    NOW()
+)
+ON DUPLICATE KEY UPDATE
+    `title` = VALUES(`title`),
+    `subtitle` = VALUES(`subtitle`),
+    `origin` = VALUES(`origin`),
+    `varieties` = VALUES(`varieties`),
+    `season` = VALUES(`season`),
+    `sizes` = VALUES(`sizes`),
+    `packaging` = VALUES(`packaging`),
+    `availability` = VALUES(`availability`),
+    `transportation` = VALUES(`transportation`),
+    `destinations` = VALUES(`destinations`),
+    `quality` = VALUES(`quality`),
+    `certifications` = VALUES(`certifications`),
+    `meta_title` = VALUES(`meta_title`),
+    `meta_description` = VALUES(`meta_description`),
+    `status` = VALUES(`status`);
 
-(
+-- Berries from Morocco
+INSERT INTO `product_seo`
+    (`slug`, `title`, `subtitle`, `origin`, `varieties`, `season`, `sizes`, `packaging`, `availability`, `transportation`, `destinations`, `quality`, `certifications`, `meta_title`, `meta_description`, `status`, `created_at`, `updated_at`)
+VALUES (
     'berries',
     'Berries from Morocco',
-    'Moroccan strawberries, raspberries and blueberries — delicate, hand-picked and cold-chain shipped.',
-    'Morocco — Tadla-Azilal and Meknes-Saïss regions. Greenhouse-grown for consistent supply.',
-    'Strawberries (Albion, Mara des Bois, Ventana) | Raspberries (Tulameen, Killarney) | Blueberries (Ardi, Legacy, Duke)',
-    'Strawberries: November to April (peak December–March). Raspberries: January to April. Blueberries: December to May.',
-    'Strawberries: 15–25mm diameter (small), 25–35mm (medium), 35–45mm (large) |
-Raspberries: 3–6mm (small), 6–9mm (medium), 9–12mm (large) |
-Blueberries: 8–10mm (small), 10–12mm (medium), 12–14mm (large)',
-    'Clamshells 125g (24 per master case) | Clamshells 250g (12 per master case) | Punnets 125g (24 per master case) | Bulk 1kg tubs',
-    'Weekly shipments of strawberries (Nov–Apr), raspberries (Jan–Mar), blueberries (Dec–May).',
-    'Flown to Paris (CDG) or shipped by sea in temperature-controlled containers at 0–2°C with shock-absorbing packaging.',
-    'France, Spain, Netherlands, Germany, UK, Belgium, Luxembourg, Nordic countries, Gulf states (UAE, Saudi Arabia).',
-    'Harvested at full ripeness. Packed in clean-room conditions. Metal detection and weight sorting before dispatch.',
-    'GlobalGAP, ISO 22000, BRC, IFS. EU organic (on request for specific lots). Traceability via QR code on each clamshell.',
-    'Moroccan Berries: Strawberries, Raspberries & Blueberries',
-    'Delicate Moroccan berries, hand-picked and cold-chain shipped. Varieties, season, packaging and export markets.',
+    'Strawberries, blueberries and other berries, picked by hand and kept cold from the start.',
+    'Morocco. Strawberries are grown mostly in the cooler north-west of the country, and other berries come from different areas depending on the season.',
+    'Strawberries | Blueberries | Raspberries and blackberries: ask us what is available',
+    'The berry season generally runs from winter into spring. Ask us what is available right now.',
+    'Berries are sorted by size and appearance. Tell us the specification you prefer.',
+    'Punnets | Trays | Retail packs | Private label on request',
+    'Supply follows the season. Tell us the quantity and how often you would like to receive it, and we will tell you honestly what we can commit to.',
+    'Berries are the most delicate fruit we deal with. They should be cooled quickly after picking and kept close to freezing point, around 0 degrees, and they must stay dry, because moisture makes them go mouldy.',
+    'We supply professional buyers in Europe and in other markets. Tell us where the goods should go and we will explain what is possible, including labelling and documents.',
+    'Berries do not ripen after picking, so they are harvested by hand at the right colour, a few at a time, again and again through the season. They are handled as little as possible.',
+    'We do not list certificates on this page. If a certificate applies to a product or to a grower, we will tell you exactly which one it is and send you the document with your quote.',
+    'Moroccan Berries: Strawberries and Blueberries Guide',
+    'Strawberries, blueberries and other berries from Morocco: season, packing and the cold chain. Ask FoodMax Group for availability and a quote.',
     'published',
-    '2026-05-20 08:00:00',
-    '2026-05-20 08:00:00'
-),
+    '2026-05-02 08:00:00',
+    NOW()
+)
+ON DUPLICATE KEY UPDATE
+    `title` = VALUES(`title`),
+    `subtitle` = VALUES(`subtitle`),
+    `origin` = VALUES(`origin`),
+    `varieties` = VALUES(`varieties`),
+    `season` = VALUES(`season`),
+    `sizes` = VALUES(`sizes`),
+    `packaging` = VALUES(`packaging`),
+    `availability` = VALUES(`availability`),
+    `transportation` = VALUES(`transportation`),
+    `destinations` = VALUES(`destinations`),
+    `quality` = VALUES(`quality`),
+    `certifications` = VALUES(`certifications`),
+    `meta_title` = VALUES(`meta_title`),
+    `meta_description` = VALUES(`meta_description`),
+    `status` = VALUES(`status`);
 
-(
+-- Dried Fruits from Morocco
+INSERT INTO `product_seo`
+    (`slug`, `title`, `subtitle`, `origin`, `varieties`, `season`, `sizes`, `packaging`, `availability`, `transportation`, `destinations`, `quality`, `certifications`, `meta_title`, `meta_description`, `status`, `created_at`, `updated_at`)
+VALUES (
     'dried-fruits',
     'Dried Fruits from Morocco',
-    'Premium Moroccan dried fruits — apricots, raisins, dates and almonds — for snacks and ingredients.',
-    'Morocco — Souss-Massa (apricots), Meknes-Saïss (raisins, dates), Tadla-Azilal (almonds).',
-    'Apricots (delMonte, royal) | Raisins (sultana, flame, crimson) | Dates (medjool, deglet nour) | Almonds (nonpareil, mission)',
-    'Year-round availability. Apricots and almonds: spring–fall harvest. Dates: October–December. Raisins: August–October.',
-    'Apricots: 5–8mm pieces (small), 8–12mm (medium), 12–18mm (large) |
-Raisins: seedless sultana, flame, or crimson |
-Dates: 12–16mm (medium), 16–20mm (large) |
-Almonds: whole, sliced, slivered, meal',
-    '250g retail pouches | 500g standup pouches | 1kg bulk bags | 10kg master cases | 15kg bulk bins for ingredients',
-    'Continuous stock available. Bulk quantities (1+ metric tons) upon request.',
-    'Stored in climate-controlled warehouses (18–22°C, 50–55% RH). Shipped at ambient temperature in moisture-barrier packaging.',
-    'France, Germany, Netherlands, UK, Belgium, Scandinavia, Middle East, Asia (Japan, South Korea), North America.',
-    'All fruits are sun-dried or mechanically dehumidified. Sifted, sorted, and metal-detected. Moisture content tested (<15%).',
-    'GlobalGAP, ISO 22000, BRC, IFS. HACCP-certified facilities. Kosher and halal certifications available on request.',
-    'Moroccan Dried Fruits: Apricots, Raisins, Dates & Almonds',
-    'Premium Moroccan dried fruits for snacks and ingredients. Varieties, packaging, availability and export markets.',
+    'Dried fruits selected and packed with the same care as our fresh range.',
+    'Morocco. The fruit is picked fully ripe and dried after harvest, and the range we can offer depends on the harvest.',
+    'Dried figs and dates, depending on the harvest | Other dried fruits: ask us for the current range',
+    'Dried fruit keeps, so it can be supplied across much of the year. The new harvest generally arrives from late summer into autumn.',
+    'Sizes and grades depend on the product. Tell us what you need and we will explain what is available.',
+    'Cartons | Bags | Retail packs | Bulk for processing',
+    'Supply follows the season. Tell us the quantity and how often you would like to receive it, and we will tell you honestly what we can commit to.',
+    'Dried fruit keeps best in a cool, dry place, away from light and strong smells. Depending on the product, it does not always need a refrigerated vehicle, but a cool and dry load protects its quality.',
+    'We supply professional buyers in Europe and in other markets. Tell us where the goods should go and we will explain what is possible, including labelling and documents.',
+    'The fruit is dried until most of the water is gone, steadily and cleanly: too fast and it hardens on the outside, too slow and it can spoil. Selection before drying decides the quality afterwards.',
+    'We do not list certificates on this page. If a certificate applies to a product or to a grower, we will tell you exactly which one it is and send you the document with your quote.',
+    'Moroccan Dried Fruits: Range and Export Guide',
+    'Dried fruits from Morocco for professional buyers: range, season, packing and storage. Ask FoodMax Group for the current range and a quote.',
     'published',
-    '2026-05-16 08:00:00',
-    '2026-05-16 08:00:00'
-),
+    '2026-05-01 08:00:00',
+    NOW()
+)
+ON DUPLICATE KEY UPDATE
+    `title` = VALUES(`title`),
+    `subtitle` = VALUES(`subtitle`),
+    `origin` = VALUES(`origin`),
+    `varieties` = VALUES(`varieties`),
+    `season` = VALUES(`season`),
+    `sizes` = VALUES(`sizes`),
+    `packaging` = VALUES(`packaging`),
+    `availability` = VALUES(`availability`),
+    `transportation` = VALUES(`transportation`),
+    `destinations` = VALUES(`destinations`),
+    `quality` = VALUES(`quality`),
+    `certifications` = VALUES(`certifications`),
+    `meta_title` = VALUES(`meta_title`),
+    `meta_description` = VALUES(`meta_description`),
+    `status` = VALUES(`status`);
 
-(
+-- Figs from Morocco
+INSERT INTO `product_seo`
+    (`slug`, `title`, `subtitle`, `origin`, `varieties`, `season`, `sizes`, `packaging`, `availability`, `transportation`, `destinations`, `quality`, `certifications`, `meta_title`, `meta_description`, `status`, `created_at`, `updated_at`)
+VALUES (
     'figs',
     'Figs from Morocco',
-    'Sweet Moroccan figs, hand-picked at peak ripeness for export to European markets.',
-    'Morocco — Tadla-Azilal and Meknes-Saïss regions. Traditional orchards with drip irrigation.',
-    'Fresh figs: Moroccan Beldia (brown-skin, pink flesh) | Dried figs: Beldia, Nadoria (soft, caramel) | Split figs (dried, halved)',
-    'Fresh figs: June to August. Dried figs: June–September (fresh drying). Available year-round (stored/dried).',
-    'Fresh: 5–7 per kg (small), 3–5 per kg (medium), 1–3 per kg (large) |
-Dried whole: 40–60 pieces per kg |
-Dried pieces: 20–40g per 100g pack',
-    'Clamshells 250g (8 per master case) | Trays 500g (4 per master case) | Loose 2kg punnets | Dried: 250g pouches (24 per master case) | 1kg retail tubs',
-    'Fresh figs: June–August (seasonal). Dried: year-round from current season stock.',
-    'Fresh figs: pre-cooled to 4–6°C, shipped in ventilated containers with ethylene absorption. Dried: ambient, moisture-barrier packaging.',
-    'France, Spain, Netherlands, Germany, UK, Middle East (UAE, Saudi Arabia, Kuwait), North Africa (Tunisia, Algeria).',
-    'Hand-picked in the early morning. Fresh figs are tree-ripened before harvest. No sulfites added to dried figs.',
-    'GlobalGAP, ISO 22000, BRC. IPM-certified orchards. Traceability from tree to packhouse.',
-    'Moroccan Figs: Fresh and Dried, Season & Export Guide',
-    'Sweet Moroccan figs, fresh and dried, exported to Europe and the Middle East. Season, varieties, packaging and quality.',
+    'Fresh figs, soft, sweet and fragile, picked by hand and packed with great care.',
+    'Morocco, where the hot dry summers suit the fig tree very well.',
+    'Fresh figs: ask us which types are available in the season | Dried figs: see our dried fruits guide',
+    'Fresh figs are mostly harvested from late summer into autumn. Ask us what is available right now.',
+    'Figs are sorted by size and appearance.',
+    'Trays, in a single layer | Small punnets | Private label on request',
+    'Supply follows the season. Tell us the quantity and how often you would like to receive it, and we will tell you honestly what we can commit to.',
+    'Fresh figs are very delicate and have a short life, so they need careful packing in a single layer and an unbroken cold chain, at around 0 to 2 degrees.',
+    'We supply professional buyers in Europe and in other markets. Tell us where the goods should go and we will explain what is possible, including labelling and documents.',
+    'A fig does not ripen after it is picked, so it has to be harvested when it is ready, by hand and a few at a time, often several times a week during the season. The skin is thin and the fruit is soft, so it is handled gently.',
+    'We do not list certificates on this page. If a certificate applies to a product or to a grower, we will tell you exactly which one it is and send you the document with your quote.',
+    'Moroccan Figs: Fresh Fig Season and Export Guide',
+    'Fresh Moroccan figs for professional buyers: season, packing and the cold chain. Ask FoodMax Group for availability and a quote.',
     'published',
-    '2026-05-18 08:00:00',
-    '2026-05-18 08:00:00'
-);
+    '2026-04-30 08:00:00',
+    NOW()
+)
+ON DUPLICATE KEY UPDATE
+    `title` = VALUES(`title`),
+    `subtitle` = VALUES(`subtitle`),
+    `origin` = VALUES(`origin`),
+    `varieties` = VALUES(`varieties`),
+    `season` = VALUES(`season`),
+    `sizes` = VALUES(`sizes`),
+    `packaging` = VALUES(`packaging`),
+    `availability` = VALUES(`availability`),
+    `transportation` = VALUES(`transportation`),
+    `destinations` = VALUES(`destinations`),
+    `quality` = VALUES(`quality`),
+    `certifications` = VALUES(`certifications`),
+    `meta_title` = VALUES(`meta_title`),
+    `meta_description` = VALUES(`meta_description`),
+    `status` = VALUES(`status`);

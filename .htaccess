@@ -10,6 +10,13 @@ RewriteEngine On
     Header set Content-Security-Policy "upgrade-insecure-requests;"
 </IfModule>
 
+# L'ancienne page catalogue n'est plus indexee (remplacee par products.php)
+<IfModule mod_headers.c>
+    <Files "dbproducts.php">
+        Header set X-Robots-Tag "noindex, nofollow"
+    </Files>
+</IfModule>
+
 # Bloquer l'accès direct aux includes
 RewriteRule ^includes/ - [F,L]
 
@@ -24,6 +31,9 @@ RewriteRule   ^products/?$  products/products.php [NC,L,QSA]
 RewriteRule ^home/?$ index.php [L]
 RewriteRule ^about-us/?$ about-us.php [L]
 RewriteRule   about-us$  about-us.php [L]
+# Plan du site pour Google
+RewriteRule ^sitemap\.xml$ sitemap.php [L]
+
 # Pages de presentation
 RewriteRule ^how-we-work/?$   how-we-work.php [L]
 RewriteRule ^quality/?$       quality.php [L]
@@ -39,8 +49,8 @@ RewriteRule   ^contact$  contact.php [L]
 RewriteRule   ^blog$  blog.php [L,QSA]
 RewriteRule   ^blog/$  blog.php [L,QSA]
 RewriteRule   ^blog/([A-Za-z0-9-]+)/?$  blog-post.php?slug=$1 [L,QSA]
-RewriteRule   dbproducts/$  products/dbproducts.php [L]
-RewriteRule   dbproducts$  products/dbproducts.php [L]
+# Ancien catalogue (dbproducts) : redirige definitivement vers le nouveau
+RewriteRule   ^dbproducts/?$  products/ [R=301,L]
 RewriteRule   products/$  products/products.php [L]
 RewriteRule   products$  products/products.php [L]
 RewriteRule   offers/$  offers.php [L]
@@ -56,13 +66,13 @@ RewriteRule  offers/Valencia/$  products/Valencia-detail.php [L]
 RewriteRule  offers/Canned_fish/$  products/canned_fish.php [L]
 RewriteRule  offers/Cashew/$  products/Cashew-detail.php [L]
 RewriteRule  ^products/search/([A-Za-z0-9-]+)/?$  products/products.php?motCle=$1 [NC,L]
-RewriteRule   ^dbproducts/tags/([A-Za-z0-9-]+)/([0-9]+)/?$  products/dbproducts.php?tags=$1&page=$2 [NC,L]
+RewriteRule   ^dbproducts/tags/([A-Za-z0-9-]+)/([0-9]+)/?$  products/tags/$1/ [R=301,L]
 RewriteRule   ^products/tags/([A-Za-z0-9-]+)/?$  products/products.php?tags=$1 [NC,L]
-RewriteRule   ^dbproducts/([0-9]+)/([A-Za-z0-9-]+)/?$  products/dbproducts.php?idCat=$1&name=$2 [NC,L]
-RewriteRule   ^dbproducts/([0-9]+)/([A-Za-z0-9-]+)/([0-9]+)/?$  products/dbproducts.php?idCat=$1&name=$2&page=$3 [NC,L]
-RewriteRule   ^dbproducts/([0-9]+)/?$  products/products.php?page=$1 [NC,L]
+RewriteRule   ^dbproducts/([0-9]+)/([A-Za-z0-9-]+)/?$  products/$1/$2/ [R=301,L]
+RewriteRule   ^dbproducts/([0-9]+)/([A-Za-z0-9-]+)/([0-9]+)/?$  products/$1/$2/$3/ [R=301,L]
+RewriteRule   ^dbproducts/([0-9]+)/?$  products/?page=$1 [R=301,L]
 RewriteRule   ^products_detail/([0-9]+)/?$  products/products_detail.php?prod_id=$1 [NC,L]
-RewriteRule   ^dbproducts/search/([A-Za-z0-9-]+)/([0-9]+)/?$  products/dbproducts.php?motCle=$1&page=$2 [NC,L]
+RewriteRule   ^dbproducts/search/([A-Za-z0-9-]+)/([0-9]+)/?$  products/search/$1/ [R=301,L]
 RewriteRule   ^dbGallery/([0-9]+)/?$  dbGallery.php?page=$1 [NC,L]
 RewriteRule   ^gallery/([0-9]+)/?$  gallery.php?page=$1
 RewriteRule   ^offers/([0-9]+)/?$  offers.php?page=$1 [NC,L]

@@ -16,6 +16,7 @@
 /* _header.php ouvre la session : il doit etre inclus AVANT tout affichage,
    sinon les en-tetes HTTP sont deja partis et session_start() echoue. */
 require_once(__DIR__ . "/includes/paths.php");
+require_once(__DIR__ . "/includes/seo.php");
 require_once(__DIR__ . "/includes/_header.php");
 require_once(__DIR__ . "/includes/explore.php");
 
@@ -115,9 +116,32 @@ $fm_categories = array_values($fm_categories);
 
 <head>
 	<title>FoodMax Group | Freshness, quality and trust from Morocco</title>
-	<meta name="description" content="FoodMax Group grows, selects, packs and exports quality Moroccan fruits and vegetables: citrus, berries, melons, tomatoes, peppers, green leaves and dried fruits.">
+	<meta name="description" content="FoodMax Group selects, packs and exports quality Moroccan fruits and vegetables: citrus, berries, melons, tomatoes, peppers, green leaves and dried fruits.">
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+<?php
+/* Accueil : fiche entreprise + "WebSite" avec recherche de produits (Google peut
+   proposer un champ de recherche directement dans ses resultats). */
+fm_seo_head(array(
+    'path'        => '',
+    'title'       => 'FoodMax Group | Freshness, quality and trust from Morocco',
+    'description' => 'FoodMax Group selects, packs and exports quality Moroccan fruits and vegetables for professional buyers.',
+    'type'        => 'website',
+    'jsonld'      => array(
+        fm_seo_org(),
+        array(
+            '@type'           => 'WebSite',
+            'name'            => FM_SITE_NAME,
+            'url'             => fm_seo_url(''),
+            'potentialAction' => array(
+                '@type'       => 'SearchAction',
+                'target'      => array('@type' => 'EntryPoint', 'urlTemplate' => fm_seo_url('products/?motCle={search_term_string}')),
+                'query-input' => 'required name=search_term_string',
+            ),
+        ),
+    ),
+));
+?>
 
 	<link rel="stylesheet" type="text/css" href="<?php echo $fm_app; ?>css/phlox.css">
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,600i,700,700i">

@@ -9,6 +9,7 @@ require_once(__DIR__ . "/includes/paths.php");
 require_once(__DIR__ . "/includes/_header.php");
 
 $fm_page_title = 'Quality and commitment';
+$fm_page_path  = 'quality/';
 $fm_page_desc  = 'How FoodMax Group approaches freshness, quality, traceability and consistency, and how we try to work responsibly.';
 require_once(__DIR__ . "/includes/page-open.php");
 

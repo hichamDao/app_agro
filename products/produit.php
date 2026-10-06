@@ -1,25 +1,23 @@
 <?php
 /**
- * Page produit SEO Foodmax Group.
+ * Fiche produit SEO FoodMax Group.
  *
- * Servi par la rewrite rule .htaccess : /products/{slug}/ -> produits/produit.php?slug={slug}
- * Affiche une fiche produit complete : origine, varietes, saison, tailles,
- * conditionnement, disponibilite, transport, marches, qualite, certifications.
+ * Servie par .htaccess : /products/{slug}/ -> products/produit.php?slug={slug}
+ * Affiche la fiche d'une famille de produits (origine, varietes, saison, tailles,
+ * conditionnement, disponibilite, transport, marches, qualite, certifications)
+ * puis les produits du catalogue correspondants et les guides voisins.
  *
- * 404 si l'article n'existe pas ou n'est pas publie.
+ * 404 si la fiche n'existe pas ou n'est pas publiee.
  */
 require_once(__DIR__ . "/../includes/paths.php");
 require_once(__DIR__ . "/../includes/_header.php");
 require_once(__DIR__ . "/../includes/blog_functions.php");
+require_once(__DIR__ . "/../includes/seo.php");
+require_once(__DIR__ . "/../includes/guides.php");
 
-/* ------------------------------------------------------------ slug + produit */
-$slug = isset($_GET['slug']) ? trim((string) $_GET['slug']) : '';
-$slug = $slug !== '' ? substr($slug, 0, 100) : '';
-
-/* Normalisation : on retire les caracteres non-alphanumeriques (securite). */
-$cleanSlug = preg_replace('/[^a-z0-9-]/', '', $slug);
-
-if ($cleanSlug === '' || $cleanSlug !== $slug) {
+/* ------------------------------------------------------------ slug + fiche */
+$slug = isset($_GET['slug']) && is_string($_GET['slug']) ? trim($_GET['slug']) : '';
+if ($slug === '' || strlen($slug) > 100 || !preg_match('/^[a-z0-9-]+$/', $slug)) {
     http_response_code(404);
     require_once(__DIR__ . "/../includes/_404.php");
     exit;
@@ -36,10 +34,9 @@ if (!$stmt) {
     http_response_code(500);
     die('Database error.');
 }
-
-mysqli_stmt_bind_param($stmt, 's', $cleanSlug);
+mysqli_stmt_bind_param($stmt, 's', $slug);
 mysqli_stmt_execute($stmt);
-$res = mysqli_stmt_get_result($stmt);
+$res  = mysqli_stmt_get_result($stmt);
 $post = $res ? mysqli_fetch_assoc($res) : null;
 mysqli_stmt_close($stmt);
 
@@ -49,63 +46,106 @@ if (!$post || $post['status'] !== 'published') {
     exit;
 }
 
-/* ------------------------------------------------------------ categories associees (pour le lien catalogue) */
-$categories = array();
-$catSql = "SELECT Code_cat, Nom_cat FROM categories ORDER BY Nom_cat ASC";
-$catRs = mysqli_query($conn, $catSql);
-if ($catRs) {
-    while ($c = mysqli_fetch_assoc($catRs)) {
-        $categories[] = $c;
-    }
-}
-
-/* Recherche la categorie produit correspondant au slug. */
+/* ------------------------------------------------------------ famille du catalogue */
+/* Noms de categories acceptes pour chaque fiche (compares sans majuscules,
+   sans espaces ni "_"). Le premier sert de libelle. */
 $categoryMap = array(
-    'tomatoes'    => 'Tomatoes',
-    'oranges'     => 'Citrus',
-    'lemons'      => 'Citrus',
-    'watermelon'  => 'Watermelon',
-    'peppers'     => 'Peppers',
-    'courgettes'  => 'Courgettes',
-    'berries'     => 'Berries',
-    'dried-fruits'=> 'Dried fruits',
-    'figs'        => 'Figs',
+    'tomatoes'     => array('Tomatoes'),
+    'oranges'      => array('Citrus'),
+    'lemons'       => array('Citrus'),
+    'watermelon'   => array('Watermelon', 'Melons', 'Melon'),
+    'peppers'      => array('Peppers'),
+    'courgettes'   => array('Courgettes'),
+    'berries'      => array('Berries'),
+    'dried-fruits' => array('Dried fruits', 'Driedfruits'),
+    'figs'         => array('Figs'),
 );
-$categoryName = isset($categoryMap[$cleanSlug]) ? $categoryMap[$cleanSlug] : '';
+$norm = function ($v) { return strtolower(preg_replace('/[^a-z]/i', '', (string) $v)); };
+
+$categoryName = isset($categoryMap[$slug]) ? $categoryMap[$slug][0] : '';
 $categoryLink = '';
-foreach ($categories as $c) {
-    $nomCat = str_replace('_', ' ', $c['Nom_cat']);
-    if (strtolower($nomCat) === strtolower($categoryName) || strtolower($c['Nom_cat']) === strtolower(str_replace(' ', '', $nomCat))) {
-        $categoryLink = $fm_app . 'products/' . (int) $c['Code_cat'] . '/' . rawurlencode(str_replace('_', '', $c['Nom_cat'])) . '/';
-        break;
+$catCode      = 0;
+if (isset($categoryMap[$slug])) {
+    $voulus = array_map($norm, $categoryMap[$slug]);
+    $catRs  = mysqli_query($conn, 'SELECT Code_cat, Nom_cat FROM categories ORDER BY Nom_cat ASC');
+    if ($catRs) {
+        while ($c = mysqli_fetch_assoc($catRs)) {
+            if (in_array($norm($c['Nom_cat']), $voulus, true)) {
+                $catCode      = (int) $c['Code_cat'];
+                $nomUrl       = preg_replace('/[^A-Za-z0-9-]/', '', str_replace('_', '', $c['Nom_cat']));
+                $categoryLink = $fm_app . 'products/' . $catCode . '/' . rawurlencode($nomUrl) . '/';
+                break;
+            }
+        }
     }
 }
 
-/* ------------------------------------------------------------ donnees produit */
-$fm_titre       = $post['meta_title'] !== '' && $post['meta_title'] !== null
-    ? $post['meta_title'] . ' | Foodmax'
-    : $post['title'];
-$fm_sousTitre   = $post['meta_description'] !== '' && $post['meta_description'] !== null
+/* Produits du catalogue pour cette famille (cartes + image de la fiche). */
+$produitsFamille = array();
+$imageFiche      = '';
+if ($catCode > 0) {
+    $stmtP = mysqli_prepare(
+        $conn,
+        'SELECT id_prod, Ref_prod, Designation, description, Photo
+           FROM produits WHERE Code_cat = ?
+          ORDER BY Selectionne DESC, Designation ASC LIMIT 8'
+    );
+    if ($stmtP) {
+        mysqli_stmt_bind_param($stmtP, 'i', $catCode);
+        mysqli_stmt_execute($stmtP);
+        $rP = mysqli_stmt_get_result($stmtP);
+        if ($rP) { while ($p = mysqli_fetch_assoc($rP)) { $produitsFamille[] = $p; } }
+        mysqli_stmt_close($stmtP);
+    }
+    foreach ($produitsFamille as $p) {
+        $u = fm_prod_photo($fm_app, $p['Ref_prod'], $p['Photo']);
+        if (substr($u, -4) !== '.svg') { $imageFiche = $u; break; }
+    }
+}
+$produitsFamille = array_slice($produitsFamille, 0, 4);
+
+/* ------------------------------------------------------------ SEO */
+$fm_titre = ($post['meta_title'] !== '' && $post['meta_title'] !== null ? $post['meta_title'] : $post['title'])
+          . ' | ' . FM_SITE_NAME;
+$fm_desc  = ($post['meta_description'] !== '' && $post['meta_description'] !== null)
     ? $post['meta_description']
-    : fm_blog_resume($post['subtitle'], 160);
-$fm_image       = fm_blog_image_url($fm_app, $post);
-$catArticle     = $post['title'];
-$dateArticle    = fm_blog_date_fr($post['created_at']);
+    : fm_blog_texte($post['subtitle'], 158);
+$fm_imgAbs = fm_img_absolue($fm_app, $imageFiche);
+$fm_chemin = 'products/' . $post['slug'] . '/';
+
+$fm_seo = array(
+    'path'        => $fm_chemin,
+    'title'       => $post['title'],
+    'description' => $fm_desc,
+    'image'       => $fm_imgAbs,
+    'type'        => 'website',
+    'jsonld'      => array(
+        array(
+            '@type'         => 'WebPage',
+            'name'          => $post['title'],
+            'description'   => $fm_desc,
+            'url'           => fm_seo_url($fm_chemin),
+            'inLanguage'    => 'en',
+            'dateModified'  => fm_blog_date_iso($post['updated_at'] ? $post['updated_at'] : $post['created_at']),
+            'isPartOf'      => array('@type' => 'WebSite', 'name' => FM_SITE_NAME, 'url' => fm_seo_url('')),
+            'publisher'     => fm_seo_org(),
+        ),
+        fm_seo_breadcrumb(array(array('Home', ''), array('Products', 'products/'), array($post['title'], $fm_chemin))),
+    ),
+);
+if ($fm_imgAbs !== '') { $fm_seo['jsonld'][0]['primaryImageOfPage'] = array('@type' => 'ImageObject', 'url' => $fm_imgAbs); }
+
+$recents = fm_blog_recent($conn, 3);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-	<title><?php echo fm_blog_echapper($fm_titre); ?></title>
-	<meta name="description" content="<?php echo fm_blog_echapper($fm_sousTitre); ?>">
+	<title><?php echo fm_blog_echapper(fm_seo_title($fm_titre)); ?></title>
+	<meta name="description" content="<?php echo fm_blog_echapper($fm_desc); ?>">
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<meta property="og:title" content="<?php echo fm_blog_echapper($post['title']); ?>">
-	<meta property="og:description" content="<?php echo fm_blog_echapper($fm_sousTitre); ?>">
-	<meta property="og:image" content="<?php echo fm_blog_echapper($fm_image); ?>">
-	<meta property="og:type" content="article">
-	<meta property="og:url" content="<?php echo $fm_app . 'products/' . rawurlencode($post['slug']) . '/'; ?>">
+<?php fm_seo_head($fm_seo); ?>
 
 	<link rel="stylesheet" type="text/css" href="<?php echo $fm_app; ?>css/phlox.css">
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,600i,700,700i">
@@ -129,19 +169,15 @@ $dateArticle    = fm_blog_date_fr($post['created_at']);
 <!-- ============================================================ EN-TETE PAGE -->
 <section class="fm-pagehead fm-pagehead-product">
 	<div class="fm-pagehead-inner">
-		<?php if ($categoryName !== ''): ?>
-		<span class="fm-eyebrow"><?php echo fm_blog_echapper($categoryName); ?></span>
-		<?php else: ?>
-		<span class="fm-eyebrow">From Morocco</span>
-		<?php endif; ?>
+		<span class="fm-eyebrow"><?php echo $categoryName !== '' ? fm_blog_echapper($categoryName) : 'From Morocco'; ?></span>
 
 		<h1><?php echo fm_blog_echapper($post['title']); ?></h1>
 
-		<?php if ($post['subtitle'] !== '' && $post['subtitle'] !== null): ?>
+		<?php if ($post['subtitle'] !== '' && $post['subtitle'] !== null) { ?>
 		<p><?php echo fm_blog_echapper($post['subtitle']); ?></p>
-		<?php endif; ?>
+		<?php } ?>
 
-		<nav class="fm-crumbs" aria-label="Fil d'Ariane">
+		<nav class="fm-crumbs" aria-label="Breadcrumb">
 			<ol>
 				<li><a href="<?php echo $fm_app; ?>">Home</a></li>
 				<li><a href="<?php echo $fm_app; ?>products/">Products</a></li>
@@ -151,162 +187,166 @@ $dateArticle    = fm_blog_date_fr($post['created_at']);
 	</div>
 </section>
 
-<!-- =============================================================== PRODUIT -->
+<!-- =============================================================== FICHE -->
 <section class="fm-section">
 	<div class="fm-article-inner">
 
-		<?php if ($fm_image !== $fm_app . 'img/blog-placeholder.svg'): ?>
+		<?php if ($imageFiche !== '') { ?>
 		<div class="fm-article-hero">
-			<img src="<?php echo $fm_blog_echapper($fm_image); ?>"
+			<img src="<?php echo fm_blog_echapper($imageFiche); ?>"
 			     alt="<?php echo fm_blog_echapper($post['title']); ?>" loading="lazy">
 		</div>
-		<?php endif; ?>
-
-		<?php if ($post['subtitle'] !== '' && $post['subtitle'] !== null): ?>
-		<p class="fm-article-lead">
-			<?php echo fm_blog_echapper($post['subtitle']); ?>
-		</p>
-		<?php endif; ?>
+		<?php } ?>
 
 		<?php
-		/* ---------------------------------------------------------- champs SEO */
-		/* Chaque champ est rendu comme une section avec titre + contenu. */
+		/* Chaque champ devient une section : titre + texte ou liste.
+		   Icones de Font Awesome 4.7 (celle du site). */
 		$champs = array(
-			array('origin',          'Origin',             'fa-map-marker'),
-			array('varieties',       'Varieties',          'fa-seedling'),
-			array('season',          'Season',             'fa-calendar'),
-			array('sizes',           'Sizes',              'fa-balance-scale'),
-			array('packaging',       'Packaging',          'fa-box'),
-			array('availability',    'Availability',       'fa-check-circle'),
-			array('transportation',  'Transportation',     'fa-shipping-fast'),
-			array('destinations',    'Destination markets', 'fa-globe'),
-			array('quality',         'Quality',            'fa-check-circle-o'),
-			array('certifications',  'Certifications',     'fa-award'),
+			array('origin',         'Origin',              'fa-map-marker'),
+			array('varieties',      'Varieties',           'fa-leaf'),
+			array('season',         'Season',              'fa-calendar'),
+			array('sizes',          'Sizes',               'fa-balance-scale'),
+			array('packaging',      'Packaging',           'fa-cube'),
+			array('availability',   'Availability',        'fa-check-circle'),
+			array('transportation', 'Transport',           'fa-truck'),
+			array('destinations',   'Destination markets', 'fa-globe'),
+			array('quality',        'Quality',             'fa-check-circle-o'),
+			array('certifications', 'Certificates',        'fa-certificate'),
 		);
-		?>
 
-		<?php foreach ($champs as $champ):
+		foreach ($champs as $champ) {
 			$cle   = $champ[0];
-			$label = $champ[1];
-			$icone = $champ[2];
-			$val = isset($post[$cle]) ? trim((string) $post[$cle]) : '';
-			if ($val === '') continue;
-			/* Si la valeur contient des sauts de ligne, on les transforme en paragraphs. */
-			$val = str_replace("\r\n", "\n", $val);
+			$val   = isset($post[$cle]) ? trim((string) $post[$cle]) : '';
+			if ($val === '') { continue; }
+			$val         = str_replace("\r\n", "\n", $val);
 			$paragraphes = preg_split('/\n\s*\n/', $val);
 		?>
 		<div class="fm-seo-section">
-			<h2><i class="fa fa-fw <?php echo $icone; ?>" aria-hidden="true"></i> <?php echo $label; ?></h2>
-			<?php foreach ($paragraphes as $p):
-				$p = trim($p);
-				if ($p === '') continue;
-				/* Si le paragraphe ressemble a une liste à puces (lignes avec |), on le formate en liste. */
-				if (preg_match('/^[A-Za-z].*\|.*\n/m', $p)) {
-					$lignes = array_filter(array_map('trim', explode("\n", $p)));
-				?>
-				<ul class="fm-seo-list">
-					<?php foreach ($lignes as $ligne):
-						/* On split sur le premier | pour séparer le label du contenu. */
-						$parts = preg_split('/\s*\|\s*/', $ligne, 2);
-					?>
-					<li>
-						<?php if (isset($parts[1]) && $parts[1] !== ''): ?>
-						<strong><?php echo fm_blog_echapper($parts[0]); ?>:</strong> <?php echo fm_blog_echapper($parts[1]); ?>
-						<?php else: ?>
-						<?php echo fm_blog_echapper($ligne); ?>
-						<?php endif; ?>
-					</li>
-					<?php endforeach; ?>
-				</ul>
+			<h2><i class="fa fa-fw <?php echo $champ[2]; ?>" aria-hidden="true"></i> <?php echo $champ[1]; ?></h2>
+			<?php foreach ($paragraphes as $para) {
+				$para = trim($para);
+				if ($para === '') { continue; }
+				/* Une ligne "a | b | c" (ou plusieurs lignes) devient une liste. */
+				if (strpos($para, '|') !== false || strpos($para, "\n") !== false) {
+					$items = preg_split('/\s*\|\s*|\n+/', $para);
+			?>
+			<ul class="fm-seo-list">
+				<?php foreach ($items as $item) {
+					$item = trim($item);
+					if ($item === '') { continue; }
+					$pos = strpos($item, ':');
+					if ($pos !== false && $pos < 40) { ?>
+				<li><strong><?php echo fm_blog_echapper(substr($item, 0, $pos)); ?>:</strong> <?php echo fm_blog_echapper(trim(substr($item, $pos + 1))); ?></li>
 				<?php } else { ?>
-				<p><?php echo fm_blog_echapper($p); ?></p>
-				<?php } ?>
-			<?php endforeach; ?>
+				<li><?php echo fm_blog_echapper($item); ?></li>
+				<?php } } ?>
+			</ul>
+			<?php } else { ?>
+			<p><?php echo fm_blog_echapper($para); ?></p>
+			<?php } } ?>
 		</div>
-		<?php endforeach; ?>
-
-		<?php if ($categoryLink !== ''): ?>
-		<div class="fm-article-product-link">
-			<div class="fm-card">
-				<span class="fm-eyebrow">See the full catalogue</span>
-				<h3><?php echo fm_blog_echapper($categoryName); ?> products</h3>
-				<p>
-					Browse our complete selection of <?php echo strtolower(fm_blog_echapper($categoryName)); ?>,
-					check availability and request a quote for your next order.
-				</p>
-				<a class="btn" href="<?php echo $categoryLink; ?>">
-					View products <i class="fa fa-arrow-right" aria-hidden="true"></i>
-				</a>
-			</div>
-		</div>
-		<?php endif; ?>
+		<?php } ?>
 
 		<div class="fm-article-product-link">
 			<div class="fm-card">
 				<span class="fm-eyebrow">Request a quote</span>
-				<h3>Need this product?</h3>
+				<h3>Interested in this product?</h3>
 				<p>
-					Tell us the product, the volume and the destination &mdash; and we will reply
-					within one business day with availability and pricing.
+					Tell us which product you have in mind, how much you need and where it
+					should go, and a real person from our team will come back to you within
+					one business day with what is available and at what price.
 				</p>
 				<a class="btn" href="<?php echo $fm_app; ?>contact/">
-					Request a quote <i class="fa fa-arrow-right" aria-hidden="true"></i>
+					Contact us <i class="fa fa-arrow-right" aria-hidden="true"></i>
 				</a>
 			</div>
 		</div>
 	</div>
 </section>
 
-<!-- ============================================================ RECENT ARTICLES -->
-<?php $recents = fm_blog_recent($conn, 3); ?>
-<?php if (!empty($recents)): ?>
+<!-- ======================================================= PRODUITS DU CATALOGUE -->
+<?php if (!empty($produitsFamille)) { ?>
 <section class="fm-section fm-section-alt">
 	<div class="fm-section-head">
-		<span class="fm-eyebrow">From the blog</span>
-		<h2>Related articles</h2>
+		<span class="fm-eyebrow">From our catalogue</span>
+		<h2><?php echo fm_blog_echapper($categoryName); ?> you can ask us about</h2>
+		<?php if ($categoryLink !== '') { ?>
+		<p class="fm-section-sub">
+			A few of the products in this family. <a href="<?php echo $categoryLink; ?>">See the whole range</a>.
+		</p>
+		<?php } ?>
 	</div>
 
 	<div class="fm-pgrid">
-		<?php foreach ($recents as $r):
+		<?php foreach ($produitsFamille as $prod) {
+			$lien = $fm_app . 'products_detail/' . (int) $prod['id_prod'] . '/';
+		?>
+		<article class="fm-pcard">
+			<a class="fm-pcard-media" href="<?php echo $lien; ?>" tabindex="-1" aria-hidden="true">
+				<img src="<?php echo fm_blog_echapper(fm_prod_photo($fm_app, $prod['Ref_prod'], $prod['Photo'])); ?>"
+				     alt="<?php echo fm_blog_echapper($prod['Designation']); ?>" loading="lazy">
+			</a>
+			<div class="fm-pcard-body">
+				<h3 class="fm-pcard-title"><a href="<?php echo $lien; ?>"><?php echo fm_blog_echapper($prod['Designation']); ?></a></h3>
+				<p class="fm-pcard-desc"><?php echo fm_blog_resume(isset($prod['description']) ? $prod['description'] : '', 110); ?></p>
+			</div>
+		</article>
+		<?php } ?>
+	</div>
+
+	<?php if ($categoryLink !== '') { ?>
+	<p style="text-align:center;margin-top:28px;">
+		<a class="btn" href="<?php echo $categoryLink; ?>">See all <?php echo fm_blog_echapper(strtolower($categoryName)); ?> <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+	</p>
+	<?php } ?>
+</section>
+<?php } ?>
+
+<!-- =========================================================== AUTRES GUIDES -->
+<?php fm_guides_bloc($conn, $post['slug'], 'Other buyer\'s guides', 'The same kind of information for the other families we work with.'); ?>
+
+<!-- ============================================================ BLOG -->
+<?php if (!empty($recents)) { ?>
+<section class="fm-section fm-section-alt">
+	<div class="fm-section-head">
+		<span class="fm-eyebrow">From the blog</span>
+		<h2>Keep reading</h2>
+	</div>
+
+	<div class="fm-pgrid">
+		<?php foreach ($recents as $r) {
 			$rSlug = rawurlencode($r['slug']);
 			$rImg  = fm_blog_image_url($fm_app, $r);
 		?>
 		<article class="fm-pcard">
-			<a class="fm-pcard-media" href="<?php echo $fm_app; ?>blog/<?php echo $rSlug; ?>/" aria-hidden="true">
-				<img src="<?php echo $rImg; ?>"
+			<a class="fm-pcard-media" href="<?php echo $fm_app; ?>blog/<?php echo $rSlug; ?>/" tabindex="-1" aria-hidden="true">
+				<img src="<?php echo fm_blog_echapper($rImg); ?>"
 				     alt="<?php echo fm_blog_echapper($r['title']); ?>" loading="lazy">
 			</a>
 			<div class="fm-pcard-body">
 				<h3 class="fm-pcard-title">
 					<a href="<?php echo $fm_app; ?>blog/<?php echo $rSlug; ?>/"><?php echo fm_blog_echapper($r['title']); ?></a>
 				</h3>
-				<p class="fm-pcard-desc">
-					<?php echo $r['excerpt'] !== '' ? fm_blog_resume($r['excerpt']) : fm_blog_resume($r['content']); ?>
-				</p>
+				<p class="fm-pcard-desc"><?php echo $r['excerpt'] !== '' && $r['excerpt'] !== null ? fm_blog_resume($r['excerpt']) : ''; ?></p>
 				<div class="fm-pcard-foot">
-					<span class="fm-pcard-ref">
-						<i class="fa fa-calendar" aria-hidden="true"></i>
-						<?php echo fm_blog_date_fr($r['created_at']); ?>
-					</span>
+					<span class="fm-pcard-ref"><i class="fa fa-calendar" aria-hidden="true"></i> <?php echo fm_blog_date_fr($r['created_at']); ?></span>
 				</div>
 			</div>
 		</article>
-		<?php endforeach; ?>
+		<?php } ?>
 	</div>
 </section>
-<?php endif; ?>
+<?php } ?>
 
-<!-- ================================================================ SHARE / CTA -->
-<section class="fm-section fm-section-alt">
-	<div class="fm-section-head">
-		<span class="fm-eyebrow">Ready to source?</span>
-		<h2>Let's talk about your next order</h2>
-		<p class="fm-section-sub">
-			Whether you already know exactly what you need or are just starting
-			to look around, we would love to hear from you.
-		</p>
-	</div>
+<!-- ==================================================================== CTA -->
+<section class="fm-cta">
 	<div class="fm-cta-inner">
+		<p class="fm-eyebrow">Next step</p>
+		<h2>Let's talk about your next order</h2>
+		<p>
+			Whether you already know exactly what you need or you are only starting to
+			look around, we would love to hear from you.
+		</p>
 		<div class="fm-cta-actions">
 			<a class="btn" href="<?php echo $fm_app; ?>contact/">Contact our team</a>
 			<a class="btn btn-outline" href="<?php echo $fm_app; ?>products/">Browse all products</a>

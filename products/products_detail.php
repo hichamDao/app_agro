@@ -1,6 +1,7 @@
 <?php
 require_once((__DIR__ . "/../includes/_header.php"));
 require_once((__DIR__ . "/../includes/paths.php"));
+require_once((__DIR__ . "/../includes/seo.php"));
 
 /* ============================================================ entrees */
 $prod_id = isset($_GET['prod_id']) ? intval($_GET['prod_id']) : 0;
@@ -167,18 +168,56 @@ if ($rsT) {
     $tagsPopulaires = array_slice(array_keys($compte), 0, 14);
 }
 
-$fm_titre = $prod ? $prod['Designation'] . ' | Foodmax' : 'Product not found | Foodmax';
+/* ------------------------------------------------------------------ SEO */
+$fm_titre = $prod
+    ? $prod['Designation'] . ($famille ? ' (' . $famille['label'] . ')' : '') . ' | ' . FM_SITE_NAME
+    : 'Product not found | ' . FM_SITE_NAME;
+$fm_desc  = $prod
+    ? fm_seo_cut($prod['description'] !== '' ? $prod['description'] : $prod['Designation'] . ' from Morocco, packed for professional buyers. Ask us for availability and a quote.', 155)
+    : 'This product is no longer in the FoodMax Group catalogue.';
+
+$fm_chemin = 'products_detail/' . (int) $prod_id . '/';
+$fm_photoAbs = array();
+foreach ($photos as $ph) {
+    $fm_photoAbs[] = rtrim(FM_SITE_URL, '/') . '/images/' . rawurlencode((string) $prod['Ref_prod']) . '/' . rawurlencode($ph);
+}
+$fm_seo = array(
+    'path'        => $fm_chemin,
+    'title'       => $prod ? $prod['Designation'] : 'Product not found',
+    'description' => $fm_desc,
+    'image'       => $fm_photoAbs ? $fm_photoAbs[0] : '',
+    'type'        => 'website',
+    'noindex'     => ($prod === null),
+    'jsonld'      => array(),
+);
+if ($prod) {
+    $fm_produit = array(
+        '@type'       => 'Product',
+        'name'        => $prod['Designation'],
+        'description' => $fm_desc,
+        'sku'         => (string) $prod['Ref_prod'],
+        'url'         => fm_seo_url($fm_chemin),
+    );
+    if ($famille)      { $fm_produit['category'] = $famille['label']; }
+    if ($fm_photoAbs)  { $fm_produit['image']    = $fm_photoAbs; }
+    $fm_etapes = array(array('Home', ''), array('Products', 'products/'));
+    if ($famille) {
+        $fm_slugF = preg_replace('/[^A-Za-z0-9-]/', '', (string) $famille['slug']);
+        if ($fm_slugF !== '') { $fm_etapes[] = array($famille['label'], 'products/' . (int) $famille['Code_cat'] . '/' . $fm_slugF . '/'); }
+    }
+    $fm_etapes[] = array($prod['Designation'], $fm_chemin);
+    $fm_seo['jsonld'] = array($fm_produit, fm_seo_breadcrumb($fm_etapes));
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-	<title><?php echo fd_echapper($fm_titre); ?></title>
-	<meta name="description" content="<?php echo $prod
-		? fd_echapper(mb_substr(strip_tags($prod['description']), 0, 155))
-		: 'This product is no longer available in the Foodmax catalogue.'; ?>">
+	<title><?php echo fd_echapper(fm_seo_title($fm_titre)); ?></title>
+	<meta name="description" content="<?php echo fd_echapper($fm_desc); ?>">
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+<?php fm_seo_head($fm_seo); ?>
 
 	<link rel="stylesheet" type="text/css" href="<?php echo $fm_app; ?>css/phlox.css">
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,600i,700,700i">
@@ -206,7 +245,7 @@ $fm_titre = $prod ? $prod['Designation'] . ' | Foodmax' : 'Product not found | F
 		<div class="fm-pagehead-inner">
 			<span class="fm-eyebrow">Catalogue</span>
 			<h1>Product not found</h1>
-			<nav class="fm-crumbs" aria-label="Fil d'Ariane">
+			<nav class="fm-crumbs" aria-label="Breadcrumb">
 				<ol>
 					<li><a href="<?php echo $fm_app; ?>">Home</a></li>
 					<li><a href="<?php echo $fm_app; ?>products/">Products</a></li>
@@ -241,7 +280,7 @@ $fm_titre = $prod ? $prod['Designation'] . ' | Foodmax' : 'Product not found | F
 				? count($photos) . ' photo' . (count($photos) > 1 ? 's' : '') . ' available'
 				: 'Photographs of this product are coming soon.'; ?></p>
 
-			<nav class="fm-crumbs" aria-label="Fil d'Ariane">
+			<nav class="fm-crumbs" aria-label="Breadcrumb">
 				<ol>
 					<li><a href="<?php echo $fm_app; ?>">Home</a></li>
 					<li><a href="<?php echo $fm_app; ?>products/">Products</a></li>

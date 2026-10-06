@@ -6,15 +6,29 @@
  */
 require_once(__DIR__ . "/paths.php");
 require_once(__DIR__ . "/explore.php");
+require_once(__DIR__ . "/seo.php");
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-	<title><?php echo htmlspecialchars($fm_page_title, ENT_QUOTES, 'UTF-8'); ?> | FoodMax Group</title>
+	<title><?php echo htmlspecialchars(fm_seo_title($fm_page_title . ' | ' . FM_SITE_NAME), ENT_QUOTES, 'UTF-8'); ?></title>
 	<meta name="description" content="<?php echo htmlspecialchars($fm_page_desc, ENT_QUOTES, 'UTF-8'); ?>">
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+<?php
+/* SEO commun : $fm_page_path (ex. "quality/") est defini par chaque page. */
+if (isset($fm_page_path) && $fm_page_path !== '') {
+    fm_seo_head(array(
+        'path'        => $fm_page_path,
+        'title'       => $fm_page_title,
+        'description' => $fm_page_desc,
+        'jsonld'      => array(fm_seo_breadcrumb(array(
+            array('Home', ''), array('About us', 'about-us/'), array($fm_page_title, $fm_page_path),
+        ))),
+    ));
+}
+?>
 
 	<link rel="stylesheet" type="text/css" href="<?php echo $fm_app; ?>css/phlox.css">
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,600i,700,700i">

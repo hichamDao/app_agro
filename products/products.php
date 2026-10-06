@@ -1,6 +1,8 @@
 <?php
 require_once((__DIR__ . "/../includes/_header.php"));
 require_once((__DIR__ . "/../includes/paths.php"));
+require_once((__DIR__ . "/../includes/seo.php"));
+require_once((__DIR__ . "/../includes/guides.php"));
 
 /* ------------------------------------------------------------------ entrees
    Les valeurs sont normalisees puis injectees via requetes preparees :
@@ -155,15 +157,69 @@ if ($motCle !== '') {
 $fm_lienActif = 'products/';
 if ($catCourante) { $fm_lienActif = 'products/' . $catCourante['Code_cat'] . '/'; }
 if ($motCle !== '' || $tag !== '' || $featured) { $fm_lienActif = 'products/'; }
+
+/* ------------------------------------------------------------------ SEO
+   Une seule adresse par contenu : la categorie utilise sa forme lisible
+   /products/8/Peppers/, et les resultats de recherche, les tags et la
+   selection ne sont pas indexes (ce sont des pages sans contenu propre qui
+   dupliqueraient le catalogue). */
+$fm_estFiltre = ($motCle !== '' || $tag !== '' || $featured);
+$fm_suffixe   = $page > 1 ? ' (page ' . $page . ')' : '';
+if ($catCourante && !$fm_estFiltre) {
+    $fm_slugCat  = preg_replace('/[^A-Za-z0-9-]/', '', $catCourante['slug']);
+    $fm_seoPath  = 'products/' . $catCourante['Code_cat'] . '/' . $fm_slugCat . '/' . ($page > 1 ? $page . '/' : '');
+    $fm_seoBase  = 'products/' . $catCourante['Code_cat'] . '/' . $fm_slugCat . '/';
+    $fm_seoTitle = $catCourante['label'] . ': fresh from Morocco, packed for export' . $fm_suffixe . ' | ' . FM_SITE_NAME;
+    $fm_seoDesc  = 'Our ' . strtolower($catCourante['label']) . ' range from Morocco, packed for professional buyers. See the products and ask us for availability and a quote.';
+} elseif (!$fm_estFiltre) {
+    $fm_seoPath  = 'products/' . ($page > 1 ? '?page=' . $page : '');
+    $fm_seoBase  = 'products/';
+    $fm_seoTitle = 'Fresh fruits and vegetables from Morocco: product catalogue' . $fm_suffixe . ' | ' . FM_SITE_NAME;
+    $fm_seoDesc  = 'Browse the FoodMax Group catalogue of Moroccan fruit and vegetables, packed for professional buyers. Ask us about availability and get a quote.';
+} else {
+    $fm_seoPath  = 'products/';
+    $fm_seoBase  = 'products/';
+    $fm_seoTitle = strip_tags(html_entity_decode($fm_titre, ENT_QUOTES, 'UTF-8')) . ' | ' . FM_SITE_NAME;
+    $fm_seoDesc  = 'FoodMax Group product catalogue.';
+}
+$fm_pageSuiv = isset($nombreDePages) ? $nombreDePages : 1;
+$fm_lienSeo  = function ($p) use ($catCourante, $fm_estFiltre) {
+    if ($catCourante && !$fm_estFiltre) {
+        return 'products/' . $catCourante['Code_cat'] . '/' . preg_replace('/[^A-Za-z0-9-]/', '', $catCourante['slug']) . '/' . ($p > 1 ? $p . '/' : '');
+    }
+    return 'products/' . ($p > 1 ? '?page=' . $p : '');
+};
+$fm_etapes = array(array('Home', ''), array('Products', 'products/'));
+if ($catCourante && !$fm_estFiltre) { $fm_etapes[] = array($catCourante['label'], $fm_seoBase); }
+$fm_seo = array(
+    'path'        => $fm_seoPath,
+    'title'       => $fm_seoTitle,
+    'description' => $fm_seoDesc,
+    'type'        => 'website',
+    'noindex'     => $fm_estFiltre,
+    'prev'        => (!$fm_estFiltre && $page > 1) ? $fm_lienSeo($page - 1) : '',
+    'next'        => (!$fm_estFiltre && $page < $fm_pageSuiv) ? $fm_lienSeo($page + 1) : '',
+    'jsonld'      => $fm_estFiltre ? array() : array(
+        array(
+            '@type'       => 'CollectionPage',
+            'name'        => $fm_catName = ($catCourante ? $catCourante['label'] : 'Product catalogue'),
+            'description' => $fm_seoDesc,
+            'url'         => fm_seo_url($fm_seoPath),
+            'isPartOf'    => array('@type' => 'WebSite', 'name' => FM_SITE_NAME, 'url' => fm_seo_url('')),
+        ),
+        fm_seo_breadcrumb($fm_etapes),
+    ),
+);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-	<title><?php echo strip_tags($fm_titre); ?> | Foodmax</title>
-	<meta name="description" content="<?php echo htmlspecialchars(strip_tags($fm_sousTitre), ENT_QUOTES, 'UTF-8'); ?>">
+	<title><?php echo htmlspecialchars(fm_seo_title($fm_seoTitle), ENT_QUOTES, 'UTF-8'); ?></title>
+	<meta name="description" content="<?php echo htmlspecialchars($fm_seoDesc, ENT_QUOTES, 'UTF-8'); ?>">
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+<?php fm_seo_head($fm_seo); ?>
 
 	<link rel="stylesheet" type="text/css" href="<?php echo $fm_app; ?>css/phlox.css">
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,600i,700,700i">
@@ -245,10 +301,15 @@ function fm_resume($texte, $long = 96) {
 		<h1><?php echo $fm_titre; ?></h1>
 		<p><?php echo $fm_sousTitre; ?></p>
 
-		<nav class="fm-crumbs" aria-label="Fil d'Ariane">
+		<nav class="fm-crumbs" aria-label="Breadcrumb">
 			<ol>
 				<li><a href="<?php echo $fm_app; ?>">Home</a></li>
-				<li><?php echo $catCourante ? fm_echapper($catCourante['label']) : 'Products'; ?></li>
+				<?php if ($catCourante) { ?>
+				<li><a href="<?php echo $fm_app; ?>products/">Products</a></li>
+				<li><?php echo fm_echapper($catCourante['label']); ?></li>
+				<?php } else { ?>
+				<li>Products</li>
+				<?php } ?>
 			</ol>
 		</nav>
 	</div>
@@ -489,15 +550,17 @@ function fm_resume($texte, $long = 96) {
 		<div class="fm-quality">
 			<span class="fm-quality-icon"><i class="fa fa-ship"></i></span>
 			<h3>Worldwide</h3>
-			<p>Shipped to Europe, Asia, Africa and the Gulf.</p>
+			<p>Distributors worldwide, and several European countries in particular.</p>
 		</div>
 	</div>
 </section>
 
+<?php if (!$fm_estFiltre) { fm_guides_bloc($conn, '', "Buyer's guides", 'Season, packing and transport for each family, written for people who buy fresh produce for a living.', true); } ?>
+
 <section class="fm-cta" style="background-image:url('<?php echo $fm_app; ?>img/banner-cta.jpg');">
 	<div class="fm-cta-inner">
 		<h2>Looking for a specific variety?</h2>
-		<p>Send us the product, the volume and the destination &mdash; we reply within one business day.</p>
+		<p>Tell us the product, the quantity and where it should go, and we will come back to you within one business day.</p>
 		<a class="btn" href="<?php echo $fm_app; ?>contact/">Talk to our team</a>
 	</div>
 </section>

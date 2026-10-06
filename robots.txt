@@ -1,0 +1,17 @@
+# FoodMax Group - robots.txt
+# Tout le site public peut etre explore. On exclut seulement l'administration,
+# les fichiers internes et les pages sans valeur de reference (recherches).
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /includes/
+Disallow: /sql/
+Disallow: /*?motCle=
+Disallow: /*?tags=
+Disallow: /*?featured=
+Disallow: /products/search/
+Disallow: /products/tags/
+Disallow: /dbproducts
+
+Sitemap: https://foodmax-group.com/sitemap.xml

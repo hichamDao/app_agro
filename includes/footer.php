@@ -19,8 +19,8 @@ $fm_social = array(
 
 		<!-- ------------------------------------------------- logo + description -->
 		<div class="fm-footer-col fm-footer-brand">
-			<a class="fm-footer-logo" href="<?php echo $fm_app; ?>" aria-label="Foodmax, accueil">
-				<img src="<?php echo $fm_app; ?>images/logo.png" alt="Foodmax">
+			<a class="fm-footer-logo" href="<?php echo $fm_app; ?>" aria-label="FoodMax Group, home">
+				<img src="<?php echo $fm_app; ?>images/logo.png" alt="FoodMax Group">
 			</a>
 
 			<p class="fm-footer-desc">
@@ -76,7 +76,7 @@ $fm_social = array(
 			<ul class="fm-footer-info">
 				<li>
 					<i class="fa fa-map-marker" aria-hidden="true"></i>
-					<span>Foodmax Group, 16 Rue AL Ikhae Apt 2,<br>Zone industrielle &mdash; Marrakech, Morocco</span>
+					<span>FoodMax Group, 16 Rue AL Ikhae Apt 2,<br>Zone industrielle &mdash; Marrakech, Morocco</span>
 				</li>
 				<li>
 					<i class="fa fa-phone" aria-hidden="true"></i>

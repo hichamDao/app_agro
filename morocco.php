@@ -9,6 +9,7 @@ require_once(__DIR__ . "/includes/paths.php");
 require_once(__DIR__ . "/includes/_header.php");
 
 $fm_page_title = 'FoodMax Group and Morocco';
+$fm_page_path  = 'morocco/';
 $fm_page_desc  = 'Why Morocco: a land of many climates, generations of grower know-how and a wide range of fruits and vegetables for export.';
 require_once(__DIR__ . "/includes/page-open.php");
 

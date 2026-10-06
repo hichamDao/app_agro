@@ -2,16 +2,26 @@
 /* _header.php ouvre la session : il doit etre inclus AVANT tout affichage,
    sinon les en-tetes HTTP sont deja partis et session_start() echoue. */
 require_once(__DIR__ . "/includes/paths.php");
+require_once(__DIR__ . "/includes/seo.php");
 require_once(__DIR__ . "/includes/_header.php");
 require_once(__DIR__ . "/includes/explore.php"); ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-	<title>About us | Foodmax</title>
-	<meta name="description" content="Foodmax Group is a Moroccan company specialised in the export and distribution of fresh food. Our mission, our quality approach and our strategy.">
+	<title>About Us: Moroccan Fresh Produce Exporter | FoodMax Group</title>
+	<meta name="description" content="FoodMax Group is a Moroccan company specialised in the export and distribution of fresh food. Our mission, our quality approach and our strategy.">
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+<?php fm_seo_head(array(
+    'path'        => 'about-us/',
+    'title'       => 'About FoodMax Group',
+    'description' => 'FoodMax Group is a Moroccan exporter of fresh fruit and vegetables. Who we are, what we believe in and how we work with growers and buyers.',
+    'jsonld'      => array(
+        array('@type' => 'AboutPage', 'name' => 'About FoodMax Group', 'url' => fm_seo_url('about-us/'), 'about' => fm_seo_org()),
+        fm_seo_breadcrumb(array(array('Home', ''), array('About us', 'about-us/'))),
+    ),
+)); ?>
 
 	<link rel="stylesheet" type="text/css" href="<?php echo $fm_app; ?>css/phlox.css">
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,600i,700,700i">

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" role="img" aria-label="FoodMax Group">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2f5010"/><stop offset="1" stop-color="#6b9734"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="520" fill="url(#g)"/>
+  <circle cx="660" cy="90" r="190" fill="#ffffff" opacity="0.06"/>
+  <circle cx="110" cy="470" r="150" fill="#ffffff" opacity="0.06"/>
+  <g transform="translate(400 250)" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" opacity="0.88">
+    <path d="M0 95 C0 20 -5 -35 5 -85"/>
+    <path d="M2 40 C-45 35 -85 0 -90 -45 C-45 -45 -5 -15 2 40Z" fill="#ffffff" fill-opacity="0.18"/>
+    <path d="M3 5 C45 0 82 -35 85 -80 C42 -78 8 -48 3 5Z" fill="#ffffff" fill-opacity="0.18"/>
+  </g>
+</svg>

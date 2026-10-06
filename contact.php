@@ -2,15 +2,25 @@
 /* _header.php ouvre la session : il doit etre inclus AVANT tout affichage,
    sinon les en-tetes HTTP sont deja partis et session_start() echoue. */
 require_once(__DIR__ . "/includes/paths.php");
+require_once(__DIR__ . "/includes/seo.php");
 require_once(__DIR__ . "/includes/_header.php"); ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-	<title>Contact | Foodmax</title>
-	<meta name="description" content="Contact Foodmax Group: Moroccan fresh produce exporter. Phone, email and office address in Marrakech, Morocco.">
+	<title>Contact Us and Request a Quote | FoodMax Group</title>
+	<meta name="description" content="Contact FoodMax Group in Marrakech, Morocco. Tell us the product, the quantity and the destination, and we reply within one business day.">
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+<?php fm_seo_head(array(
+    'path'        => 'contact/',
+    'title'       => 'Contact FoodMax Group',
+    'description' => 'Contact FoodMax Group in Marrakech, Morocco. Tell us the product, the quantity and the destination, and we reply within one business day.',
+    'jsonld'      => array(
+        array('@type' => 'ContactPage', 'name' => 'Contact FoodMax Group', 'url' => fm_seo_url('contact/'), 'about' => fm_seo_org()),
+        fm_seo_breadcrumb(array(array('Home', ''), array('Contact', 'contact/'))),
+    ),
+)); ?>
 
 	<link rel="stylesheet" type="text/css" href="<?php echo $fm_app; ?>css/phlox.css">
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,600i,700,700i">

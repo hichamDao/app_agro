@@ -12,8 +12,9 @@ if (!isset($fm_app)) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Page not found | Foodmax</title>
+	<title>Page not found | FoodMax Group</title>
 	<meta name="description" content="Page not found.">
+	<meta name="robots" content="noindex, follow">
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" type="text/css" href="<?php echo $fm_app; ?>css/phlox.css">
@@ -27,10 +28,11 @@ if (!isset($fm_app)) {
 		<span class="fm-eyebrow">Error 404</span>
 		<h1>Page not found</h1>
 		<p>
-			The page you are looking for does not exist, has been moved,
-			or you may not have permission to view it.
+			Sorry, we could not find that page. It may have moved, or the address
+			may have a typo. The quickest ways back are below.
 		</p>
-		<a class="btn" href="<?php echo $fm_app; ?>">Return to homepage</a>
+		<a class="btn" href="<?php echo $fm_app; ?>products/">Browse our products</a>
+		<a class="btn btn-outline" href="<?php echo $fm_app; ?>">Back to the homepage</a>
 	</div>
 </section>
 

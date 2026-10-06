@@ -15,10 +15,30 @@ require_once(__DIR__ . "/paths.php");
 $fm_self = basename($_SERVER['SCRIPT_FILENAME']);
 $fm_path = str_replace('\\', '/', isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '');
 
+/* Familles de produits du menu : lues dans la base, donc toujours a jour et
+   toujours des liens qui existent. Si la base ne repond pas, le menu reste
+   utilisable avec le seul lien "All products". */
+$fm_nav_cats = array();
+if (isset($conn) && $conn) {
+    try {
+        $fm_rs = mysqli_query($conn, 'SELECT Code_cat, Nom_cat FROM categories ORDER BY Nom_cat ASC');
+        if ($fm_rs) {
+            while ($fm_c = mysqli_fetch_assoc($fm_rs)) {
+                $fm_slug = preg_replace('/[^A-Za-z0-9-]/', '', str_replace('_', '', (string) $fm_c['Nom_cat']));
+                if ($fm_slug === '') { continue; }
+                $fm_nav_cats[] = array(
+                    'label' => str_replace('_', ' ', (string) $fm_c['Nom_cat']),
+                    'url'   => 'products/' . (int) $fm_c['Code_cat'] . '/' . $fm_slug . '/',
+                );
+            }
+        }
+    } catch (Throwable $fm_e) { $fm_nav_cats = array(); }
+}
+
 /* Onglet "About us" actif sur sa page et sur les pages de presentation. */
 $fm_about_actif = false;
-foreach (array('about-us', 'how-we-work', 'quality', 'morocco', 'why-foodmax') as $fm_slug) {
-    if (strpos($fm_path, $fm_slug) !== false) { $fm_about_actif = true; }
+foreach (array('about-us', 'how-we-work', 'quality', 'morocco', 'why-foodmax', 'gallery') as $fm_pg) {
+    if (strpos($fm_path, $fm_pg) !== false) { $fm_about_actif = true; }
 }
 ?>
 <body id='url_div'>
@@ -26,16 +46,16 @@ foreach (array('about-us', 'how-we-work', 'quality', 'morocco', 'why-foodmax') a
 <header class="fm-nav" id="fmNav">
 	<div class="fm-nav-inner">
 
-		<a class="fm-nav-logo" href="<?php echo $fm_app; ?>" aria-label="Foodmax, accueil">
-			<img src="<?php echo $fm_app; ?>images/logo.png" alt="Foodmax">
+		<a class="fm-nav-logo" href="<?php echo $fm_app; ?>" aria-label="FoodMax Group, home">
+			<img src="<?php echo $fm_app; ?>images/logo.png" alt="FoodMax Group">
 		</a>
 
 		<button type="button" class="fm-nav-burger" id="fmBurger"
-		        aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="fmMenu">
+		        aria-label="Open the menu" aria-expanded="false" aria-controls="fmMenu">
 			<span></span><span></span><span></span>
 		</button>
 
-		<nav class="fm-nav-menu" id="fmMenu" aria-label="Navigation principale">
+		<nav class="fm-nav-menu" id="fmMenu" aria-label="Main navigation">
 			<ul class="fm-nav-list">
 				<li<?php echo ($fm_self === 'index.php' && $fm_path === '/') ? ' class="is-current"' : ''; ?>>
 					<a href="<?php echo $fm_app; ?>">Home</a>
@@ -50,6 +70,7 @@ foreach (array('about-us', 'how-we-work', 'quality', 'morocco', 'why-foodmax') a
 						<li><a href="<?php echo $fm_app; ?>quality/">Quality and commitment</a></li>
 						<li><a href="<?php echo $fm_app; ?>morocco/">FoodMax Group and Morocco</a></li>
 						<li><a href="<?php echo $fm_app; ?>why-foodmax/">Why work with us</a></li>
+						<li><a href="<?php echo $fm_app; ?>gallery/">Photo gallery</a></li>
 					</ul>
 				</li>
 				<li class="has-sub<?php echo (strpos($fm_path, 'products') !== false || strpos($fm_path, 'offers') !== false) ? ' is-current' : ''; ?>">
@@ -57,34 +78,24 @@ foreach (array('about-us', 'how-we-work', 'quality', 'morocco', 'why-foodmax') a
 						Products <i class="fa fa-angle-down" aria-hidden="true"></i>
 					</a>
 					<ul class="fm-sub">
-						<li><a href="<?php echo $fm_app; ?>products/tomatoes/">Tomatoes</a></li>
-						<li><a href="<?php echo $fm_app; ?>products/oranges/">Oranges</a></li>
-						<li><a href="<?php echo $fm_app; ?>products/lemons/">Lemons</a></li>
-						<li><a href="<?php echo $fm_app; ?>products/citrus/">All Citrus</a></li>
-						<li><a href="<?php echo $fm_app; ?>products/watermelon/">Watermelon</a></li>
-						<li><a href="<?php echo $fm_app; ?>products/peppers/">Peppers</a></li>
-						<li><a href="<?php echo $fm_app; ?>products/courgettes/">Courgettes</a></li>
-						<li><a href="<?php echo $fm_app; ?>products/berries/">Berries</a></li>
-						<li><a href="<?php echo $fm_app; ?>products/figs/">Figs</a></li>
-						<li><a href="<?php echo $fm_app; ?>products/dried-fruits/">Dried Fruits</a></li>
+						<?php foreach ($fm_nav_cats as $fm_c) { ?>
+						<li><a href="<?php echo $fm_app . htmlspecialchars($fm_c['url'], ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($fm_c['label'], ENT_QUOTES, 'UTF-8'); ?></a></li>
+						<?php } ?>
 						<li class="fm-sub-all"><a href="<?php echo $fm_app; ?>products/">All products</a></li>
 					</ul>
-				</li>
-				<li<?php echo (strpos($fm_path, 'gallery') !== false) ? ' class="is-current"' : ''; ?>>
-					<a href="<?php echo $fm_app; ?>gallery/">Gallery</a>
 				</li>
 				<li<?php echo (strpos($fm_path, 'blog') !== false) ? ' class="is-current"' : ''; ?>>
 					<a href="<?php echo $fm_app; ?>blog/">Blog</a>
 				</li>
-				<li<?php echo (strpos($fm_path, 'contact') !== false) ? ' class="is-current"' : ''; ?>>
-					<a href="<?php echo $fm_app; ?>contact/">Contact</a>
+				<li class="fm-nav-cta<?php echo (strpos($fm_path, 'contact') !== false) ? ' is-current' : ''; ?>">
+					<a href="<?php echo $fm_app; ?>contact/">Contact us</a>
 				</li>
 			</ul>
 		</nav>
 
 		<div class="fm-nav-actions">
 			<button type="button" class="fm-search-toggle" id="searchtoggl"
-			        aria-label="Rechercher" aria-expanded="false" aria-controls="searchbar">
+			        aria-label="Search products" aria-expanded="false" aria-controls="searchbar">
 				<i class="fa fa-search" aria-hidden="true"></i>
 			</button>
 		</div>
@@ -93,7 +104,7 @@ foreach (array('about-us', 'how-we-work', 'quality', 'morocco', 'why-foodmax') a
 	<div id="searchbar" class="fm-searchbar">
 		<div class="fm-searchbar-inner">
 			<form id="searchform" method="get" action="<?php echo $fm_app; ?>products/" role="search">
-				<label class="sr-only" for="s">Rechercher un produit</label>
+				<label class="sr-only" for="s">Search for a product</label>
 				<i class="fa fa-search fm-search-leading" aria-hidden="true"></i>
 				<input type="search" name="motCle" id="s"
 				       placeholder="Search our products&hellip;" autocomplete="off">

@@ -1,6 +1,7 @@
 <?php
 require_once((__DIR__ . "/includes/_header.php"));
 require_once((__DIR__ . "/includes/paths.php"));
+require_once((__DIR__ . "/includes/seo.php"));
 
 /* ---------------------------------------------------------------- entrees
    Seule la pagination provient de l'URL ; elle est castee en entier avant
@@ -77,8 +78,13 @@ $fm_sousTitre  = 'Fresh produce, packing and export moments from our partner far
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Gallery <?php echo $page > 1 ? '&mdash; page ' . $page . ' &mdash; ' : '&mdash; ' ?>Foodmax</title>
-	<meta name="description" content="Foodmax gallery: photographs of Moroccan fresh fruit and vegetables, packing and cold chain facilities.">
+<?php fm_seo_head(array(
+    'path'        => 'gallery/' . ($page > 1 ? '?page=' . $page : ''),
+    'title'       => 'Photo gallery',
+    'description' => 'Photographs of Moroccan fresh fruit and vegetables and of the work of the FoodMax Group team.',
+)); ?>
+	<title>Photo Gallery<?php echo $page > 1 ? ' (page ' . $page . ')' : ''; ?> | FoodMax Group</title>
+	<meta name="description" content="Photographs of Moroccan fresh fruit and vegetables and of the work of the FoodMax Group team.">
 	<link rel="stylesheet" href="<?php echo $fm_app; ?>css/font-awesome.min.css">
 	<link rel="stylesheet" href="<?php echo $fm_app; ?>css/fancybox/jquery.fancybox.css">
 	<link rel="stylesheet" href="<?php echo $fm_app; ?>css/fancybox/helpers/jquery.fancybox-thumbs.css">

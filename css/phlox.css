@@ -693,7 +693,7 @@ body .pagination span.active {
     transform: none;
     transition: max-height 300ms var(--phlox-ease);
   }
-  .fm-nav-list > li.has-sub.is-open > .fm-sub { max-height: 420px; }
+  .fm-nav-list > li.has-sub.is-open > .fm-sub { max-height: 720px; }
   .fm-sub li a { padding: 11px 4px 11px 18px; border-left: 2px solid transparent; }
   .fm-sub li a:hover { padding-left: 22px; }
   .fm-sub .fm-sub-all { margin-top: 0; padding-top: 0; }
@@ -3391,3 +3391,23 @@ a.fm-pager-item:hover {
   margin: 0 0 14px;
   line-height: 1.7;
 }
+
+/* ------------------------------------- menu : bouton "Contact us" visible --- */
+
+.fm-nav-list > li.fm-nav-cta { margin-left: 10px; align-self: center; }
+.fm-nav-list > li.fm-nav-cta > a {
+  padding: 11px 22px;
+  color: #fff;
+  background: var(--phlox-primary);
+  border-radius: 100em;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14);
+  transition: var(--phlox-tr);
+  }
+.fm-nav-list > li.fm-nav-cta > a:after { display: none; }
+.fm-nav-list > li.fm-nav-cta > a:hover,
+.fm-nav-list > li.fm-nav-cta.is-current > a { color: #fff; background: var(--phlox-primary-dark); }
+
+@media (max-width: 991px) {
+  .fm-nav-list > li.fm-nav-cta { margin: 10px 18px 14px; border-bottom: 0; }
+  .fm-nav-list > li.fm-nav-cta > a { text-align: center; padding: 14px 22px; }
+  }

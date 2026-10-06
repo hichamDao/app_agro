@@ -2,7 +2,7 @@
 /**
  * Blog FoodMax Group.
  *
- * Liste les articles publis avec pagination et filtre par categorie.
+ * Liste les articles publies avec pagination et filtre par categorie.
  * Chaque article peut etre relie a une page produit (product_link) pour
  * guider les lecteurs vers le catalogue.
  *
@@ -12,6 +12,7 @@
 require_once(__DIR__ . "/includes/paths.php");
 require_once(__DIR__ . "/includes/_header.php");
 require_once(__DIR__ . "/includes/blog_functions.php");
+require_once(__DIR__ . "/includes/seo.php");
 
 /* ------------------------------------------------------------ parametres URL */
 $categorie = isset($_GET['category']) ? trim((string) $_GET['category']) : '';
@@ -77,23 +78,52 @@ if ($stmt) {
 /* ------------------------------------------------------------ categories */
 $categories = fm_blog_categories($conn);
 
+/* ------------------------------------------------------------ chemin d'une page de la liste */
+$fm_blog_chemin = function ($p) use ($categorie) {
+    $q = array();
+    if ($categorie !== '') { $q[] = 'category=' . rawurlencode($categorie); }
+    if ($p > 1)            { $q[] = 'page=' . (int) $p; }
+    return 'blog/' . ($q ? '?' . implode('&', $q) : '');
+};
+
 /* ------------------------------------------------------------ titres SEO */
+$suffixePage = $page > 1 ? ' (page ' . $page . ')' : '';
 if ($categorie !== '') {
-    $fm_titre     = $categorie . ' — Blog | Foodmax';
-    $fm_sousTitre = 'Articles sur ' . $categorie . ' par Foodmax Group.';
+    $fm_titre     = $categorie . ': articles and guides' . $suffixePage . ' | ' . FM_SITE_NAME;
+    $fm_sousTitre = 'Our articles about ' . $categorie . ': what to know about the season, the growing and the shipping, written by the FoodMax Group team.';
 } else {
-    $fm_titre     = 'Blog | Foodmax';
-    $fm_sousTitre = 'Insights, guides and news from the Moroccan fresh produce export world.';
+    $fm_titre     = 'Fresh produce blog: guides and season notes' . $suffixePage . ' | ' . FM_SITE_NAME;
+    $fm_sousTitre = 'Plain-language guides from FoodMax Group on Moroccan fruit and vegetables: seasons, packing, the cold chain and how exporting really works.';
 }
+
+$fm_seo = array(
+    'path'        => $fm_blog_chemin($page),
+    'title'       => $fm_titre,
+    'description' => $fm_sousTitre,
+    'type'        => 'website',
+    'prev'        => $page > 1 ? $fm_blog_chemin($page - 1) : '',
+    'next'        => $page < $nombrePages ? $fm_blog_chemin($page + 1) : '',
+    'jsonld'      => array(
+        array(
+            '@type'       => 'Blog',
+            'name'        => 'FoodMax Group blog',
+            'url'         => fm_seo_url('blog/'),
+            'description' => $fm_sousTitre,
+            'publisher'   => fm_seo_org(),
+        ),
+        fm_seo_breadcrumb(array(array('Home', ''), array('Blog', 'blog/'))),
+    ),
+);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-	<title><?php echo fm_blog_echapper($fm_titre); ?></title>
+	<title><?php echo fm_blog_echapper(fm_seo_title($fm_titre)); ?></title>
 	<meta name="description" content="<?php echo fm_blog_echapper($fm_sousTitre); ?>">
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+<?php fm_seo_head($fm_seo); ?>
 
 	<link rel="stylesheet" type="text/css" href="<?php echo $fm_app; ?>css/phlox.css">
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,600i,700,700i">
@@ -118,13 +148,14 @@ if ($categorie !== '') {
 <section class="fm-pagehead fm-pagehead-blog">
 	<div class="fm-pagehead-inner">
 		<span class="fm-eyebrow">From the blog</span>
-		<h1>Export insights &amp; guides</h1>
+		<h1>Moroccan fresh produce: guides and field notes</h1>
 		<p>
-			Seasonal tips, export guides and behind-the-scenes stories from our
-			team and our growers. New articles are published regularly.
+			Here we write about the things buyers ask us most, how the seasons run,
+			what happens between the farm and your warehouse, and why the small
+			details make such a difference, in plain words and without the jargon.
 		</p>
 
-		<nav class="fm-crumbs" aria-label="Fil d'Ariane">
+		<nav class="fm-crumbs" aria-label="Breadcrumb">
 			<ol>
 				<li><a href="<?php echo $fm_app; ?>">Home</a></li>
 				<li>Blog</li>
@@ -139,16 +170,17 @@ if ($categorie !== '') {
 		<span class="fm-eyebrow">Latest articles</span>
 		<h2><?php echo $categorie !== '' ? fm_blog_echapper($categorie) : 'All articles'; ?></h2>
 		<p class="fm-section-sub">
-			<?php echo $nombreTotal; ?> article<?php echo ($nombreTotal > 1) ? 's' : ''; ?>
-			<?php echo $categorie !== '' ? ' dans la catégorie <strong>' . fm_blog_echapper($categorie) . '</strong>' : ''; ?>.
+			<?php echo $nombreTotal; ?> article<?php echo ($nombreTotal != 1) ? 's' : ''; ?>
+			<?php echo $categorie !== '' ? 'about <strong>' . fm_blog_echapper($categorie) . '</strong>' : 'so far'; ?><?php if ($categorie !== '') { ?>,
+			<a href="<?php echo $fm_app; ?>blog/">see all articles</a><?php } ?>.
 		</p>
 	</div>
 
 	<?php if (!$articles) { ?>
 		<div class="fm-empty">
 			<span class="fm-empty-icon"><i class="fa fa-leaf"></i></span>
-			<h2>Nothing to show here yet</h2>
-			<p>We are working on new articles. Check back soon, or browse our <a href="<?php echo $fm_app; ?>products/">products</a>.</p>
+			<h2>Nothing here yet</h2>
+			<p>We are still writing the next articles. In the meantime, you are very welcome to browse our <a href="<?php echo $fm_app; ?>products/">products</a> or to <a href="<?php echo $fm_app; ?>contact/">ask us a question</a> directly.</p>
 		</div>
 	<?php } else { ?>
 	<div class="fm-blog-grid">
@@ -180,8 +212,8 @@ if ($categorie !== '') {
 
 				<div class="fm-bcard-foot">
 					<span class="fm-bcard-date"><i class="fa fa-calendar" aria-hidden="true"></i> <?php echo $date; ?></span>
-					<?php if ($post['product_link'] !== '' && $post['product_link'] !== null) { ?>
-					<a class="fm-bcard-link" href="<?php echo $fm_app . $post['product_link']; ?>">
+					<?php $lienProd = fm_blog_lien($fm_app, $post['product_link']); if ($lienProd !== '') { ?>
+					<a class="fm-bcard-link" href="<?php echo $lienProd; ?>">
 						Products <i class="fa fa-angle-right" aria-hidden="true"></i>
 					</a>
 					<?php } ?>
@@ -193,15 +225,8 @@ if ($categorie !== '') {
 
 	<?php
 	/* ------------------------------------------------------ pagination */
-	$qs = array();
-	if ($categorie !== '') { $qs[] = 'category=' . rawurlencode($categorie); }
-	$qsStr = implode('&', $qs);
-
-	$lienPage = function ($p) use ($qsStr, $categorie) {
-		$base = $categorie !== ''
-		    ? $GLOBALS['fm_app'] . 'blog/?category=' . rawurlencode($categorie)
-		    : $GLOBALS['fm_app'] . 'blog/';
-		return $base . ($p > 1 ? '?page=' . $p . ($qsStr !== '' && $categorie !== '' ? '&' . $qsStr : '') : ($qsStr !== '' && $categorie === '' ? '?' . $qsStr : ''));
+	$lienPage = function ($p) use ($fm_blog_chemin) {
+		return fm_blog_echapper($GLOBALS['fm_app'] . $fm_blog_chemin($p));
 	};
 	?>
 	<?php if ($nombrePages > 1) { ?>
@@ -263,7 +288,7 @@ if ($categorie !== '') {
 					'Morocco'    => 'fa-globe',
 					'Tomatoes'   => 'fa-tint',
 					'Citrus'     => 'fa-lemon-o',
-					'Watermelon' => 'fa-water',
+					'Watermelon' => 'fa-sun-o',
 					'Logistics'  => 'fa-truck',
 					'Cold chain' => 'fa-snowflake-o',
 				);
@@ -286,13 +311,13 @@ if ($categorie !== '') {
 <!-- ============================================================ RECENT / CTA -->
 <section class="fm-cta">
 	<div class="fm-cta-inner">
-		<h2>Want to learn more?</h2>
+		<h2>Something you would like us to write about?</h2>
 		<p>
-			Each article is written to help you source better. Whether you are
-			new to importing or looking for seasonal details, our team is here to
-			help.
+			These articles come from real questions we get from buyers. If there is
+			something you would like to understand better, a product, a season or
+			the way a shipment travels, tell us and we will gladly explain.
 		</p>
-		<a class="btn" href="<?php echo $fm_app; ?>contact/">Contact our team</a>
+		<a class="btn" href="<?php echo $fm_app; ?>contact/">Ask us a question</a>
 	</div>
 </section>
 

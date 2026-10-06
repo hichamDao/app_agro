@@ -9,6 +9,7 @@ require_once(__DIR__ . "/includes/paths.php");
 require_once(__DIR__ . "/includes/_header.php");
 
 $fm_page_title = 'Why work with us';
+$fm_page_path  = 'why-foodmax/';
 $fm_page_desc  = 'Six reasons to work with FoodMax Group, and the kind of clients and partners we supply.';
 require_once(__DIR__ . "/includes/page-open.php");
 
