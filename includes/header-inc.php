@@ -17,7 +17,7 @@ $fm_path = str_replace('\\', '/', isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQ
 
 /* Onglet "About us" actif sur sa page et sur les pages de presentation. */
 $fm_about_actif = false;
-foreach (array('about-us', 'how-we-work', 'quality', 'morocco', 'why-foodmax') as $fm_slug) {
+foreach (array('about-us', 'how-we-work', 'quality', 'morocco', 'why-foodmax', 'fresh-produce-exporter-morocco', 'export-services', 'for-importers') as $fm_slug) {
     if (strpos($fm_path, $fm_slug) !== false) { $fm_about_actif = true; }
 }
 ?>
@@ -37,14 +37,17 @@ foreach (array('about-us', 'how-we-work', 'quality', 'morocco', 'why-foodmax') a
 
 		<nav class="fm-nav-menu" id="fmMenu" aria-label="Navigation principale">
 			<ul class="fm-nav-list">
-				<li<?php echo ($fm_self === 'index.php' && $fm_path === '/') ? ' class="is-current"' : ''; ?>>
-					<a href="<?php echo $fm_app; ?>">Home</a>
-				</li>
-				<li class="has-sub<?php echo $fm_about_actif ? ' is-current' : ''; ?>">
+			<li<?php echo ($fm_self === 'index.php' && $fm_path === '/') ? ' class="is-current"' : ''; ?>>
+				<a href="<?php echo $fm_app; ?>">Home</a>
+			</li>
+			<li class="has-sub<?php echo $fm_about_actif ? ' is-current' : ''; ?>">
 					<a href="<?php echo $fm_app; ?>about-us/" class="fm-sub-toggle">
 						About us <i class="fa fa-angle-down" aria-hidden="true"></i>
 					</a>
 					<ul class="fm-sub">
+						<li><a href="<?php echo $fm_app; ?>fresh-produce-exporter-morocco/">Fresh Produce Exporter</a></li>
+						<li><a href="<?php echo $fm_app; ?>export-services/">Export Services</a></li>
+						<li><a href="<?php echo $fm_app; ?>for-importers/">For Importers</a></li>
 						<li><a href="<?php echo $fm_app; ?>about-us/">Our story</a></li>
 						<li><a href="<?php echo $fm_app; ?>how-we-work/">How we work</a></li>
 						<li><a href="<?php echo $fm_app; ?>quality/">Quality and commitment</a></li>
@@ -57,16 +60,17 @@ foreach (array('about-us', 'how-we-work', 'quality', 'morocco', 'why-foodmax') a
 						Products <i class="fa fa-angle-down" aria-hidden="true"></i>
 					</a>
 					<ul class="fm-sub">
-						<li><a href="<?php echo $fm_app; ?>products/tomatoes/">Tomatoes</a></li>
-						<li><a href="<?php echo $fm_app; ?>products/oranges/">Oranges</a></li>
-						<li><a href="<?php echo $fm_app; ?>products/lemons/">Lemons</a></li>
-						<li><a href="<?php echo $fm_app; ?>products/citrus/">All Citrus</a></li>
-						<li><a href="<?php echo $fm_app; ?>products/watermelon/">Watermelon</a></li>
-						<li><a href="<?php echo $fm_app; ?>products/peppers/">Peppers</a></li>
-						<li><a href="<?php echo $fm_app; ?>products/courgettes/">Courgettes</a></li>
-						<li><a href="<?php echo $fm_app; ?>products/berries/">Berries</a></li>
-						<li><a href="<?php echo $fm_app; ?>products/figs/">Figs</a></li>
-						<li><a href="<?php echo $fm_app; ?>products/dried-fruits/">Dried Fruits</a></li>
+						<li><a href="<?php echo $fm_app; ?>products/7/Tomatoes/">Tomatoes</a></li>
+						<li><a href="<?php echo $fm_app; ?>products/3/Citrus/">Citrus</a></li>
+						<li><a href="<?php echo $fm_app; ?>products/6/Melons/">Melons</a></li>
+						<li><a href="<?php echo $fm_app; ?>products/8/Peppers/">Peppers</a></li>
+						<li><a href="<?php echo $fm_app; ?>products/10/Courgettes/">Courgettes</a></li>
+						<li><a href="<?php echo $fm_app; ?>products/4/Berries/">Berries</a></li>
+						<li><a href="<?php echo $fm_app; ?>products/16/Figs/">Figs</a></li>
+						<li><a href="<?php echo $fm_app; ?>products/14/Driedfruits/">Dried Fruits</a></li>
+						<li><a href="<?php echo $fm_app; ?>products/11/Eggplants/">Eggplants</a></li>
+						<li><a href="<?php echo $fm_app; ?>products/15/Greenleaves/">Green Leaves</a></li>
+						<li><a href="<?php echo $fm_app; ?>products/5/Pits/">Pits</a></li>
 						<li class="fm-sub-all"><a href="<?php echo $fm_app; ?>products/">All products</a></li>
 					</ul>
 				</li>

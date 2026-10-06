@@ -52,6 +52,7 @@ $fm_social = array(
 		<nav class="fm-footer-col" aria-label="Footer navigation">
 			<h2 class="fm-footer-title">FoodMax Group</h2>
 			<ul class="fm-footer-links">
+				<li><a href="<?php echo $fm_app; ?>fresh-produce-exporter-morocco/">Fresh Produce Exporter</a></li>
 				<li><a href="<?php echo $fm_app; ?>about-us/">About us</a></li>
 				<li><a href="<?php echo $fm_app; ?>how-we-work/">How we work</a></li>
 				<li><a href="<?php echo $fm_app; ?>quality/">Quality and commitment</a></li>
