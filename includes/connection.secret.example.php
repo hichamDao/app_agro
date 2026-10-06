@@ -10,8 +10,8 @@
  * le nouveau connection.php, sinon le site affichera une erreur.
  */
 return array(
-    'host' => 'votre-serveur-mysql',
-    'user' => 'votre_utilisateur',
-    'pass' => 'votre_mot_de_passe',
-    'db'   => 'votre_base',
+    'host' => '',
+    'user' => '',
+    'pass' => '',
+    'db'   => '',
 );

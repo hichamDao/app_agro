@@ -57,15 +57,24 @@ foreach (array('about-us', 'how-we-work', 'quality', 'morocco', 'why-foodmax') a
 						Products <i class="fa fa-angle-down" aria-hidden="true"></i>
 					</a>
 					<ul class="fm-sub">
-						<li><a href="<?php echo $fm_app; ?>products/7/Tomatoes/">Tomatoes</a></li>
-						<li><a href="<?php echo $fm_app; ?>products/3/Citrus/">Citrus</a></li>
-						<li><a href="<?php echo $fm_app; ?>products/8/Peppers/">Peppers</a></li>
-						<li><a href="<?php echo $fm_app; ?>products/14/Driedfruits/">Dried Fruits</a></li>
+						<li><a href="<?php echo $fm_app; ?>products/tomatoes/">Tomatoes</a></li>
+						<li><a href="<?php echo $fm_app; ?>products/oranges/">Oranges</a></li>
+						<li><a href="<?php echo $fm_app; ?>products/lemons/">Lemons</a></li>
+						<li><a href="<?php echo $fm_app; ?>products/citrus/">All Citrus</a></li>
+						<li><a href="<?php echo $fm_app; ?>products/watermelon/">Watermelon</a></li>
+						<li><a href="<?php echo $fm_app; ?>products/peppers/">Peppers</a></li>
+						<li><a href="<?php echo $fm_app; ?>products/courgettes/">Courgettes</a></li>
+						<li><a href="<?php echo $fm_app; ?>products/berries/">Berries</a></li>
+						<li><a href="<?php echo $fm_app; ?>products/figs/">Figs</a></li>
+						<li><a href="<?php echo $fm_app; ?>products/dried-fruits/">Dried Fruits</a></li>
 						<li class="fm-sub-all"><a href="<?php echo $fm_app; ?>products/">All products</a></li>
 					</ul>
 				</li>
 				<li<?php echo (strpos($fm_path, 'gallery') !== false) ? ' class="is-current"' : ''; ?>>
 					<a href="<?php echo $fm_app; ?>gallery/">Gallery</a>
+				</li>
+				<li<?php echo (strpos($fm_path, 'blog') !== false) ? ' class="is-current"' : ''; ?>>
+					<a href="<?php echo $fm_app; ?>blog/">Blog</a>
 				</li>
 				<li<?php echo (strpos($fm_path, 'contact') !== false) ? ' class="is-current"' : ''; ?>>
 					<a href="<?php echo $fm_app; ?>contact/">Contact</a>

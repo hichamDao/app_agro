@@ -1,5 +1,6 @@
 # Identifiants et secrets : ne jamais les envoyer sur GitHub
 includes/connection.secret.php
+includes/smtp.secret.php
 .env
 *.env
 *.pem

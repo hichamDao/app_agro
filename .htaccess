@@ -16,7 +16,10 @@ RewriteRule ^includes/ - [F,L]
 # Routes du site
 RewriteRule ^products/([0-9]+)/([A-Za-z0-9-]+)/([0-9]+)/?$ products/products.php?idCat=$1&name=$2&page=$3 [NC,L,QSA]
 
-RewriteRule ^products/([0-9]+)/([A-Za-z0-9-]+)/?$ products/products.php?idCat=$1&name=$2 [NC,L,QSA]
+RewriteRule   ^products/([0-9]+)/([A-Za-z0-9-]+)/?$ products/products.php?idCat=$1&name=$2 [NC,L,QSA]
+
+RewriteRule   ^products/([A-Za-z0-9-]+)/?$ products/produit.php?slug=$1 [NC,L,QSA]
+RewriteRule   ^products/?$  products/products.php [NC,L,QSA]
 
 RewriteRule ^home/?$ index.php [L]
 RewriteRule ^about-us/?$ about-us.php [L]
@@ -33,6 +36,9 @@ RewriteRule   gallery/$  gallery.php [L]
 RewriteRule   gallery$  gallery.php [L]
 RewriteRule   ^contact/$  contact.php [L]
 RewriteRule   ^contact$  contact.php [L]
+RewriteRule   ^blog$  blog.php [L,QSA]
+RewriteRule   ^blog/$  blog.php [L,QSA]
+RewriteRule   ^blog/([A-Za-z0-9-]+)/?$  blog-post.php?slug=$1 [L,QSA]
 RewriteRule   dbproducts/$  products/dbproducts.php [L]
 RewriteRule   dbproducts$  products/dbproducts.php [L]
 RewriteRule   products/$  products/products.php [L]

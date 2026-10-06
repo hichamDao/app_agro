@@ -59,6 +59,7 @@ $fm_social = array(
 				<li><a href="<?php echo $fm_app; ?>why-foodmax/">Why work with us</a></li>
 				<li><a href="<?php echo $fm_app; ?>products/">Products</a></li>
 				<li><a href="<?php echo $fm_app; ?>gallery/">Gallery</a></li>
+				<li><a href="<?php echo $fm_app; ?>blog/">Blog</a></li>
 				<li><a href="<?php echo $fm_app; ?>contact/">Contact</a></li>
 			</ul>
 

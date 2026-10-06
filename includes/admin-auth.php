@@ -70,9 +70,9 @@ function fm_admin_role_libelle($role = null) {
 function fm_admin_droits($role = null) {
     $r = $role === null ? fm_admin_role() : (string) $role;
     if ($r === 'admin') {
-        return array('produits', 'categories', 'galerie', 'contacts', 'utilisateurs');
+        return array('produits', 'categories', 'galerie', 'contacts', 'blog', 'utilisateurs');
     }
-    return array('produits', 'categories', 'galerie', 'contacts');
+    return array('produits', 'categories', 'galerie', 'contacts', 'blog');
 }
 
 /** Le role courant a-t-il le droit demande ? */
@@ -126,6 +126,7 @@ function fm_admin_menu_visible() {
         'categories' => array('Categories',      'fa-tags',       'GestionCategories.php'),
         'galerie'    => array('Galerie',         'fa-picture-o',  'GestionGaleries.php'),
         'contacts'   => array('Messages',        'fa-envelope',   'GestionContacts.php'),
+        'blog'       => array('Blog',            'fa-book',       'GestionBlog.php'),
         'utilisateurs' => array('Utilisateurs',   'fa-users',      'GestionUtilisateurs.php'),
     );
     $droits = fm_admin_droits();
