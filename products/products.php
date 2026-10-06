@@ -46,14 +46,14 @@ if ($idCat > 0) {
     $types   .= 'i';
 }
 if ($motCle !== '') {
-    $like     = '%' . $motCle . '%';
+    $like     = '%' . addcslashes($motCle, '%_\\') . '%';
     $where[]  = 'Designation LIKE ?';
     $params[] = $like;
     $types   .= 's';
 }
 if ($tag !== '') {
     $where[]  = 'tags LIKE ?';
-    $params[] = '%' . $tag . '%';
+    $params[] = '%' . addcslashes($tag, '%_\\') . '%';
     $types   .= 's';
 }
 if ($featured) {
@@ -115,16 +115,20 @@ foreach ($categories as $c) { $catLabels[$c['Code_cat']] = $c['label']; }
 
 /* Suggestions affichees quand une recherche ne renvoie rien. */
 $suggestions = array();
-if ($motCle !== '' && $nombreTotal === 0 && strlen($motCle) >= 3) {
-    $pref = '%' . substr($motCle, 0, 3) . '%';
-    $rsSug = mysqli_query(
+if ($motCle !== '' && $nombreTotal === 0 && mb_strlen($motCle, 'UTF-8') >= 3) {
+    $pref = '%' . addcslashes(mb_substr($motCle, 0, 3, 'UTF-8'), '%_\\') . '%';
+    $stmtSug = mysqli_prepare(
         $conn,
-        "SELECT id_prod, Designation FROM produits WHERE Designation LIKE '"
-            . mysqli_real_escape_string($conn, $pref)
-            . "' ORDER BY Designation ASC LIMIT 4"
+        'SELECT id_prod, Designation FROM produits WHERE Designation LIKE ? ORDER BY Designation ASC LIMIT 4'
     );
-    if ($rsSug) {
-        while ($s = mysqli_fetch_assoc($rsSug)) { $suggestions[] = $s; }
+    if ($stmtSug) {
+        mysqli_stmt_bind_param($stmtSug, 's', $pref);
+        mysqli_stmt_execute($stmtSug);
+        $rsSug = mysqli_stmt_get_result($stmtSug);
+        if ($rsSug) {
+            while ($s = mysqli_fetch_assoc($rsSug)) { $suggestions[] = $s; }
+        }
+        mysqli_stmt_close($stmtSug);
     }
 }
 

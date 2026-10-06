@@ -1,5 +1,32 @@
 <?php
 require_once((__DIR__ . "/../includes/_header.php")); 
+
+/* ---------------------------------------------------------------- securite
+   Aucune valeur venant de l'URL n'est collee dans le SQL : les requetes sont
+   preparees (fm_requete) et les valeurs affichees sont encodees. */
+if (!function_exists('fm_requete')) {
+    /* Execute une requete preparee et renvoie un mysqli_result (ou false). */
+    function fm_requete($conn, $sql, $types = '', $params = array())
+    {
+        $stmt = mysqli_prepare($conn, $sql);
+        if (!$stmt) { return false; }
+        if ($types !== '') { mysqli_stmt_bind_param($stmt, $types, ...$params); }
+        if (!mysqli_stmt_execute($stmt)) { mysqli_stmt_close($stmt); return false; }
+        $res = mysqli_stmt_get_result($stmt);
+        mysqli_stmt_close($stmt);
+        return $res;
+    }
+}
+if (!function_exists('fm_h')) {
+    function fm_h($v) { return htmlspecialchars((string) $v, ENT_QUOTES, 'UTF-8'); }
+}
+
+/* Entrees normalisees une seule fois : nombres forces, textes seulement. */
+if (isset($_GET['idCat'])) { $_GET['idCat'] = (int) $_GET['idCat']; }
+if (isset($_GET['page']))  { $_GET['page']  = max(1, (int) $_GET['page']); }
+foreach (array('motCle', 'tags', 'name') as $fm_k) {
+    if (isset($_GET[$fm_k]) && !is_string($_GET[$fm_k])) { unset($_GET[$fm_k]); }
+}
 ?>
 <?php
 function str_replace_first($from, $to, $subject)
@@ -95,11 +122,12 @@ else{
 <?php
 
 if (isset($_GET['motCle'])){
-$motCle=$_GET['motCle'];
-$req="select * from produits where Designation LIKE
-'%$motCle%'";
- $rs=mysqli_query($conn, $req);
-  $nombreTotal=mysqli_num_rows($rs);
+$motCle=trim($_GET['motCle']);
+$reqSql    = "select * from produits where Designation LIKE ?";
+$reqTypes  = 's';
+$reqParams = array('%' . addcslashes($motCle, '%_\\') . '%');
+ $rs=fm_requete($conn, $reqSql, $reqTypes, $reqParams);
+  $nombreTotal=$rs ? mysqli_num_rows($rs) : 0;
   $nombreParPage=12;
       
     $nombreDePages = ceil($nombreTotal / $nombreParPage );  
@@ -108,8 +136,10 @@ $req="select * from produits where Designation LIKE
 
  
 $premierMessageAafficher = ($page - 1) * $nombreParPage;
-$req="select * from produits where Designation LIKE
-'%$motCle%' order by id_prod ASC limit $premierMessageAafficher,$nombreParPage";
+$reqSql   .= " order by id_prod ASC limit ?,?";
+$reqTypes .= 'ii';
+$reqParams[] = $premierMessageAafficher;
+$reqParams[] = $nombreParPage;
 ?>
 <?php
 }
@@ -117,25 +147,23 @@ elseif(isset($_GET['tags'])){
 
 
 
-  $tag=$_GET['tags'];
+  $tag=trim($_GET['tags']);
 
-  $tagTri=explode(",",$tag);
-  for($i=0;$i<count($tagTri); $i++){
-    if($_GET['tags']==$tagTri[$i])
-  $req="select * from produits where description like '%$tag%' ";
+  $reqSql    = "select * from produits where description like ?";
+  $reqTypes  = 's';
+  $reqParams = array('%' . addcslashes($tag, '%_\\') . '%');
 
-else
-  echo'';
-}
-
-$rs=mysqli_query($conn, $req) or die(mysqli_error($conn));
- $nombreTotal=mysqli_num_rows($rs);
+$rs=fm_requete($conn, $reqSql, $reqTypes, $reqParams);
+ $nombreTotal=$rs ? mysqli_num_rows($rs) : 0;
   $nombreParPage=12;
       
     $nombreDePages = ceil($nombreTotal / $nombreParPage );  
       $page = (isset($_GET['page']))?intval($_GET['page']):'1';
       $premierMessageAafficher = ($page - 1) * $nombreParPage;
-      $req="select * from produits where description like '%$tag%' order by id_prod ASC limit $premierMessageAafficher,$nombreParPage";
+      $reqSql   .= " order by id_prod ASC limit ?,?";
+      $reqTypes .= 'ii';
+      $reqParams[] = $premierMessageAafficher;
+      $reqParams[] = $nombreParPage;
 ?>
 <div class="fullpage">
 <div class="search-result" id="section2">
@@ -154,12 +182,14 @@ if($nombreTotal!='0'){
 
 }
 elseif (isset($_GET['idCat'])){
-$idCat=$_GET['idCat'];
-$Namecat=$_GET['name'];
+$idCat=(int) $_GET['idCat'];
+$Namecat=rawurlencode(isset($_GET['name']) ? $_GET['name'] : '');
 
-$req="select * from produits where Code_cat=$idCat";
-$rs=mysqli_query($conn, $req);
-  $nombreTotal=mysqli_num_rows($rs);
+$reqSql    = "select * from produits where Code_cat=?";
+$reqTypes  = 'i';
+$reqParams = array($idCat);
+$rs=fm_requete($conn, $reqSql, $reqTypes, $reqParams);
+  $nombreTotal=$rs ? mysqli_num_rows($rs) : 0;
   $nombreParPage=12;
       
     $nombreDePages = ceil($nombreTotal / $nombreParPage );  
@@ -168,12 +198,14 @@ $rs=mysqli_query($conn, $req);
 
  
 $premierMessageAafficher = ($page - 1) * $nombreParPage;
-$req="select * from produits where Code_cat=$idCat order by id_prod ASC limit $premierMessageAafficher,$nombreParPage";
+$reqSql   .= " order by id_prod ASC limit ?,?";
+$reqTypes .= 'ii';
+$reqParams[] = $premierMessageAafficher;
+$reqParams[] = $nombreParPage;
 }
 else{
-  $sql="select * from produits";
-  $rs=mysqli_query($conn, $sql);
-  $nombreTotal=mysqli_num_rows($rs);
+  $rs=fm_requete($conn, "select * from produits");
+  $nombreTotal=$rs ? mysqli_num_rows($rs) : 0;
   $nombreParPage=12;
       
     $nombreDePages = ceil($nombreTotal / $nombreParPage );  
@@ -182,10 +214,16 @@ else{
 
  
 $premierMessageAafficher = ($page - 1) * $nombreParPage;
-$req="select * from produits where selectionne=1 order by id_prod ASC limit $premierMessageAafficher,$nombreParPage ";
+$reqSql    = "select * from produits where selectionne=1 order by id_prod ASC limit ?,?";
+$reqTypes  = 'ii';
+$reqParams = array($premierMessageAafficher, $nombreParPage);
 
 }
-$rsProd=mysqli_query($conn, $req) or die (mysqli_error($conn));
+$rsProd=fm_requete($conn, $reqSql, $reqTypes, $reqParams);
+if (!$rsProd) {
+  http_response_code(500);
+  die('Unable to load the products right now. Please try again later.');
+}
 ?>
 
 
@@ -217,18 +255,18 @@ $myphoto=explode(",",$prod['Photo']);
     ?>
 <div class="post">
 
-   <a id="effect-zone" href="../images/<?php echo $prod['Ref_prod']."/".$myphoto[0]; ?>" title="<?php echo($prod['Designation'])?>" class="post-thumb">
-    <img src="../images/<?php echo $prod['Ref_prod']."/".$myphoto[0]; ?>" width="240"
+   <a id="effect-zone" href="../images/<?php echo rawurlencode($prod['Ref_prod'])."/".rawurlencode($myphoto[0]); ?>" title="<?php echo fm_h($prod['Designation'])?>" class="post-thumb">
+    <img src="../images/<?php echo rawurlencode($prod['Ref_prod'])."/".rawurlencode($myphoto[0]); ?>" width="240"
   height="170">
   </a>
-  <a id="effect-zone" href="../images/<?php echo $prod['Ref_prod']."/".$myphoto[0]; ?>" title="<?php echo($prod['Designation'])?>">
+  <a id="effect-zone" href="../images/<?php echo rawurlencode($prod['Ref_prod'])."/".rawurlencode($myphoto[0]); ?>" title="<?php echo fm_h($prod['Designation'])?>">
   <div class="post-icon">
   
   <i class="fa fa-picture-o"></i>
   </div>
   </a>
   <div class="post-content">
-  <h2 class="post-title"><a href="products_detail/<?php echo($prod['id_prod'])?>/"><?php echo $prod['Designation']?></a></h2>
+  <h2 class="post-title"><a href="products_detail/<?php echo (int) $prod['id_prod']?>/"><?php echo fm_h($prod['Designation'])?></a></h2>
  
   <p>
     
@@ -243,8 +281,8 @@ $myphoto=explode(",",$prod['Photo']);
 <div id="loader12" class="loading hidden">&nbsp;</div>
 <?php
 if(isset($_GET['idCat'])){
-$idCat=$_GET['idCat'];
-$Namecat=$_GET['name'];
+$idCat=(int) $_GET['idCat'];
+$Namecat=rawurlencode(isset($_GET['name']) ? $_GET['name'] : '');
 
 ?>
 <div class="cb"></div>
@@ -307,7 +345,7 @@ if ($page >= $nombreDePages){
 <?php
 }
 elseif(isset($_GET['tags'])){
-$tag=$_GET['tags'];
+$tag=trim($_GET['tags']);
 
 
 ?>
@@ -328,7 +366,7 @@ elseif ($page > 1) {
 
     ?>
    <li> <a class="prodinfo" id="prev-page"
-                    href="dbproducts/tags/<?php echo $_GET['tags'].'/'.(($page-1));?>"
+                    href="dbproducts/tags/<?php echo rawurlencode($_GET['tags']).'/'.(($page-1));?>"
                     title="Previous Page" ><span>&#10094; Previous</span></a></li>
             <?php }
 for ($i = 1; $i <= $nombreDePages ; $i++)
@@ -339,7 +377,7 @@ for ($i = 1; $i <= $nombreDePages ; $i++)
     }
     else
     {
-  echo'<li><a href="dbproducts/tags/'.$_GET['tags'].'/'.$i.'" class="prodinfo"><span>'.$i.'</span></a></li>';
+  echo'<li><a href="dbproducts/tags/'.rawurlencode($_GET['tags']).'/'.$i.'" class="prodinfo"><span>'.$i.'</span></a></li>';
   }
   }
 if ($page >= $nombreDePages){
@@ -351,7 +389,7 @@ if ($page >= $nombreDePages){
     if ($page < $nombreDePages) {
         ?>
        <li> <a class="prodinfo" id="next-page"
-                    href="dbproducts/tags/<?php echo $_GET['tags'].'/'.(($page+1)).'/';?>"
+                    href="dbproducts/tags/<?php echo rawurlencode($_GET['tags']).'/'.(($page+1)).'/';?>"
                     title="Next Page" ><span>Next &#10095;</span></a> </li>
         <?php
     }
@@ -391,7 +429,7 @@ elseif ($page > 1) {
 
     ?>
    <li> <a class="prodinfo" id="prev-page"
-                    href="dbproducts/search/<?php echo $_GET['motCle'].'/'.(($page-1));?>"
+                    href="dbproducts/search/<?php echo rawurlencode($_GET['motCle']).'/'.(($page-1));?>"
                     title="Previous Page" ><span>&#10094; Previous</span></a></li>
             <?php }
 
@@ -403,7 +441,7 @@ for ($i = 1; $i <= $nombreDePages ; $i++)
     }
     else
     {
-  echo'<li><a href="dbproducts/search/'.$_GET['motCle'].'/'.$i.'" class="prodinfo"><span>'.$i.'</span></a></li>';
+  echo'<li><a href="dbproducts/search/'.rawurlencode($_GET['motCle']).'/'.$i.'" class="prodinfo"><span>'.$i.'</span></a></li>';
   }
   }
 if ($page >= $nombreDePages){
@@ -415,7 +453,7 @@ if ($page >= $nombreDePages){
     if ($page < $nombreDePages) {
         ?>
        <li> <a class="prodinfo" id="next-page"
-                    href="dbproducts/search/<?php echo $_GET['motCle'].'/'.(($page+1));?>"
+                    href="dbproducts/search/<?php echo rawurlencode($_GET['motCle']).'/'.(($page+1));?>"
                     title="Next Page" ><span>Next &#10095;</span></a> </li>
         <?php
     }
