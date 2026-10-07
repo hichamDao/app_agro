@@ -96,3 +96,43 @@ function fm_pagehead($eyebrow, $h1, $texte, $parent = false)
 </section>
 <?php
 }
+
+/**
+ * Grille "ce que nous exportons" : les familles de produits, chacune avec un
+ * lien vers son guide acheteur (products/{slug}/). Partagee par les pages
+ * d'export pour que les textes restent identiques et qu'un seul endroit soit
+ * a modifier. Les saisons sont indicatives (voir les guides).
+ */
+function fm_export_grid()
+{
+    global $fm_app;
+    $familles = array(
+        array('Tomatoes',     'tomatoes',     'Round, cherry, plum and truss tomatoes, sorted by size and colour. Main season from October to May.'),
+        array('Citrus',       'oranges',      'Oranges, clementines and lemons, picked by hand. Generally from autumn to spring.'),
+        array('Melons',       'watermelon',   'Seeded, seedless and mini watermelons. Generally from March to August.'),
+        array('Peppers',      'peppers',      'Bell peppers in several colours, and sweet pointed types. Generally from October to June.'),
+        array('Courgettes',   'courgettes',   'Firm, smooth courgettes, picked young. Generally from autumn to late spring.'),
+        array('Berries',      'berries',      'Strawberries, blueberries and more, kept cold from the moment they are picked.'),
+        array('Figs',         'figs',         'Fresh figs from late summer to autumn, soft and sweet, and dried figs.'),
+        array('Dried fruits', 'dried-fruits', 'Dried figs, dates and other dried fruits, depending on the harvest.'),
+        array('Eggplants',    'eggplants',    'Glossy eggplants with firm flesh. Generally from autumn to early summer.'),
+        array('Green leaves', 'green-leaves', 'Leafy greens and herbs, cut by hand and cooled straight away.'),
+        array('Stone fruits', 'pits',         'Peaches, apricots, plums and cherries, from spring to summer.'),
+    );
+    ?>
+	<div class="fm-export-grid">
+		<?php foreach ($familles as $f) { ?>
+		<article class="fm-export">
+			<span class="fm-export-icon"><i class="fa fa-fw fa-circle" aria-hidden="true"></i></span>
+			<h3><a href="<?php echo $fm_app . 'products/' . $f[1]; ?>/"><?php echo htmlspecialchars($f[0], ENT_QUOTES, 'UTF-8'); ?></a></h3>
+			<p><?php echo htmlspecialchars($f[2], ENT_QUOTES, 'UTF-8'); ?></p>
+		</article>
+		<?php } ?>
+		<article class="fm-export fm-export-more">
+			<span class="fm-export-icon"><i class="fa fa-fw fa-ellipsis-h" aria-hidden="true"></i></span>
+			<h3><a href="<?php echo $fm_app; ?>products/">And more</a></h3>
+			<p>Other seasonal products too, so ask us what is available right now.</p>
+		</article>
+	</div>
+<?php
+}

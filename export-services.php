@@ -2,6 +2,7 @@
 /* _header.php ouvre la session : il doit etre inclus AVANT tout affichage,
    sinon les en-tetes HTTP sont deja partis et session_start() echoue. */
 require_once(__DIR__ . "/includes/paths.php");
+require_once(__DIR__ . "/includes/explore.php");
 require_once(__DIR__ . "/includes/seo.php");
 require_once(__DIR__ . "/includes/_header.php");
 ?>
@@ -44,7 +45,7 @@ require_once(__DIR__ . "/includes/_header.php");
 	<div class="fm-pagehead-inner">
 		<span class="fm-eyebrow">Export services</span>
 		<h1>Fresh Produce Export Services from Morocco</h1>
-		<p>FoodMax Group handles every step from the Moroccan field to your warehouse sourcing quality produce controlling quality packing to your specs maintaining the cold chain preparing export documents and organizing shipment</p>
+		<p>FoodMax Group looks after every step between a Moroccan field and your warehouse: sourcing, quality control, packing to your specification, the cold chain, export documents and the organisation of the shipment, so that you deal with one team instead of several.</p>
 
 		<nav class="fm-crumbs" aria-label="Breadcrumb">
 			<ol>
@@ -61,7 +62,7 @@ require_once(__DIR__ . "/includes/_header.php");
 		<p class="fm-eyebrow">Our process</p>
 		<h2>Six steps from field to destination</h2>
 		<p class="fm-section-sub">
-			We manage the full export chain so you receive fresh produce on time and in perfect condition
+			We look after the whole export chain, so that the produce reaches you on time and in the condition you expect.
 		</p>
 	</div>
 
@@ -69,37 +70,37 @@ require_once(__DIR__ . "/includes/_header.php");
 		<article class="fm-step">
 			<span class="fm-step-num">01</span>
 			<h3>Product sourcing</h3>
-			<p>We select produce directly from growers across Morocco matching your variety size and quality requirements</p>
+			<p>We select produce from growers across Morocco, matching the variety, the size and the quality you ask for, and we tell you honestly what the season can and cannot offer.</p>
 		</article>
 
 		<article class="fm-step">
 			<span class="fm-step-num">02</span>
 			<h3>Quality control</h3>
-			<p>Every lot is inspected at harvest and at the packhouse for size colour firmness brix level and phytosanitary compliance</p>
+			<p>Lots are checked when they are harvested and again when they are packed, looking at size, colour, firmness and general condition, and anything that does not match your specification is set aside.</p>
 		</article>
 
 		<article class="fm-step">
 			<span class="fm-step-num">03</span>
 			<h3>Packing</h3>
-			<p>We pack to your specification retail clamshells flow wrap bulk bins private label everything prepared for your market</p>
+			<p>We pack to your specification, in cartons, trays, punnets, retail packs or bulk, with private label if you wish, so that the goods are ready for your market as soon as they arrive.</p>
 		</article>
 
 		<article class="fm-step">
 			<span class="fm-step-num">04</span>
 			<h3>Cold chain</h3>
-			<p>Pre cooling hydrocooling refrigerated trucks and containers temperature monitored from field to your door</p>
+			<p>Produce is cooled quickly after harvest and kept at the right temperature for each product, in refrigerated trucks and containers, until it reaches you. If you would like temperature records, just ask us.</p>
 		</article>
 
 		<article class="fm-step">
 			<span class="fm-step-num">05</span>
 			<h3>Documentation</h3>
-			<p>Phytosanitary certificates certificates of origin GlobalGAP BRC IFS customs paperwork we prepare it all</p>
+			<p>Every shipment travels with the paperwork it needs: usually an invoice and a packing list and, depending on the product and the destination, a phytosanitary certificate, a certificate of origin and other customs documents. Tell us where the goods are going and we will explain what is required.</p>
 		</article>
 
 		<article class="fm-step">
 			<span class="fm-step-num">06</span>
 			<h3>Shipping</h3>
-			<p>Sea freight air freight land transport we book the space coordinate loading and track the shipment until delivery</p>
+			<p>We organise the transport, by road or by sea depending on the product, the distance and how soon you need the goods, we coordinate the loading, and we keep you informed until delivery.</p>
 		</article>
 	</div>
 </section>
@@ -115,32 +116,32 @@ require_once(__DIR__ . "/includes/_header.php");
 		<div class="fm-quality">
 			<span class="fm-quality-icon"><i class="fa fa-leaf"></i></span>
 			<h3>Fresh</h3>
-			<p>Harvested at peak ripeness cooled fast shipped cold so it arrives in top condition</p>
+			<p>Picked at the right moment, cooled quickly and kept cold, so that it arrives in the best possible condition.</p>
 		</div>
 		<div class="fm-quality">
 			<span class="fm-quality-icon"><i class="fa fa-check-circle"></i></span>
 			<h3>Reliable</h3>
-			<p>We ship on time every time and communicate proactively if anything changes</p>
+			<p>We aim to ship when we say we will, and if anything changes we tell you early instead of letting you find out.</p>
 		</div>
 		<div class="fm-quality">
 			<span class="fm-quality-icon"><i class="fa fa-file-text-o"></i></span>
 			<h3>Compliant</h3>
-			<p>All documentation ready for customs no surprises at the border</p>
+			<p>We prepare the export documents for your market, so there are fewer surprises at the border.</p>
 		</div>
 		<div class="fm-quality">
 			<span class="fm-quality-icon"><i class="fa fa-globe"></i></span>
-			<h3>Global</h3>
-			<p>Europe Middle East Africa Asia we know the routes the rules and the markets</p>
+			<h3>International</h3>
+			<p>We supply buyers in Europe and in other markets, and we are happy to look at a new destination together.</p>
 		</div>
 		<div class="fm-quality">
 			<span class="fm-quality-icon"><i class="fa fa-handshake-o"></i></span>
 			<h3>Flexible</h3>
-			<p>Small trial orders or full container programmes we adapt to your volume</p>
+			<p>From a small trial shipment to a regular container programme, we adapt to your volume.</p>
 		</div>
 		<div class="fm-quality">
 			<span class="fm-quality-icon"><i class="fa fa-comments-o"></i></span>
 			<h3>Transparent</h3>
-			<p>One point of contact clear pricing and regular updates from loading to delivery</p>
+			<p>One point of contact, clear prices and regular news from loading to delivery.</p>
 		</div>
 	</div>
 </section>
@@ -151,67 +152,21 @@ require_once(__DIR__ . "/includes/_header.php");
 		<p class="fm-eyebrow">Our range</p>
 		<h2>Moroccan produce we export</h2>
 		<p class="fm-section-sub">
-			Twelve product families each with its own season we know them all
+			Each family has its own season and its own character. Click on a product to read our guide for buyers.
 		</p>
 	</div>
 
-	<div class="fm-export-grid">
-		<article class="fm-export">
-			<span class="fm-export-icon"><i class="fa fa-fw fa-circle" aria-hidden="true"></i></span>
-			<h3>Tomatoes</h3>
-			<p>Cherry plum round coloured varieties October to May</p>
-		</article>
-		<article class="fm-export">
-			<span class="fm-export-icon"><i class="fa fa-fw fa-circle" aria-hidden="true"></i></span>
-			<h3>Citrus</h3>
-			<p>Navel oranges blood oranges lemons mandarins November to April</p>
-		</article>
-		<article class="fm-export">
-			<span class="fm-export-icon"><i class="fa fa-fw fa-circle" aria-hidden="true"></i></span>
-			<h3>Melons</h3>
-			<p>Watermelon seeded and seedless March to August</p>
-		</article>
-		<article class="fm-export">
-			<span class="fm-export-icon"><i class="fa fa-fw fa-circle" aria-hidden="true"></i></span>
-			<h3>Peppers</h3>
-			<p>Red yellow orange bell peppers October to June</p>
-		</article>
-		<article class="fm-export">
-			<span class="fm-export-icon"><i class="fa fa-fw fa-circle" aria-hidden="true"></i></span>
-			<h3>Courgettes</h3>
-			<p>Green yellow patty pan year round greenhouse grown</p>
-		</article>
-		<article class="fm-export">
-			<span class="fm-export-icon"><i class="fa fa-fw fa-circle" aria-hidden="true"></i></span>
-			<h3>Berries</h3>
-			<p>Strawberries raspberries blueberries November to May</p>
-		</article>
-		<article class="fm-export">
-			<span class="fm-export-icon"><i class="fa fa-fw fa-circle" aria-hidden="true"></i></span>
-			<h3>Figs</h3>
-			<p>Fresh and dried June to September</p>
-		</article>
-		<article class="fm-export">
-			<span class="fm-export-icon"><i class="fa fa-fw fa-circle" aria-hidden="true"></i></span>
-			<h3>Dried fruits</h3>
-			<p>Apricots raisins dates almonds year round</p>
-		</article>
-		<article class="fm-export fm-export-more">
-			<span class="fm-export-icon"><i class="fa fa-fw fa-ellipsis-h" aria-hidden="true"></i></span>
-			<h3>And more</h3>
-			<p>Eggplants green leaves pits ask us what is in season</p>
-		</article>
-	</div>
+	<?php fm_export_grid(); ?>
 </section>
 
 <!-- ============================================================ CTA -->
 <section class="fm-cta">
 	<div class="fm-cta-inner">
 		<p class="fm-eyebrow">Next step</p>
-		<h2>Ready to source from Morocco</h2>
+		<h2>Ready to source from Morocco?</h2>
 		<p>
-			Tell us what product you need the volume the destination and the timing
-			and we will send you a proposal within one business day
+			Tell us the product, the quantity, the destination and the timing, and we will come back to you
+			with a proposal within one business day.
 		</p>
 		<div class="fm-cta-actions">
 			<a class="btn" href="<?php echo $fm_app; ?>contact/">Request a quote</a>
