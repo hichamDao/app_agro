@@ -1042,6 +1042,44 @@ body .pagination span.active {
 .fm-quality h3 { margin: 0 0 10px; font-size: 19px; }
 .fm-quality p { margin: 0; font-size: 14px; color: var(--phlox-muted); }
 
+/* ----------------------------------------------------------------- EXPORT --- */
+.fm-export-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  max-width: 1240px;
+  margin: 0 auto;
+}
+.fm-export {
+  padding: 24px 20px;
+  text-align: center;
+  background: var(--phlox-bg);
+  border: 1px solid var(--phlox-border);
+  border-radius: var(--phlox-radius);
+  transition: var(--phlox-tr);
+}
+.fm-export:hover {
+  border-color: var(--phlox-primary);
+  transform: translateY(-3px);
+  box-shadow: var(--phlox-shadow-hover);
+}
+.fm-export-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 14px;
+  font-size: 10px;
+  color: var(--phlox-primary);
+  background: var(--phlox-primary-soft);
+  border-radius: 50%;
+}
+.fm-export:hover .fm-export-icon { color: #fff; background: var(--phlox-primary); }
+.fm-export h3 { margin: 0 0 8px; font-size: 17px; }
+.fm-export p { margin: 0; font-size: 13px; color: var(--phlox-muted); line-height: 1.5; }
+.fm-export-more { opacity: 0.85; }
+
 /* ----------------------------------------------------------------- CTA --- */
 
 .fm-cta {

@@ -59,6 +59,9 @@ $categoryMap = array(
     'berries'      => array('Berries'),
     'dried-fruits' => array('Dried fruits', 'Driedfruits'),
     'figs'         => array('Figs'),
+    'eggplants'    => array('Eggplants'),
+    'green-leaves' => array('Green leaves', 'Greenleaves'),
+    'pits'         => array('Pits'),
 );
 $norm = function ($v) { return strtolower(preg_replace('/[^a-z]/i', '', (string) $v)); };
 

@@ -34,10 +34,27 @@ if (isset($conn) && $conn) {
         }
     } catch (Throwable $fm_e) { $fm_nav_cats = array(); }
 }
+/* Repli si la base ne repond pas : les familles et leurs identifiants. */
+if (!$fm_nav_cats) {
+    $fm_nav_cats = array(
+        array('label' => 'Tomatoes',     'url' => 'products/7/Tomatoes/'),
+        array('label' => 'Citrus',       'url' => 'products/3/Citrus/'),
+        array('label' => 'Melons',       'url' => 'products/6/Melons/'),
+        array('label' => 'Peppers',      'url' => 'products/8/Peppers/'),
+        array('label' => 'Courgettes',   'url' => 'products/10/Courgettes/'),
+        array('label' => 'Berries',      'url' => 'products/4/Berries/'),
+        array('label' => 'Figs',         'url' => 'products/16/Figs/'),
+        array('label' => 'Dried Fruits', 'url' => 'products/14/Driedfruits/'),
+        array('label' => 'Eggplants',    'url' => 'products/11/Eggplants/'),
+        array('label' => 'Green Leaves', 'url' => 'products/15/Greenleaves/'),
+        array('label' => 'Pits',         'url' => 'products/5/Pits/'),
+    );
+}
 
 /* Onglet "About us" actif sur sa page et sur les pages de presentation. */
 $fm_about_actif = false;
-foreach (array('about-us', 'how-we-work', 'quality', 'morocco', 'why-foodmax', 'gallery') as $fm_pg) {
+foreach (array('about-us', 'how-we-work', 'quality', 'morocco', 'why-foodmax', 'gallery',
+              'fresh-produce-exporter-morocco', 'export-services', 'for-importers') as $fm_pg) {
     if (strpos($fm_path, $fm_pg) !== false) { $fm_about_actif = true; }
 }
 ?>
@@ -57,14 +74,17 @@ foreach (array('about-us', 'how-we-work', 'quality', 'morocco', 'why-foodmax', '
 
 		<nav class="fm-nav-menu" id="fmMenu" aria-label="Main navigation">
 			<ul class="fm-nav-list">
-				<li<?php echo ($fm_self === 'index.php' && $fm_path === '/') ? ' class="is-current"' : ''; ?>>
-					<a href="<?php echo $fm_app; ?>">Home</a>
-				</li>
-				<li class="has-sub<?php echo $fm_about_actif ? ' is-current' : ''; ?>">
+			<li<?php echo ($fm_self === 'index.php' && $fm_path === '/') ? ' class="is-current"' : ''; ?>>
+				<a href="<?php echo $fm_app; ?>">Home</a>
+			</li>
+			<li class="has-sub<?php echo $fm_about_actif ? ' is-current' : ''; ?>">
 					<a href="<?php echo $fm_app; ?>about-us/" class="fm-sub-toggle">
 						About us <i class="fa fa-angle-down" aria-hidden="true"></i>
 					</a>
 					<ul class="fm-sub">
+						<li><a href="<?php echo $fm_app; ?>fresh-produce-exporter-morocco/">Fresh Produce Exporter</a></li>
+						<li><a href="<?php echo $fm_app; ?>export-services/">Export Services</a></li>
+						<li><a href="<?php echo $fm_app; ?>for-importers/">For Importers</a></li>
 						<li><a href="<?php echo $fm_app; ?>about-us/">Our story</a></li>
 						<li><a href="<?php echo $fm_app; ?>how-we-work/">How we work</a></li>
 						<li><a href="<?php echo $fm_app; ?>quality/">Quality and commitment</a></li>

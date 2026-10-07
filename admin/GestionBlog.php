@@ -124,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     WHERE id = ?';
             $stmt = mysqli_prepare($conn, $sql);
             if ($stmt) {
-                mysqli_stmt_bind_param($stmt, 'ssssssssssi',
+                mysqli_stmt_bind_param($stmt, 'sssssssssssi',
                     $title, $slug, $excerpt, $content, $category,
                     $productLink, $productLbl, $image, $metaTitle, $metaDesc, $status, $id);
                 $ok = mysqli_stmt_execute($stmt);

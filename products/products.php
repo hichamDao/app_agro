@@ -153,6 +153,40 @@ if ($motCle !== '') {
     $fm_sousTitre = 'Fresh fruits and vegetables grown in Morocco, packed for export.';
 }
 
+/* Mapping category name to SEO slug for product guide pages */
+$seoSlugMap = array(
+    'Tomatoes'    => 'tomatoes',
+    'Citrus'      => 'oranges',
+    'Melons'      => 'watermelon',
+    'Peppers'     => 'peppers',
+    'Courgettes'  => 'courgettes',
+    'Berries'     => 'berries',
+    'Figs'        => 'figs',
+    'Dried_fruits'=> 'dried-fruits',
+    'Dried fruits'=> 'dried-fruits',
+    'Eggplants'   => 'eggplants',
+    'Green_leaves'=> 'green-leaves',
+    'Green leaves'=> 'green-leaves',
+    'Pits'        => 'pits',
+);
+$seoSlug = isset($seoSlugMap[$catCourante['label']]) ? $seoSlugMap[$catCourante['label']] : '';
+/* Le bouton n'apparait que si la fiche existe et est publiee : jamais de lien mort. */
+if ($seoSlug !== '') {
+    $fm_guideOk = false;
+    try {
+        $stG = mysqli_prepare($conn, "SELECT 1 FROM product_seo WHERE slug = ? AND status = 'published' LIMIT 1");
+        if ($stG) {
+            mysqli_stmt_bind_param($stG, 's', $seoSlug);
+            mysqli_stmt_execute($stG);
+            $rG = mysqli_stmt_get_result($stG);
+            $fm_guideOk = ($rG && mysqli_fetch_assoc($rG)) ? true : false;
+            mysqli_stmt_close($stG);
+        }
+    } catch (Throwable $fm_e) { $fm_guideOk = false; }
+    if (!$fm_guideOk) { $seoSlug = ''; }
+}
+$seoLink = $seoSlug ? $fm_app . 'products/' . $seoSlug . '/' : '';
+
 /* Filtre actif, pour surligner le bon lien dans la barre de navigation. */
 $fm_lienActif = 'products/';
 if ($catCourante) { $fm_lienActif = 'products/' . $catCourante['Code_cat'] . '/'; }
@@ -300,6 +334,14 @@ function fm_resume($texte, $long = 96) {
 		<span class="fm-eyebrow">Our catalogue</span>
 		<h1><?php echo $fm_titre; ?></h1>
 		<p><?php echo $fm_sousTitre; ?></p>
+
+		<?php if ($seoLink !== ''): ?>
+		<div class="fm-seo-link">
+			<a href="<?php echo $seoLink; ?>" class="btn btn-outline">
+				<i class="fa fa-book" aria-hidden="true"></i> Product Guide
+			</a>
+		</div>
+		<?php endif; ?>
 
 		<nav class="fm-crumbs" aria-label="Breadcrumb">
 			<ol>

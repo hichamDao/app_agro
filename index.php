@@ -169,30 +169,18 @@ require_once(__DIR__ . "/includes/header-inc.php"); ?>
 		<img src="<?php echo $fm_app; ?>images/banniere.png" alt="Fresh fruits and vegetables from Morocco" width="2048" height="768" fetchpriority="high">
 	</div>
 	<div class="fm-hero-inner">
-		<p class="fm-hero-kicker">From Morocco to the World</p>
-		<h1 class="fm-hero-title">Freshness, quality and trust</h1>
+		<h1 class="fm-hero-title">Moroccan Fresh Produce Exporter — Fruits &amp; Vegetables Worldwide</h1>
 		<p class="fm-hero-text">
-			Every box we send starts in a Moroccan field, in the hands of people
-			who care about what they grow, and it stays with us all the way to
-			your door. At FoodMax Group we select, check, pack and ship fresh
-			fruits and vegetables for markets close to home and far away, because
-			we believe a good product deserves to arrive just as it left the
-			farm, and a good customer deserves to know exactly what they are
-			getting.
+			FoodMax Group sources, packs and exports premium Moroccan fruits and vegetables to international markets, with reliable quality, full traceability and end-to-end cold chain management.
 		</p>
 		<div class="fm-hero-actions">
 			<a class="btn" href="<?php echo $fm_app; ?>products/">
-				Discover Our Products <i class="fa fa-arrow-right" aria-hidden="true"></i>
+				Explore our products <i class="fa fa-arrow-right" aria-hidden="true"></i>
 			</a>
 			<a class="btn btn-outline fm-btn-light" href="<?php echo $fm_app; ?>contact/">
-				Contact FoodMax Group
+				Request an export quote
 			</a>
 		</div>
-		<ul class="fm-hero-points">
-			<li><i class="fa fa-check" aria-hidden="true"></i> Twelve product families</li>
-			<li><i class="fa fa-check" aria-hidden="true"></i> Cold chain from start to finish</li>
-			<li><i class="fa fa-check" aria-hidden="true"></i> Supply for professionals</li>
-		</ul>
 	</div>
 </section>
 

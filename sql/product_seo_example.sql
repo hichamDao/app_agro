@@ -376,3 +376,123 @@ ON DUPLICATE KEY UPDATE
     `meta_title` = VALUES(`meta_title`),
     `meta_description` = VALUES(`meta_description`),
     `status` = VALUES(`status`);
+
+-- Eggplants from Morocco
+INSERT INTO `product_seo`
+    (`slug`, `title`, `subtitle`, `origin`, `varieties`, `season`, `sizes`, `packaging`, `availability`, `transportation`, `destinations`, `quality`, `certifications`, `meta_title`, `meta_description`, `status`, `created_at`, `updated_at`)
+VALUES (
+    'eggplants',
+    'Eggplants from Morocco',
+    'Glossy Moroccan eggplants with firm flesh and a clean skin, picked at just the right moment.',
+    'Morocco. Eggplants are warm-season plants that need heat and sunshine, and they are often grown in greenhouses or under tunnels.',
+    'Large purple eggplants: the classic type | Long, slender eggplants | Round, white or striped types: ask us what is available',
+    'Eggplants are generally available from autumn to early summer. Ask us what is available right now.',
+    'Eggplants are sorted by length, thickness and weight. Tell us the range you prefer.',
+    'Cartons | Trays | Retail packs',
+    'Supply follows the season. Tell us the quantity and how often you would like to receive it, and we will tell you honestly what we can commit to.',
+    'Eggplants dislike the cold, so they are kept at a moderate temperature, around 10 to 12 degrees, and not for too long. They are loaded carefully to avoid dents and scratches on the skin.',
+    'We supply professional buyers in Europe and in other markets. Tell us where the goods should go and we will explain what is possible, including labelling and documents.',
+    'The fruit is harvested by hand before it is fully mature, while the skin is shiny and the flesh still firm, because an eggplant left too long on the plant gets hard seeds and a more bitter taste.',
+    'We do not list certificates on this page. If a certificate applies to a product or to a grower, we will tell you exactly which one it is and send you the document with your quote.',
+    'Moroccan Eggplants: Season and Export Guide',
+    'Fresh Moroccan eggplants for professional buyers: season, sizes, packing and handling. Ask FoodMax Group for availability and a quote.',
+    'published',
+    '2026-04-29 08:00:00',
+    NOW()
+)
+ON DUPLICATE KEY UPDATE
+    `title` = VALUES(`title`),
+    `subtitle` = VALUES(`subtitle`),
+    `origin` = VALUES(`origin`),
+    `varieties` = VALUES(`varieties`),
+    `season` = VALUES(`season`),
+    `sizes` = VALUES(`sizes`),
+    `packaging` = VALUES(`packaging`),
+    `availability` = VALUES(`availability`),
+    `transportation` = VALUES(`transportation`),
+    `destinations` = VALUES(`destinations`),
+    `quality` = VALUES(`quality`),
+    `certifications` = VALUES(`certifications`),
+    `meta_title` = VALUES(`meta_title`),
+    `meta_description` = VALUES(`meta_description`),
+    `status` = VALUES(`status`);
+
+-- Green Leaves from Morocco
+INSERT INTO `product_seo`
+    (`slug`, `title`, `subtitle`, `origin`, `varieties`, `season`, `sizes`, `packaging`, `availability`, `transportation`, `destinations`, `quality`, `certifications`, `meta_title`, `meta_description`, `status`, `created_at`, `updated_at`)
+VALUES (
+    'green-leaves',
+    'Green Leaves from Morocco',
+    'Tender leafy greens and herbs, cut by hand and cooled straight away.',
+    'Morocco. Leafy greens grow best in cool weather and grow fast, so the harvest comes only a few weeks after planting.',
+    'Lettuce and salad leaves | Spinach | Herbs such as parsley and coriander | Other leafy greens: ask us which are available',
+    'Leafy greens are cool-season crops, generally available from autumn to spring. Ask us what is available right now.',
+    'Sizes and weights depend on the product and the pack. Tell us what you need and we will explain what is possible.',
+    'Cartons | Bunches | Bags and retail packs',
+    'Supply follows the season. Tell us the quantity and how often you would like to receive it, and we will tell you honestly what we can commit to.',
+    'Green leaves are the most delicate products we deal with. They need a quick and cool journey, just above freezing, around 0 to 2 degrees, in humid conditions that keep the leaves firm and green. For this product more than any other, the cold chain is part of the quality.',
+    'We supply professional buyers in Europe and in other markets. Tell us where the goods should go and we will explain what is possible, including labelling and documents.',
+    'Leaves are cut by hand, usually early in the morning while they are still crisp and full of water, and then cooled straight away, because every hour in the warmth costs freshness.',
+    'We do not list certificates on this page. If a certificate applies to a product or to a grower, we will tell you exactly which one it is and send you the document with your quote.',
+    'Moroccan Green Leaves: Season and Export Guide',
+    'Leafy greens and herbs from Morocco for professional buyers: season, packing and the cold chain. Ask FoodMax Group for a quote.',
+    'published',
+    '2026-04-28 08:00:00',
+    NOW()
+)
+ON DUPLICATE KEY UPDATE
+    `title` = VALUES(`title`),
+    `subtitle` = VALUES(`subtitle`),
+    `origin` = VALUES(`origin`),
+    `varieties` = VALUES(`varieties`),
+    `season` = VALUES(`season`),
+    `sizes` = VALUES(`sizes`),
+    `packaging` = VALUES(`packaging`),
+    `availability` = VALUES(`availability`),
+    `transportation` = VALUES(`transportation`),
+    `destinations` = VALUES(`destinations`),
+    `quality` = VALUES(`quality`),
+    `certifications` = VALUES(`certifications`),
+    `meta_title` = VALUES(`meta_title`),
+    `meta_description` = VALUES(`meta_description`),
+    `status` = VALUES(`status`);
+
+-- Stone Fruits from Morocco
+INSERT INTO `product_seo`
+    (`slug`, `title`, `subtitle`, `origin`, `varieties`, `season`, `sizes`, `packaging`, `availability`, `transportation`, `destinations`, `quality`, `certifications`, `meta_title`, `meta_description`, `status`, `created_at`, `updated_at`)
+VALUES (
+    'pits',
+    'Stone Fruits from Morocco',
+    'Peaches, apricots, plums and cherries: the taste of spring turning into summer.',
+    'Morocco. Stone fruit trees need a cold winter to rest and flower well in spring, so they grow where the winters are cool enough.',
+    'Peaches and nectarines | Apricots | Plums | Cherries | Other stone fruits: ask us what is available',
+    'The season generally runs from spring to summer, depending on the fruit. A late frost at the wrong moment can affect a crop, so the quality of a season can change from one year to the next.',
+    'Stone fruits are graded by size and by appearance. Tell us the range you prefer.',
+    'Trays | Cartons | Punnets and retail packs',
+    'Supply follows the season. Tell us the quantity and how often you would like to receive it, and we will tell you honestly what we can commit to.',
+    'Stone fruits are kept cool, around 0 to 2 degrees, and handled gently, because bruises appear quickly on the skin. They are at their best when they are allowed to finish ripening at room temperature.',
+    'We supply professional buyers in Europe and in other markets. Tell us where the goods should go and we will explain what is possible, including labelling and documents.',
+    'The fruit is picked by hand when it is firm but already coloured, so that it can travel and keep ripening and softening on its way.',
+    'We do not list certificates on this page. If a certificate applies to a product or to a grower, we will tell you exactly which one it is and send you the document with your quote.',
+    'Moroccan Stone Fruits: Peaches, Apricots and Plums',
+    'Peaches, apricots, plums and cherries from Morocco: season, packing and handling. Ask FoodMax Group for availability and a quote.',
+    'published',
+    '2026-04-27 08:00:00',
+    NOW()
+)
+ON DUPLICATE KEY UPDATE
+    `title` = VALUES(`title`),
+    `subtitle` = VALUES(`subtitle`),
+    `origin` = VALUES(`origin`),
+    `varieties` = VALUES(`varieties`),
+    `season` = VALUES(`season`),
+    `sizes` = VALUES(`sizes`),
+    `packaging` = VALUES(`packaging`),
+    `availability` = VALUES(`availability`),
+    `transportation` = VALUES(`transportation`),
+    `destinations` = VALUES(`destinations`),
+    `quality` = VALUES(`quality`),
+    `certifications` = VALUES(`certifications`),
+    `meta_title` = VALUES(`meta_title`),
+    `meta_description` = VALUES(`meta_description`),
+    `status` = VALUES(`status`);
