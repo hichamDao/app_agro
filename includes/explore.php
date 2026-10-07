@@ -30,6 +30,16 @@ function fm_site_pages()
             'icon'  => 'fa-globe',
             'text'  => 'A land of many climates and generations of know-how, and why it matters to us.',
         ),
+        'export-services' => array(
+            'title' => 'Export services',
+            'icon'  => 'fa-ship',
+            'text'  => 'From sourcing and packing to documents and shipping: what we take care of for you.',
+        ),
+        'for-importers' => array(
+            'title' => 'For importers',
+            'icon'  => 'fa-briefcase',
+            'text'  => 'What an importer can expect from us, and how to start a first order.',
+        ),
         'why-foodmax' => array(
             'title' => 'Why work with us',
             'icon'  => 'fa-star',
@@ -65,7 +75,7 @@ function fm_explore($exclure = array(), $eyebrow = 'Keep exploring', $titre = 'C
 }
 
 /* En-tete de page avec fil d'Ariane. $titre_courant : dernier element. */
-function fm_pagehead($eyebrow, $h1, $texte, $parent = true)
+function fm_pagehead($eyebrow, $h1, $texte, $parent = false)
 {
     global $fm_app;
     ?>

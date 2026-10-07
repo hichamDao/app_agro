@@ -13,7 +13,7 @@ $fm_page_path  = 'why-foodmax/';
 $fm_page_desc  = 'Six reasons to work with FoodMax Group, and the kind of clients and partners we supply.';
 require_once(__DIR__ . "/includes/page-open.php");
 
-fm_pagehead('Why work with us', 'Why work with FoodMax Group', 'Choosing a supplier is a matter of trust, so here is, as plainly as we can put it, what you can expect from us and who we usually work with.');
+fm_pagehead('Why work with us', 'Why work with FoodMax Group', 'Choosing a supplier is a matter of trust, so here is, as plainly as we can put it, what you can expect from us and who we usually work with.', true);
 ?>
 
 <!-- ================================================================ WHY -->

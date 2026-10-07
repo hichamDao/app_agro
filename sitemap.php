@@ -25,6 +25,9 @@ $ajout = function ($chemin, $maj = '', $freq = 'monthly', $prio = '0.5') use (&$
 $ajout('',               '', 'weekly',  '1.0');
 $ajout('products/',      '', 'weekly',  '0.9');
 $ajout('contact/',       '', 'yearly',  '0.8');
+$ajout('fresh-produce-exporter-morocco/', '', 'monthly', '0.9');
+$ajout('export-services/', '', 'monthly', '0.8');
+$ajout('for-importers/',   '', 'monthly', '0.8');
 $ajout('about-us/',      '', 'monthly', '0.7');
 $ajout('how-we-work/',   '', 'monthly', '0.6');
 $ajout('quality/',       '', 'monthly', '0.6');

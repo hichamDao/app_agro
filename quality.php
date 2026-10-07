@@ -13,7 +13,7 @@ $fm_page_path  = 'quality/';
 $fm_page_desc  = 'How FoodMax Group approaches freshness, quality, traceability and consistency, and how we try to work responsibly.';
 require_once(__DIR__ . "/includes/page-open.php");
 
-fm_pagehead('Our promise', 'Quality and commitment', 'Quality is not a sentence on a web page, it is a handful of things we do every day, and we also try to do them responsibly, with respect for the land, the water and the people involved.');
+fm_pagehead('Our promise', 'Quality and commitment', 'Quality is not a sentence on a web page, it is a handful of things we do every day, and we also try to do them responsibly, with respect for the land, the water and the people involved.', true);
 ?>
 
 <!-- ============================================================ QUALITY -->

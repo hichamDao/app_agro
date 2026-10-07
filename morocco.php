@@ -13,7 +13,7 @@ $fm_page_path  = 'morocco/';
 $fm_page_desc  = 'Why Morocco: a land of many climates, generations of grower know-how and a wide range of fruits and vegetables for export.';
 require_once(__DIR__ . "/includes/page-open.php");
 
-fm_pagehead('Where we come from', 'FoodMax Group and Morocco', 'Our roots are in Morocco, a country with a remarkable range of climates and a long agricultural tradition, and we are proud to carry its produce to tables far from home.');
+fm_pagehead('Where we come from', 'FoodMax Group and Morocco', 'Our roots are in Morocco, a country with a remarkable range of climates and a long agricultural tradition, and we are proud to carry its produce to tables far from home.', true);
 ?>
 
 <!-- ========================================================= MOROCCO -->

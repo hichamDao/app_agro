@@ -50,17 +50,23 @@ $fm_social = array(
 
 		<!-- --------------------------------------------------------- navigation -->
 		<nav class="fm-footer-col" aria-label="Footer navigation">
-			<h2 class="fm-footer-title">FoodMax Group</h2>
+			<h2 class="fm-footer-title">Services</h2>
 			<ul class="fm-footer-links">
-				<li><a href="<?php echo $fm_app; ?>fresh-produce-exporter-morocco/">Fresh Produce Exporter</a></li>
-				<li><a href="<?php echo $fm_app; ?>about-us/">About us</a></li>
+				<li><a href="<?php echo $fm_app; ?>products/">Products</a></li>
+				<li><a href="<?php echo $fm_app; ?>fresh-produce-exporter-morocco/">Fresh produce exporter</a></li>
+				<li><a href="<?php echo $fm_app; ?>export-services/">Export services</a></li>
+				<li><a href="<?php echo $fm_app; ?>for-importers/">For importers</a></li>
 				<li><a href="<?php echo $fm_app; ?>how-we-work/">How we work</a></li>
+				<li><a href="<?php echo $fm_app; ?>blog/">Blog</a></li>
+			</ul>
+
+			<h2 class="fm-footer-title fm-footer-title-spaced">Company</h2>
+			<ul class="fm-footer-links">
+				<li><a href="<?php echo $fm_app; ?>about-us/">About us</a></li>
+				<li><a href="<?php echo $fm_app; ?>why-foodmax/">Why work with us</a></li>
 				<li><a href="<?php echo $fm_app; ?>quality/">Quality and commitment</a></li>
 				<li><a href="<?php echo $fm_app; ?>morocco/">FoodMax Group and Morocco</a></li>
-				<li><a href="<?php echo $fm_app; ?>why-foodmax/">Why work with us</a></li>
-				<li><a href="<?php echo $fm_app; ?>products/">Products</a></li>
 				<li><a href="<?php echo $fm_app; ?>gallery/">Gallery</a></li>
-				<li><a href="<?php echo $fm_app; ?>blog/">Blog</a></li>
 				<li><a href="<?php echo $fm_app; ?>contact/">Contact</a></li>
 			</ul>
 

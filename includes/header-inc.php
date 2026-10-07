@@ -51,12 +51,14 @@ if (!$fm_nav_cats) {
     );
 }
 
-/* Onglet "About us" actif sur sa page et sur les pages de presentation. */
-$fm_about_actif = false;
-foreach (array('about-us', 'how-we-work', 'quality', 'morocco', 'why-foodmax', 'gallery',
-              'fresh-produce-exporter-morocco', 'export-services', 'for-importers') as $fm_pg) {
-    if (strpos($fm_path, $fm_pg) !== false) { $fm_about_actif = true; }
+/* Onglets actifs : on compare le premier segment de l'adresse a l'identique
+   (avec strpos, "morocco" correspondait aussi a "fresh-produce-exporter-morocco"). */
+$fm_segment = '';
+if (preg_match('~^(?:/[^/]+)*?/(about-us|how-we-work|quality|morocco|why-foodmax|gallery|fresh-produce-exporter-morocco|export-services|for-importers)(?:\\.php)?(?:/|\\?|$)~', $fm_path, $fm_m)) {
+    $fm_segment = $fm_m[1];
 }
+$fm_services_actif = in_array($fm_segment, array('fresh-produce-exporter-morocco', 'export-services', 'for-importers', 'how-we-work'), true);
+$fm_about_actif    = in_array($fm_segment, array('about-us', 'quality', 'morocco', 'why-foodmax', 'gallery'), true);
 ?>
 <body id='url_div'>
 
@@ -77,22 +79,6 @@ foreach (array('about-us', 'how-we-work', 'quality', 'morocco', 'why-foodmax', '
 			<li<?php echo ($fm_self === 'index.php' && $fm_path === '/') ? ' class="is-current"' : ''; ?>>
 				<a href="<?php echo $fm_app; ?>">Home</a>
 			</li>
-			<li class="has-sub<?php echo $fm_about_actif ? ' is-current' : ''; ?>">
-					<a href="<?php echo $fm_app; ?>about-us/" class="fm-sub-toggle">
-						About us <i class="fa fa-angle-down" aria-hidden="true"></i>
-					</a>
-					<ul class="fm-sub">
-						<li><a href="<?php echo $fm_app; ?>fresh-produce-exporter-morocco/">Fresh Produce Exporter</a></li>
-						<li><a href="<?php echo $fm_app; ?>export-services/">Export Services</a></li>
-						<li><a href="<?php echo $fm_app; ?>for-importers/">For Importers</a></li>
-						<li><a href="<?php echo $fm_app; ?>about-us/">Our story</a></li>
-						<li><a href="<?php echo $fm_app; ?>how-we-work/">How we work</a></li>
-						<li><a href="<?php echo $fm_app; ?>quality/">Quality and commitment</a></li>
-						<li><a href="<?php echo $fm_app; ?>morocco/">FoodMax Group and Morocco</a></li>
-						<li><a href="<?php echo $fm_app; ?>why-foodmax/">Why work with us</a></li>
-						<li><a href="<?php echo $fm_app; ?>gallery/">Photo gallery</a></li>
-					</ul>
-				</li>
 				<li class="has-sub<?php echo (strpos($fm_path, 'products') !== false || strpos($fm_path, 'offers') !== false) ? ' is-current' : ''; ?>">
 					<a href="<?php echo $fm_app; ?>products/" class="fm-sub-toggle">
 						Products <i class="fa fa-angle-down" aria-hidden="true"></i>
@@ -102,6 +88,29 @@ foreach (array('about-us', 'how-we-work', 'quality', 'morocco', 'why-foodmax', '
 						<li><a href="<?php echo $fm_app . htmlspecialchars($fm_c['url'], ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($fm_c['label'], ENT_QUOTES, 'UTF-8'); ?></a></li>
 						<?php } ?>
 						<li class="fm-sub-all"><a href="<?php echo $fm_app; ?>products/">All products</a></li>
+					</ul>
+				</li>
+				<li class="has-sub<?php echo $fm_services_actif ? ' is-current' : ''; ?>">
+					<a href="<?php echo $fm_app; ?>fresh-produce-exporter-morocco/" class="fm-sub-toggle">
+						Services <i class="fa fa-angle-down" aria-hidden="true"></i>
+					</a>
+					<ul class="fm-sub">
+						<li><a href="<?php echo $fm_app; ?>fresh-produce-exporter-morocco/">Fresh produce exporter</a></li>
+						<li><a href="<?php echo $fm_app; ?>export-services/">Export services</a></li>
+						<li><a href="<?php echo $fm_app; ?>for-importers/">For importers</a></li>
+						<li><a href="<?php echo $fm_app; ?>how-we-work/">How we work</a></li>
+					</ul>
+				</li>
+			<li class="has-sub<?php echo $fm_about_actif ? ' is-current' : ''; ?>">
+					<a href="<?php echo $fm_app; ?>about-us/" class="fm-sub-toggle">
+						About us <i class="fa fa-angle-down" aria-hidden="true"></i>
+					</a>
+					<ul class="fm-sub">
+						<li><a href="<?php echo $fm_app; ?>about-us/">Our story</a></li>
+						<li><a href="<?php echo $fm_app; ?>why-foodmax/">Why work with us</a></li>
+						<li><a href="<?php echo $fm_app; ?>quality/">Quality and commitment</a></li>
+						<li><a href="<?php echo $fm_app; ?>morocco/">FoodMax Group and Morocco</a></li>
+						<li><a href="<?php echo $fm_app; ?>gallery/">Photo gallery</a></li>
 					</ul>
 				</li>
 				<li<?php echo (strpos($fm_path, 'blog') !== false) ? ' class="is-current"' : ''; ?>>

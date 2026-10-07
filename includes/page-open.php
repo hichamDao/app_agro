@@ -23,9 +23,12 @@ if (isset($fm_page_path) && $fm_page_path !== '') {
         'path'        => $fm_page_path,
         'title'       => $fm_page_title,
         'description' => $fm_page_desc,
-        'jsonld'      => array(fm_seo_breadcrumb(array(
-            array('Home', ''), array('About us', 'about-us/'), array($fm_page_title, $fm_page_path),
-        ))),
+        'jsonld'      => array(fm_seo_breadcrumb(array_values(array_filter(array(
+            array('Home', ''),
+            /* Les pages "entreprise" ont About us comme etape intermediaire. */
+            in_array($fm_page_path, array('quality/', 'morocco/', 'why-foodmax/'), true) ? array('About us', 'about-us/') : null,
+            array($fm_page_title, $fm_page_path),
+        ))))),
     ));
 }
 ?>
