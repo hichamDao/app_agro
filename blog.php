@@ -92,7 +92,7 @@ if ($categorie !== '') {
     $fm_titre     = $categorie . ': articles and guides' . $suffixePage . ' | ' . FM_SITE_NAME;
     $fm_sousTitre = 'Our articles about ' . $categorie . ': what to know about the season, the growing and the shipping, written by the FoodMax Group team.';
 } else {
-    $fm_titre     = 'Fresh produce blog: guides and season notes' . $suffixePage . ' | ' . FM_SITE_NAME;
+    $fm_titre     = 'Moroccan fresh produce blog: guides and season notes' . $suffixePage . ' | ' . FM_SITE_NAME;
     $fm_sousTitre = 'Plain-language guides from FoodMax Group on Moroccan fruit and vegetables: seasons, packing, the cold chain and how exporting really works.';
 }
 

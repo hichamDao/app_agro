@@ -18,6 +18,7 @@ $fm_path = str_replace('\\', '/', isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQ
 /* Familles de produits du menu : lues dans la base, donc toujours a jour et
    toujours des liens qui existent. Si la base ne repond pas, le menu reste
    utilisable avec le seul lien "All products". */
+require_once(__DIR__ . '/seo.php');
 $fm_nav_cats = array();
 if (isset($conn) && $conn) {
     try {
@@ -27,7 +28,7 @@ if (isset($conn) && $conn) {
                 $fm_slug = preg_replace('/[^A-Za-z0-9-]/', '', str_replace('_', '', (string) $fm_c['Nom_cat']));
                 if ($fm_slug === '') { continue; }
                 $fm_nav_cats[] = array(
-                    'label' => str_replace('_', ' ', (string) $fm_c['Nom_cat']),
+                    'label' => fm_cat_label($fm_c['Nom_cat']),
                     'url'   => 'products/' . (int) $fm_c['Code_cat'] . '/' . $fm_slug . '/',
                 );
             }
@@ -47,7 +48,7 @@ if (!$fm_nav_cats) {
         array('label' => 'Dried Fruits', 'url' => 'products/14/Driedfruits/'),
         array('label' => 'Eggplants',    'url' => 'products/11/Eggplants/'),
         array('label' => 'Green Leaves', 'url' => 'products/15/Greenleaves/'),
-        array('label' => 'Pits',         'url' => 'products/5/Pits/'),
+        array('label' => 'Stone fruits', 'url' => 'products/5/Pits/'),
     );
 }
 

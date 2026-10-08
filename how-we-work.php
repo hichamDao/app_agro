@@ -8,9 +8,9 @@ require_once(__DIR__ . "/includes/paths.php");
 /* _header.php ouvre la session : il doit etre inclus AVANT tout affichage. */
 require_once(__DIR__ . "/includes/_header.php");
 
-$fm_page_title = 'How we work';
+$fm_page_title = 'How We Export Fresh Produce from Morocco';
 $fm_page_path  = 'how-we-work/';
-$fm_page_desc  = 'Five steps from the grower to your warehouse: production, selection, quality control, packing and delivery.';
+$fm_page_desc  = 'Five steps from the Moroccan grower to your warehouse: production, selection, quality control, packing and delivery. This is how FoodMax Group works.';
 require_once(__DIR__ . "/includes/page-open.php");
 
 fm_pagehead('From the farm to you', 'How we work', 'Five steps, and each of them is something we do with care every single day, so that what reaches you is the result of a lot of quiet work you never have to worry about.');

@@ -80,10 +80,10 @@ $fm_sousTitre  = 'Fresh produce, packing and export moments from our partner far
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <?php fm_seo_head(array(
     'path'        => 'gallery/' . ($page > 1 ? '?page=' . $page : ''),
-    'title'       => 'Photo gallery',
+    'title'       => 'Photo gallery: Moroccan fruits and vegetables',
     'description' => 'Photographs of Moroccan fresh fruit and vegetables and of the work of the FoodMax Group team.',
 )); ?>
-	<title>Photo Gallery<?php echo $page > 1 ? ' (page ' . $page . ')' : ''; ?> | FoodMax Group</title>
+	<title>Photo Gallery: Moroccan Fruits and Vegetables<?php echo $page > 1 ? ' (page ' . $page . ')' : ''; ?> | FoodMax Group</title>
 	<meta name="description" content="Photographs of Moroccan fresh fruit and vegetables and of the work of the FoodMax Group team.">
 	<link rel="stylesheet" href="<?php echo $fm_app; ?>css/font-awesome.min.css">
 	<link rel="stylesheet" href="<?php echo $fm_app; ?>css/fancybox/jquery.fancybox.css">

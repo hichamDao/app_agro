@@ -8,13 +8,13 @@ require_once(__DIR__ . "/includes/_header.php"); ?>
 <html lang="en">
 
 <head>
-	<title>Contact Us and Request a Quote | FoodMax Group</title>
+	<title>Request a Quote: Moroccan Fresh Produce | FoodMax Group</title>
 	<meta name="description" content="Contact FoodMax Group in Marrakech, Morocco. Tell us the product, the quantity and the destination, and we reply within one business day.">
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <?php fm_seo_head(array(
     'path'        => 'contact/',
-    'title'       => 'Contact FoodMax Group',
+    'title'       => 'Request a Quote: Moroccan Fresh Produce',
     'description' => 'Contact FoodMax Group in Marrakech, Morocco. Tell us the product, the quantity and the destination, and we reply within one business day.',
     'jsonld'      => array(
         array('@type' => 'ContactPage', 'name' => 'Contact FoodMax Group', 'url' => fm_seo_url('contact/'), 'about' => fm_seo_org()),

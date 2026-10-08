@@ -8,9 +8,9 @@ require_once(__DIR__ . "/includes/paths.php");
 /* _header.php ouvre la session : il doit etre inclus AVANT tout affichage. */
 require_once(__DIR__ . "/includes/_header.php");
 
-$fm_page_title = 'FoodMax Group and Morocco';
+$fm_page_title = 'Why Source Fresh Produce from Morocco';
 $fm_page_path  = 'morocco/';
-$fm_page_desc  = 'Why Morocco: a land of many climates, generations of grower know-how and a wide range of fruits and vegetables for export.';
+$fm_page_desc  = 'Morocco offers many climates, generations of grower know-how and a wide range of fruit and vegetables for export. See why buyers choose Moroccan produce.';
 require_once(__DIR__ . "/includes/page-open.php");
 
 fm_pagehead('Where we come from', 'FoodMax Group and Morocco', 'Our roots are in Morocco, a country with a remarkable range of climates and a long agricultural tradition, and we are proud to carry its produce to tables far from home.', true);

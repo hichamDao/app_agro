@@ -11,13 +11,13 @@ require_once(__DIR__ . "/includes/_header.php");
 
 <head>
 	<title>Fresh Produce Supply for Importers | FoodMax Group</title>
-	<meta name="description" content="FoodMax Group supplies fresh Moroccan fruits and vegetables to international importers. Reliable sourcing, quality control, traceability, cold chain, custom packaging and export logistics.">
+	<meta name="description" content="FoodMax Group supplies fresh Moroccan fruit and vegetables to importers: sourcing, quality control, cold chain, custom packaging and export logistics.">
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <?php fm_seo_head(array(
     'path'        => 'for-importers/',
     'title'       => 'Fresh Produce Supply for International Importers',
-    'description' => 'FoodMax Group supplies fresh Moroccan fruits and vegetables to international importers. Reliable sourcing, quality control, traceability, cold chain, custom packaging and export logistics.',
+    'description' => 'FoodMax Group supplies fresh Moroccan fruit and vegetables to importers: sourcing, quality control, cold chain, custom packaging and export logistics.',
     'jsonld'      => array(fm_seo_breadcrumb(array(array('Home', ''), array('For importers', 'for-importers/')))),
 )); ?>
 

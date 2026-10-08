@@ -9,7 +9,7 @@ require_once(__DIR__ . "/includes/_header.php");
 
 $fm_page_title = 'Fresh Produce Exporter Morocco';
 $fm_page_path  = 'fresh-produce-exporter-morocco/';
-$fm_page_desc  = 'FoodMax Group is a Moroccan exporter of fresh fruit and vegetables for international markets: tomatoes, citrus, melons, peppers, courgettes, berries, figs and dried fruits.';
+$fm_page_desc  = 'FoodMax Group is a Moroccan exporter of fresh fruit and vegetables for international markets: tomatoes, citrus, melons, peppers, berries, figs and more.';
 require_once(__DIR__ . "/includes/page-open.php");
 ?>
 

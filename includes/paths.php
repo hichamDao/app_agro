@@ -41,3 +41,16 @@ if (!isset($fm_app) || $fm_app === '') {
         }
     }
 }
+
+/* Sur le site en ligne, les erreurs PHP ne doivent jamais s'afficher aux
+   visiteurs ni a Google (elles revelent des chemins du serveur et abiment la
+   page) : elles sont enregistrees dans le journal d'erreurs de l'hebergeur. En
+   local (localhost), elles restent visibles pour travailler. */
+if (!defined('FM_EST_LOCAL')) {
+    $fm_hote = isset($_SERVER['HTTP_HOST']) ? strtolower(preg_replace('/:\d+$/', '', $_SERVER['HTTP_HOST'])) : '';
+    define('FM_EST_LOCAL', in_array($fm_hote, array('localhost', '127.0.0.1', '::1'), true) || substr($fm_hote, -6) === '.local');
+    if (!FM_EST_LOCAL) {
+        @ini_set('display_errors', '0');
+        @ini_set('log_errors', '1');
+    }
+}

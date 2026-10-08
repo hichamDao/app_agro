@@ -150,3 +150,14 @@ if (!function_exists('fm_seo_title')) {
         return $titre;
     }
 }
+
+if (!function_exists('fm_cat_label')) {
+    /** Nom affiche d'une famille de produits : "Pits" devient "Stone fruits", etc. */
+    function fm_cat_label($nom)
+    {
+        $propre = trim(str_replace('_', ' ', (string) $nom));
+        $cle    = strtolower(preg_replace('/[^a-z]/i', '', $propre));
+        $noms   = array('pits' => 'Stone fruits', 'driedfruits' => 'Dried fruits', 'greenleaves' => 'Green leaves');
+        return isset($noms[$cle]) ? $noms[$cle] : $propre;
+    }
+}

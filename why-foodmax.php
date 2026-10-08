@@ -8,9 +8,9 @@ require_once(__DIR__ . "/includes/paths.php");
 /* _header.php ouvre la session : il doit etre inclus AVANT tout affichage. */
 require_once(__DIR__ . "/includes/_header.php");
 
-$fm_page_title = 'Why work with us';
+$fm_page_title = 'Why Choose FoodMax Group as Your Moroccan Supplier';
 $fm_page_path  = 'why-foodmax/';
-$fm_page_desc  = 'Six reasons to work with FoodMax Group, and the kind of clients and partners we supply.';
+$fm_page_desc  = 'Six reasons to work with FoodMax Group, a Moroccan fresh produce exporter, and the importers, wholesalers and retailers we supply.';
 require_once(__DIR__ . "/includes/page-open.php");
 
 fm_pagehead('Why work with us', 'Why work with FoodMax Group', 'Choosing a supplier is a matter of trust, so here is, as plainly as we can put it, what you can expect from us and who we usually work with.', true);

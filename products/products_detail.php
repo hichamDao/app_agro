@@ -99,9 +99,9 @@ if ($prod) {
 
 /* ======================================================= nutrition */
 $nutriments = array();
-if ($prod && trim((string) $prod['composant']) !== '') {
+if ($prod && isset($prod['composant']) && trim((string) $prod['composant']) !== '') {
     $composants = array_map('trim', explode(',', (string) $prod['composant']));
-    $percents   = array_map('trim', explode(',', (string) $prod['percent']));
+    $percents   = array_map('trim', explode(',', isset($prod['percent']) ? (string) $prod['percent'] : ''));
     foreach ($composants as $i => $libelle) {
         if ($libelle === '') { continue; }
         $val = isset($percents[$i]) ? $percents[$i] : '';
@@ -170,7 +170,7 @@ if ($rsT) {
 
 /* ------------------------------------------------------------------ SEO */
 $fm_titre = $prod
-    ? $prod['Designation'] . ($famille ? ' (' . $famille['label'] . ')' : '') . ' | ' . FM_SITE_NAME
+    ? $prod['Designation'] . ' from Morocco' . ($famille ? ' (' . fm_cat_label($famille['label']) . ')' : '') . ' | ' . FM_SITE_NAME
     : 'Product not found | ' . FM_SITE_NAME;
 $fm_desc  = $prod
     ? fm_seo_cut($prod['description'] !== '' ? $prod['description'] : $prod['Designation'] . ' from Morocco, packed for professional buyers. Ask us for availability and a quote.', 155)

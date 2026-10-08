@@ -22,7 +22,7 @@ $rsCat = mysqli_query($conn, "SELECT Code_cat, Nom_cat FROM categories ORDER BY 
 if ($rsCat) {
     while ($c = mysqli_fetch_assoc($rsCat)) {
         $c['Code_cat'] = (int) $c['Code_cat'];
-        $c['label']    = str_replace('_', ' ', $c['Nom_cat']);
+        $c['label']    = fm_cat_label($c['Nom_cat']);
         $c['slug']     = str_replace('_', '', $c['Nom_cat']);
         $categories[]  = $c;
     }
@@ -149,7 +149,7 @@ if ($motCle !== '') {
     $fm_titre     = 'Featured products';
     $fm_sousTitre = 'The selection our customers reorder most often.';
 } else {
-    $fm_titre     = 'Our products';
+    $fm_titre     = 'Moroccan fruits and vegetables';
     $fm_sousTitre = 'Fresh fruits and vegetables grown in Morocco, packed for export.';
 }
 
@@ -169,7 +169,13 @@ $seoSlugMap = array(
     'Green leaves'=> 'green-leaves',
     'Pits'        => 'pits',
 );
-$seoSlug = isset($seoSlugMap[$catCourante['label']]) ? $seoSlugMap[$catCourante['label']] : '';
+/* $catCourante vaut null sur /products/ (aucune famille choisie) : on teste avant de lire. */
+/* Comparaison sans majuscules, sans espaces ni "_" : Dried_fruits, Driedfruits et
+   "Dried fruits" designent la meme famille. */
+$seoNorm = array();
+foreach ($seoSlugMap as $k => $v) { $seoNorm[strtolower(preg_replace('/[^a-z]/i', '', $k))] = $v; }
+$seoCle  = $catCourante ? strtolower(preg_replace('/[^a-z]/i', '', $catCourante['Nom_cat'])) : '';
+$seoSlug = ($seoCle !== '' && isset($seoNorm[$seoCle])) ? $seoNorm[$seoCle] : '';
 /* Le bouton n'apparait que si la fiche existe et est publiee : jamais de lien mort. */
 if ($seoSlug !== '') {
     $fm_guideOk = false;
@@ -203,7 +209,7 @@ if ($catCourante && !$fm_estFiltre) {
     $fm_slugCat  = preg_replace('/[^A-Za-z0-9-]/', '', $catCourante['slug']);
     $fm_seoPath  = 'products/' . $catCourante['Code_cat'] . '/' . $fm_slugCat . '/' . ($page > 1 ? $page . '/' : '');
     $fm_seoBase  = 'products/' . $catCourante['Code_cat'] . '/' . $fm_slugCat . '/';
-    $fm_seoTitle = $catCourante['label'] . ': fresh from Morocco, packed for export' . $fm_suffixe . ' | ' . FM_SITE_NAME;
+    $fm_seoTitle = 'Moroccan ' . $catCourante['label'] . ' for export: our range' . $fm_suffixe . ' | ' . FM_SITE_NAME;
     $fm_seoDesc  = 'Our ' . strtolower($catCourante['label']) . ' range from Morocco, packed for professional buyers. See the products and ask us for availability and a quote.';
 } elseif (!$fm_estFiltre) {
     $fm_seoPath  = 'products/' . ($page > 1 ? '?page=' . $page : '');

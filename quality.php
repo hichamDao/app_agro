@@ -8,9 +8,9 @@ require_once(__DIR__ . "/includes/paths.php");
 /* _header.php ouvre la session : il doit etre inclus AVANT tout affichage. */
 require_once(__DIR__ . "/includes/_header.php");
 
-$fm_page_title = 'Quality and commitment';
+$fm_page_title = 'Quality and Cold Chain for Moroccan Fresh Produce';
 $fm_page_path  = 'quality/';
-$fm_page_desc  = 'How FoodMax Group approaches freshness, quality, traceability and consistency, and how we try to work responsibly.';
+$fm_page_desc  = 'How FoodMax Group handles freshness, quality control, traceability and the cold chain for Moroccan fruit and vegetables, and how we work responsibly.';
 require_once(__DIR__ . "/includes/page-open.php");
 
 fm_pagehead('Our promise', 'Quality and commitment', 'Quality is not a sentence on a web page, it is a handful of things we do every day, and we also try to do them responsibly, with respect for the land, the water and the people involved.', true);

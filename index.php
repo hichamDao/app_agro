@@ -49,7 +49,7 @@ function fm_libelle_categorie($nom)
 {
     $nom = str_replace('_', ' ', (string) $nom);
     $nom = preg_replace('/(?<=\s)([a-z])/u', ' $1', $nom);
-    return trim($nom);
+    return fm_cat_label(trim($nom));
 }
 
 
@@ -115,8 +115,8 @@ $fm_categories = array_values($fm_categories);
 <html lang="en">
 
 <head>
-	<title>FoodMax Group | Freshness, quality and trust from Morocco</title>
-	<meta name="description" content="FoodMax Group selects, packs and exports quality Moroccan fruits and vegetables: citrus, berries, melons, tomatoes, peppers, green leaves and dried fruits.">
+	<title>Moroccan Fresh Produce Exporter | FoodMax Group</title>
+	<meta name="description" content="FoodMax Group is a Moroccan fresh produce exporter: tomatoes, citrus, melons, peppers, berries and more for importers and distributors. Request a quote.">
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <?php
@@ -124,8 +124,8 @@ $fm_categories = array_values($fm_categories);
    proposer un champ de recherche directement dans ses resultats). */
 fm_seo_head(array(
     'path'        => '',
-    'title'       => 'FoodMax Group | Freshness, quality and trust from Morocco',
-    'description' => 'FoodMax Group selects, packs and exports quality Moroccan fruits and vegetables for professional buyers.',
+    'title'       => 'Moroccan Fresh Produce Exporter | FoodMax Group',
+    'description' => 'FoodMax Group is a Moroccan fresh produce exporter: tomatoes, citrus, melons, peppers, berries and more for importers and distributors. Request a quote.',
     'type'        => 'website',
     'jsonld'      => array(
         fm_seo_org(),
