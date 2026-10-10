@@ -255,6 +255,7 @@ require_once(__DIR__ . "/includes/header-inc.php"); ?>
 
 	<div class="fm-slider-track" role="region" aria-label="Product families" tabindex="0">
 		<?php foreach ($fm_categories as $fm_cat):
+			if (!count($fm_cat['varietes'])) { continue; }   /* famille sans produit : pas de carte */
 			$fm_lien = $fm_app . 'products/' . $fm_cat['code'] . '/' . rawurlencode($fm_cat['nom']) . '/';
 			$fm_photo = $fm_cat['photo'] !== null
 				? $fm_app . 'images/' . rawurlencode($fm_cat['ref']) . '/' . rawurlencode($fm_cat['photo'])

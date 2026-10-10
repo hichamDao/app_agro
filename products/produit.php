@@ -23,22 +23,28 @@ if ($slug === '' || strlen($slug) > 100 || !preg_match('/^[a-z0-9-]+$/', $slug))
     exit;
 }
 
-$stmt = mysqli_prepare(
-    $conn,
-    'SELECT id, slug, title, subtitle, origin, varieties, season, sizes,
-            packaging, availability, transportation, destinations, quality,
-            certifications, meta_title, meta_description, status, created_at, updated_at
-     FROM product_seo WHERE slug = ? LIMIT 1'
-);
-if (!$stmt) {
-    http_response_code(500);
-    die('Database error.');
+$post = null;
+try {
+    /* SELECT * : la fiche s'affiche meme si une colonne facultative manque dans la base. */
+    $stmt = mysqli_prepare($conn, 'SELECT * FROM product_seo WHERE slug = ? LIMIT 1');
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, 's', $slug);
+        mysqli_stmt_execute($stmt);
+        $res  = mysqli_stmt_get_result($stmt);
+        $post = $res ? mysqli_fetch_assoc($res) : null;
+        mysqli_stmt_close($stmt);
+    }
+} catch (Throwable $fm_e) {
+    $post = null;                     /* table absente ou colonne inattendue : page 404, pas d'erreur 500 */
+    error_log('produit.php : ' . $fm_e->getMessage());
 }
-mysqli_stmt_bind_param($stmt, 's', $slug);
-mysqli_stmt_execute($stmt);
-$res  = mysqli_stmt_get_result($stmt);
-$post = $res ? mysqli_fetch_assoc($res) : null;
-mysqli_stmt_close($stmt);
+if (is_array($post)) {
+    foreach (array('title', 'subtitle', 'origin', 'varieties', 'season', 'sizes', 'packaging', 'availability',
+                   'transportation', 'destinations', 'quality', 'certifications', 'meta_title', 'meta_description',
+                   'status', 'created_at', 'updated_at') as $fm_col) {
+        if (!isset($post[$fm_col])) { $post[$fm_col] = ''; }
+    }
+}
 
 if (!$post || $post['status'] !== 'published') {
     http_response_code(404);

@@ -144,7 +144,9 @@ if ($motCle !== '') {
     $fm_sousTitre = $nombreTotal . ' product' . ($nombreTotal > 1 ? 's' : '') . ' found.';
 } elseif ($catCourante) {
     $fm_titre    = $catCourante['label'];
-    $fm_sousTitre = 'Browse our ' . strtolower($catCourante['label']) . ' range, packed and exported from Morocco.';
+    $fm_sousTitre = (strtolower($catCourante['label']) === 'others')
+        ? 'Other seasonal products from Morocco, packed and exported to professional buyers.'
+        : 'Browse our ' . strtolower($catCourante['label']) . ' range, packed and exported from Morocco.';
 } elseif ($featured) {
     $fm_titre     = 'Featured products';
     $fm_sousTitre = 'The selection our customers reorder most often.';
@@ -236,7 +238,8 @@ $fm_seo = array(
     'title'       => $fm_seoTitle,
     'description' => $fm_seoDesc,
     'type'        => 'website',
-    'noindex'     => $fm_estFiltre,
+    /* Une famille sans produit ne doit pas etre indexee : Google y verrait une page vide. */
+    'noindex'     => ($fm_estFiltre || ($catCourante && $nombreTotal === 0)),
     'prev'        => (!$fm_estFiltre && $page > 1) ? $fm_lienSeo($page - 1) : '',
     'next'        => (!$fm_estFiltre && $page < $fm_pageSuiv) ? $fm_lienSeo($page + 1) : '',
     'jsonld'      => $fm_estFiltre ? array() : array(

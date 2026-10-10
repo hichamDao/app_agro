@@ -22,7 +22,7 @@ require_once(__DIR__ . '/seo.php');
 $fm_nav_cats = array();
 if (isset($conn) && $conn) {
     try {
-        $fm_rs = mysqli_query($conn, 'SELECT Code_cat, Nom_cat FROM categories ORDER BY Nom_cat ASC');
+        $fm_rs = mysqli_query($conn, 'SELECT c.Code_cat, c.Nom_cat FROM categories c WHERE EXISTS (SELECT 1 FROM produits p WHERE p.Code_cat = c.Code_cat) ORDER BY c.Nom_cat ASC');
         if ($fm_rs) {
             while ($fm_c = mysqli_fetch_assoc($fm_rs)) {
                 $fm_slug = preg_replace('/[^A-Za-z0-9-]/', '', str_replace('_', '', (string) $fm_c['Nom_cat']));
