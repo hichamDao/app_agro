@@ -21,12 +21,14 @@ require_once(__DIR__ . "/includes/_header.php");
     'jsonld'      => array(fm_seo_breadcrumb(array(array('Home', ''), array('Export services', 'export-services/')))),
 )); ?>
 
-	<link rel="stylesheet" type="text/css" href="<?php echo $fm_app; ?>css/phlox.css">
-	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,600i,700,700i">
-	<link rel="stylesheet" type="text/css" href="<?php echo $fm_app; ?>css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="<?php echo $fm_app; ?>css/phlox.css<?php echo fm_ver('css/phlox.css'); ?>">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,600i,700,700i&display=swap">
+	<link rel="stylesheet" type="text/css" href="<?php echo $fm_app; ?>css/font-awesome.min.css<?php echo fm_ver('css/font-awesome.min.css'); ?>">
 
-	<script type="text/javascript" src="<?php echo $fm_app; ?>js/jquery.min.js"></script>
-	<script type="text/javascript" src="<?php echo $fm_app; ?>js/setting.js"></script>
+	<script type="text/javascript" src="<?php echo $fm_app; ?>js/jquery.min.js<?php echo fm_ver('js/jquery.min.js'); ?>"></script>
+	<script type="text/javascript" src="<?php echo $fm_app; ?>js/setting.js<?php echo fm_ver('js/setting.js'); ?>"></script>
 
 	<!-- Google tag (gtag.js) -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZPRWMT85SP"></script>

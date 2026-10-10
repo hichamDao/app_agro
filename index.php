@@ -119,6 +119,10 @@ $fm_categories = array_values($fm_categories);
 	<meta name="description" content="FoodMax Group is a Moroccan fresh produce exporter: tomatoes, citrus, melons, peppers, berries and more for importers and distributors. Request a quote.">
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="preload" as="image" type="image/webp" fetchpriority="high"
+	      href="<?php echo $fm_app; ?>images/banniere.webp"
+	      imagesrcset="<?php echo $fm_app; ?>images/banniere-1280.webp 1280w, <?php echo $fm_app; ?>images/banniere.webp 2048w"
+	      imagesizes="(max-width: 1279px) 1100px, 100vw">
 <?php
 /* Accueil : fiche entreprise + "WebSite" avec recherche de produits (Google peut
    proposer un champ de recherche directement dans ses resultats). */
@@ -143,12 +147,14 @@ fm_seo_head(array(
 ));
 ?>
 
-	<link rel="stylesheet" type="text/css" href="<?php echo $fm_app; ?>css/phlox.css">
-	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,600i,700,700i">
-	<link rel="stylesheet" type="text/css" href="<?php echo $fm_app; ?>css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="<?php echo $fm_app; ?>css/phlox.css<?php echo fm_ver('css/phlox.css'); ?>">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,600i,700,700i&display=swap">
+	<link rel="stylesheet" type="text/css" href="<?php echo $fm_app; ?>css/font-awesome.min.css<?php echo fm_ver('css/font-awesome.min.css'); ?>">
 
-	<script type="text/javascript" src="<?php echo $fm_app; ?>js/jquery.min.js"></script>
-	<script type="text/javascript" src="<?php echo $fm_app; ?>js/setting.js"></script>
+	<script type="text/javascript" src="<?php echo $fm_app; ?>js/jquery.min.js<?php echo fm_ver('js/jquery.min.js'); ?>"></script>
+	<script type="text/javascript" src="<?php echo $fm_app; ?>js/setting.js<?php echo fm_ver('js/setting.js'); ?>"></script>
 
 	<!-- Google tag (gtag.js) -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZPRWMT85SP"></script>
@@ -166,7 +172,12 @@ require_once(__DIR__ . "/includes/header-inc.php"); ?>
 <!-- =============================================================== HERO -->
 <section class="fm-hero">
 	<div class="fm-hero-bg">
-		<img src="<?php echo $fm_app; ?>images/banniere.png" alt="Fresh fruits and vegetables from Morocco" width="2048" height="768" fetchpriority="high">
+		<picture>
+			<source type="image/webp"
+			        srcset="<?php echo $fm_app; ?>images/banniere-1280.webp 1280w, <?php echo $fm_app; ?>images/banniere.webp 2048w"
+			        sizes="(max-width: 1279px) 1100px, 100vw">
+			<img src="<?php echo $fm_app; ?>images/banniere.png" alt="Fresh fruits and vegetables from Morocco" width="2048" height="768" fetchpriority="high">
+		</picture>
 	</div>
 	<div class="fm-hero-inner">
 		<h1 class="fm-hero-title">Moroccan Fresh Produce Exporter — Fruits &amp; Vegetables Worldwide</h1>
@@ -187,8 +198,13 @@ require_once(__DIR__ . "/includes/header-inc.php"); ?>
 <!-- ============================================================== ABOUT -->
 <section class="fm-about" id="about">
 	<div class="fm-about-media">
-		<img src="<?php echo $fm_app; ?>images/grow-food.png"
-		     alt="Fresh produce at FoodMax Group" loading="lazy" width="1672" height="941">
+		<picture>
+			<source type="image/webp"
+			        srcset="<?php echo $fm_app; ?>images/grow-food-700.webp 700w, <?php echo $fm_app; ?>images/grow-food.webp 1200w"
+			        sizes="(max-width: 900px) 100vw, 50vw">
+			<img src="<?php echo $fm_app; ?>images/grow-food.png"
+			     alt="Fresh produce at FoodMax Group" loading="lazy" width="1672" height="941">
+		</picture>
 	</div>
 	<div class="fm-about-body">
 		<p class="fm-eyebrow">About FoodMax Group</p>
@@ -252,7 +268,7 @@ require_once(__DIR__ . "/includes/header-inc.php"); ?>
 		?>
 		<article class="fm-cat">
 			<a class="fm-cat-media" href="<?php echo $fm_lien; ?>">
-				<img src="<?php echo $fm_photo; ?>"
+				<img<?php echo fm_img_attrs($fm_photo, '(min-width: 1200px) 25vw, (min-width: 900px) 33vw, (min-width: 600px) 45vw, 85vw'); ?>
 				     alt="<?php echo fm_echapper(fm_libelle_categorie($fm_cat['nom'])); ?>"
 				     loading="lazy">
 				<?php if ($fm_nb > 0) { ?>

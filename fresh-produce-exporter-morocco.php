@@ -41,8 +41,13 @@ require_once(__DIR__ . "/includes/page-open.php");
 
 	<div class="fm-about fm-about-page">
 		<div class="fm-about-media">
-			<img src="<?php echo $fm_app; ?>images/grow-food.png"
-			     alt="Fresh produce at FoodMax Group" loading="lazy" width="1672" height="941">
+			<picture>
+				<source type="image/webp"
+				        srcset="<?php echo $fm_app; ?>images/grow-food-700.webp 700w, <?php echo $fm_app; ?>images/grow-food.webp 1200w"
+				        sizes="(max-width: 900px) 100vw, 50vw">
+				<img src="<?php echo $fm_app; ?>images/grow-food.png"
+				     alt="Fresh produce at FoodMax Group" loading="lazy" width="1672" height="941">
+			</picture>
 		</div>
 		<div class="fm-about-body">
 			<p class="fm-lead">

@@ -35,7 +35,7 @@ function admin_entete($titre, $actif = '', array $actions = array()) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title><?php echo fm_admin_echapper($titre . ' - ' . FM_ADMIN_TITRE); ?></title>
-<link rel="stylesheet" href="<?php echo $fm_app; ?>css/font-awesome.min.css">
+<link rel="stylesheet" href="<?php echo $fm_app; ?>css/font-awesome.min.css<?php echo fm_ver('css/font-awesome.min.css'); ?>">
 <link rel="stylesheet" href="admin-style.css">
 </head>
 <body class="fm-admin">

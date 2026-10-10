@@ -11,3 +11,7 @@ includes/smtp.secret.php
 *.log
 Thumbs.db
 .DS_Store
+
+# Miniatures generees automatiquement (thumb.php)
+cache/thumbs/*
+!cache/thumbs/.gitkeep

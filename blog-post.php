@@ -130,12 +130,14 @@ $fm_seo = array(
 
 <?php fm_seo_head($fm_seo); ?>
 
-	<link rel="stylesheet" type="text/css" href="<?php echo $fm_app; ?>css/phlox.css">
-	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,600i,700,700i">
-	<link rel="stylesheet" type="text/css" href="<?php echo $fm_app; ?>css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="<?php echo $fm_app; ?>css/phlox.css<?php echo fm_ver('css/phlox.css'); ?>">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,600i,700,700i&display=swap">
+	<link rel="stylesheet" type="text/css" href="<?php echo $fm_app; ?>css/font-awesome.min.css<?php echo fm_ver('css/font-awesome.min.css'); ?>">
 
-	<script type="text/javascript" src="<?php echo $fm_app; ?>js/jquery.min.js"></script>
-	<script type="text/javascript" src="<?php echo $fm_app; ?>js/setting.js"></script>
+	<script type="text/javascript" src="<?php echo $fm_app; ?>js/jquery.min.js<?php echo fm_ver('js/jquery.min.js'); ?>"></script>
+	<script type="text/javascript" src="<?php echo $fm_app; ?>js/setting.js<?php echo fm_ver('js/setting.js'); ?>"></script>
 
 	<!-- Google tag (gtag.js) -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZPRWMT85SP"></script>
@@ -231,7 +233,7 @@ $fm_seo = array(
 		?>
 		<article class="fm-pcard">
 			<a class="fm-pcard-media" href="<?php echo $lien; ?>" tabindex="-1" aria-hidden="true">
-				<img src="<?php echo fm_blog_echapper(fm_prod_photo($fm_app, $prod['Ref_prod'], $prod['Photo'])); ?>"
+				<img<?php echo fm_img_attrs(fm_prod_photo($fm_app, $prod['Ref_prod'], $prod['Photo']), '(min-width: 1200px) 25vw, (min-width: 900px) 33vw, (min-width: 600px) 50vw, 100vw'); ?>
 				     alt="<?php echo fm_blog_echapper($prod['Designation']); ?>" loading="lazy">
 			</a>
 			<div class="fm-pcard-body">

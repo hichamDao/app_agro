@@ -67,7 +67,10 @@ $fm_about_actif    = in_array($fm_segment, array('about-us', 'quality', 'morocco
 	<div class="fm-nav-inner">
 
 		<a class="fm-nav-logo" href="<?php echo $fm_app; ?>" aria-label="FoodMax Group, home">
-			<img src="<?php echo $fm_app; ?>images/logo.png" alt="FoodMax Group">
+			<picture>
+				<source type="image/webp" srcset="<?php echo $fm_app; ?>images/logo-420.webp">
+				<img src="<?php echo $fm_app; ?>images/logo-420.png" alt="FoodMax Group" width="420" height="140">
+			</picture>
 		</a>
 
 		<button type="button" class="fm-nav-burger" id="fmBurger"
@@ -144,4 +147,4 @@ $fm_about_actif    = in_array($fm_segment, array('about-us', 'quality', 'morocco
 	</div>
 </header>
 
-<script type="text/javascript" src="<?php echo $fm_app; ?>js/nav.js"></script>
+<script type="text/javascript" src="<?php echo $fm_app; ?>js/nav.js<?php echo fm_ver('js/nav.js'); ?>"></script>

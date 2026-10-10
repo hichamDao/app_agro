@@ -20,7 +20,10 @@ $fm_social = array(
 		<!-- ------------------------------------------------- logo + description -->
 		<div class="fm-footer-col fm-footer-brand">
 			<a class="fm-footer-logo" href="<?php echo $fm_app; ?>" aria-label="FoodMax Group, home">
-				<img src="<?php echo $fm_app; ?>images/logo.png" alt="FoodMax Group">
+				<picture>
+					<source type="image/webp" srcset="<?php echo $fm_app; ?>images/logo-420.webp">
+				<img src="<?php echo $fm_app; ?>images/logo-420.png" alt="FoodMax Group" width="420" height="140">
+			</picture>
 			</a>
 
 			<p class="fm-footer-desc">
@@ -134,6 +137,6 @@ $fm_social = array(
 	</div>
 </footer>
 
-<script type="text/javascript" src="<?php echo $fm_app; ?>js/newsletter.js"></script>
-<script type="text/javascript" src="<?php echo $fm_app; ?>js/reveal.js"></script>
-<script type="text/javascript" src="<?php echo $fm_app; ?>js/slider.js"></script>
+<script type="text/javascript" src="<?php echo $fm_app; ?>js/newsletter.js<?php echo fm_ver('js/newsletter.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo $fm_app; ?>js/reveal.js<?php echo fm_ver('js/reveal.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo $fm_app; ?>js/slider.js<?php echo fm_ver('js/slider.js'); ?>"></script>

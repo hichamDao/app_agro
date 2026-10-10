@@ -1,10 +1,13 @@
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-72404116-2', 'auto');
-  ga('send', 'pageview');
-
-</script>
+<?php
+/**
+ * Suivi des visites : volontairement vide.
+ *
+ * Ce fichier chargeait l'ancien Google Universal Analytics (analytics.js,
+ * identifiant UA-...). Google a arrete ce service en 2023 : il ne collectait
+ * plus rien, mais obligeait chaque page a telecharger un script externe de plus.
+ *
+ * Le suivi actuel est assure par Google Analytics 4 (balise gtag.js,
+ * identifiant G-ZPRWMT85SP), deja presente dans le <head> de chaque page.
+ *
+ * Le fichier est conserve, vide, car de nombreuses pages l'incluent encore.
+ */

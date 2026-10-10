@@ -3454,3 +3454,9 @@ a.fm-pager-item:hover {
 .fm-export h3 a { color: inherit; text-decoration: none; }
 .fm-export h3 a:hover,
 .fm-export h3 a:focus-visible { color: var(--phlox-primary); text-decoration: underline; }
+
+/* <picture> du hero : se comporte comme un simple bloc */
+.fm-hero-bg picture { display: block; width: 100%; height: 100%; }
+
+/* <picture> du logo (en-tete et pied de page) : simple bloc transparent */
+.fm-nav-logo picture, .fm-footer-logo picture { display: contents; }

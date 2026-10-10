@@ -85,10 +85,10 @@ $fm_sousTitre  = 'Fresh produce, packing and export moments from our partner far
 )); ?>
 	<title>Photo Gallery: Moroccan Fruits and Vegetables<?php echo $page > 1 ? ' (page ' . $page . ')' : ''; ?> | FoodMax Group</title>
 	<meta name="description" content="Photographs of Moroccan fresh fruit and vegetables and of the work of the FoodMax Group team.">
-	<link rel="stylesheet" href="<?php echo $fm_app; ?>css/font-awesome.min.css">
+	<link rel="stylesheet" href="<?php echo $fm_app; ?>css/font-awesome.min.css<?php echo fm_ver('css/font-awesome.min.css'); ?>">
 	<link rel="stylesheet" href="<?php echo $fm_app; ?>css/fancybox/jquery.fancybox.css">
 	<link rel="stylesheet" href="<?php echo $fm_app; ?>css/fancybox/helpers/jquery.fancybox-thumbs.css">
-	<link rel="stylesheet" href="<?php echo $fm_app; ?>css/phlox.css">
+	<link rel="stylesheet" href="<?php echo $fm_app; ?>css/phlox.css<?php echo fm_ver('css/phlox.css'); ?>">
 </head>
 <?php require_once((__DIR__ . "/includes/header-inc.php")); ?>
 
@@ -219,10 +219,10 @@ $fm_sousTitre  = 'Fresh produce, packing and export moments from our partner far
 <?php require_once((__DIR__ . "/includes/footer.php")); ?>
 <?php require_once((__DIR__ . "/includes/analyticstracking.php")); ?>
 
-<script type="text/javascript" src="<?php echo $fm_app; ?>js/jquery.min.js"></script>
+<script type="text/javascript" src="<?php echo $fm_app; ?>js/jquery.min.js<?php echo fm_ver('js/jquery.min.js'); ?>"></script>
 <script type="text/javascript" src="<?php echo $fm_app; ?>css/fancybox/jquery.fancybox.pack.js"></script>
 <script type="text/javascript" src="<?php echo $fm_app; ?>css/fancybox/helpers/jquery.fancybox-thumbs.js"></script>
-<script type="text/javascript" src="<?php echo $fm_app; ?>js/setting.js"></script>
+<script type="text/javascript" src="<?php echo $fm_app; ?>js/setting.js<?php echo fm_ver('js/setting.js'); ?>"></script>
 
 </body>
 </html>

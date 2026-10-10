@@ -196,7 +196,7 @@ $recents = fm_blog_recent($conn, 3);
 
 		<?php if ($imageFiche !== '') { ?>
 		<div class="fm-article-hero">
-			<img src="<?php echo fm_blog_echapper($imageFiche); ?>"
+			<img<?php echo fm_img_attrs($imageFiche, '(min-width: 900px) 800px, 100vw', array(640, 800, 1000)); ?>
 			     alt="<?php echo fm_blog_echapper($post['title']); ?>" loading="lazy">
 		</div>
 		<?php } ?>
@@ -286,7 +286,7 @@ $recents = fm_blog_recent($conn, 3);
 		?>
 		<article class="fm-pcard">
 			<a class="fm-pcard-media" href="<?php echo $lien; ?>" tabindex="-1" aria-hidden="true">
-				<img src="<?php echo fm_blog_echapper(fm_prod_photo($fm_app, $prod['Ref_prod'], $prod['Photo'])); ?>"
+				<img<?php echo fm_img_attrs(fm_prod_photo($fm_app, $prod['Ref_prod'], $prod['Photo']), '(min-width: 1200px) 25vw, (min-width: 900px) 33vw, (min-width: 600px) 50vw, 100vw'); ?>
 				     alt="<?php echo fm_blog_echapper($prod['Designation']); ?>" loading="lazy">
 			</a>
 			<div class="fm-pcard-body">
