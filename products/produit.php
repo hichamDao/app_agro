@@ -329,8 +329,8 @@ $recents = fm_blog_recent($conn, 3);
 		?>
 		<article class="fm-pcard">
 			<a class="fm-pcard-media" href="<?php echo $fm_app; ?>blog/<?php echo $rSlug; ?>/" tabindex="-1" aria-hidden="true">
-				<img src="<?php echo fm_blog_echapper($rImg); ?>"
-				     alt="<?php echo fm_blog_echapper($r['title']); ?>" loading="lazy">
+				<img<?php echo fm_img_attrs($rImg, '(min-width: 900px) 33vw, 100vw', array(320, 480, 640)); ?>
+				     alt="<?php echo fm_blog_echapper($r['title']); ?>" loading="lazy" decoding="async">
 			</a>
 			<div class="fm-pcard-body">
 				<h3 class="fm-pcard-title">

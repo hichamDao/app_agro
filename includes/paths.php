@@ -79,7 +79,7 @@ if (!function_exists('fm_thumb')) {
         global $fm_app;
         $url = (string) $url;
         $rel = (strpos($url, $fm_app) === 0) ? rawurldecode(substr($url, strlen($fm_app))) : '';
-        if (!preg_match('~^images/[^/]+/[^/]+\.(jpe?g|png|webp)$~i', $rel)) {
+        if (!preg_match('~^(?:images/[^/]+/|img/blog/)[^/]+\.(jpe?g|png|webp)$~i', $rel)) {
             return htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
         }
         return $fm_app . 'thumb.php?p=' . rawurlencode($rel) . '&amp;w=' . (int) $w;

@@ -3,6 +3,7 @@
  * Miniatures d'images a la demande.
  *
  *   /thumb.php?p=images/P102170/carottes.jpg&w=480
+ *   /thumb.php?p=img/blog/blog-tomatoes.jpg&w=640
  *
  * Pourquoi : les photos de produits font souvent 1 a 3 Mo alors qu'une carte du
  * site les affiche a 300 pixels de large. Cette page renvoie la meme photo
@@ -10,8 +11,9 @@
  * supporte, et la garde en cache sur le disque (cache/thumbs/) : elle n'est
  * calculee qu'une fois.
  *
- * Securite : seuls les fichiers image situes sous images/ sont acceptes ; un
- * chemin avec "..", un autre dossier ou une autre extension est refuse. La
+ * Securite : seuls les fichiers image situes sous images/ (photos produits) ou
+ * img/blog/ (images du blog) sont acceptes ; un chemin avec "..", un autre
+ * dossier ou une autre extension est refuse. La
  * largeur est limitee a une liste fixe, ce qui borne la taille du cache.
  *
  * Si la bibliotheque GD manque ou si le cache ne peut pas etre ecrit, la page
@@ -24,7 +26,7 @@ $w      = isset($_GET['w']) ? (int) $_GET['w'] : 480;
 
 /* ---- validation du chemin */
 if ($rel === '' || strpos($rel, '..') !== false || strpos($rel, "\0") !== false
-    || !preg_match('~^images/[^/\\\\\x00-\x1f]{1,120}/[^/\\\\\x00-\x1f]{1,160}\.(jpe?g|png|webp)$~iu', $rel)) {
+    || !preg_match('~^(?:images/[^/\\\\\x00-\x1f]{1,120}/|img/blog/)[^/\\\\\x00-\x1f]{1,160}\.(jpe?g|png|webp)$~iu', $rel)) {
     http_response_code(400);
     exit;
 }
