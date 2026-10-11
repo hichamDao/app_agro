@@ -41,13 +41,28 @@ RewriteEngine On
 # Bloquer l'accès direct aux includes
 RewriteRule ^includes/ - [F,L]
 
-# Routes du site
-RewriteRule ^products/([0-9]+)/([A-Za-z0-9-]+)/([0-9]+)/?$ products/products.php?idCat=$1&name=$2&page=$3 [NC,L,QSA]
+# Routes du site : familles et produits en adresses lisibles
+#   products/Figs/            famille (products/Figs/2/ = page 2)
+#   products_detail/Figs/     produit
+#   guides/figs/              guide acheteur
+# L'ORDRE COMPTE : les routes precises passent avant la regle generale des familles.
 
-RewriteRule   ^products/([0-9]+)/([A-Za-z0-9-]+)/?$ products/products.php?idCat=$1&name=$2 [NC,L,QSA]
+# 1) Recherche et tags
+RewriteRule ^products/search/([A-Za-z0-9-]+)/?$  products/products.php?motCle=$1 [NC,L]
+RewriteRule ^products/tags/([A-Za-z0-9-]+)/?$  products/products.php?tags=$1 [NC,L]
 
-RewriteRule   ^products/([A-Za-z0-9-]+)/?$ products/produit.php?slug=$1 [NC,L,QSA]
-RewriteRule   ^products/?$  products/products.php [NC,L,QSA]
+# 2) Anciennes adresses avec numero (products/16/Figs/) : redirigees definitivement (301)
+#    vers l'adresse par nom, pour conserver le referencement.
+RewriteRule ^products/[0-9]+/([A-Za-z0-9-]+)/([0-9]+)/?$  products/$1/$2/ [R=301,L]
+RewriteRule ^products/[0-9]+/([A-Za-z0-9-]+)/?$  products/$1/ [R=301,L]
+
+# 3) Guides acheteurs
+RewriteRule ^guides/([A-Za-z0-9-]+)/?$  products/produit.php?slug=$1 [NC,L,QSA]
+
+# 4) Familles de produits (products.php verifie que la famille existe)
+RewriteRule ^products/([A-Za-z0-9-]+)/([0-9]+)/?$  products/products.php?catslug=$1&page=$2 [NC,L,QSA]
+RewriteRule ^products/([A-Za-z0-9-]+)/?$  products/products.php?catslug=$1 [NC,L,QSA]
+RewriteRule ^products/?$  products/products.php [NC,L,QSA]
 
 RewriteRule ^home/?$ index.php [L]
 RewriteRule ^about-us/?$ about-us.php [L]
@@ -89,13 +104,12 @@ RewriteRule  offers/Peppers/$  products/Peppers-detail.php [L]
 RewriteRule  offers/Valencia/$  products/Valencia-detail.php [L]
 RewriteRule  offers/Canned_fish/$  products/canned_fish.php [L]
 RewriteRule  offers/Cashew/$  products/Cashew-detail.php [L]
-RewriteRule  ^products/search/([A-Za-z0-9-]+)/?$  products/products.php?motCle=$1 [NC,L]
 RewriteRule   ^dbproducts/tags/([A-Za-z0-9-]+)/([0-9]+)/?$  products/tags/$1/ [R=301,L]
-RewriteRule   ^products/tags/([A-Za-z0-9-]+)/?$  products/products.php?tags=$1 [NC,L]
-RewriteRule   ^dbproducts/([0-9]+)/([A-Za-z0-9-]+)/?$  products/$1/$2/ [R=301,L]
-RewriteRule   ^dbproducts/([0-9]+)/([A-Za-z0-9-]+)/([0-9]+)/?$  products/$1/$2/$3/ [R=301,L]
+RewriteRule   ^dbproducts/([0-9]+)/([A-Za-z0-9-]+)/?$  products/$2/ [R=301,L]
+RewriteRule   ^dbproducts/([0-9]+)/([A-Za-z0-9-]+)/([0-9]+)/?$  products/$2/$3/ [R=301,L]
 RewriteRule   ^dbproducts/([0-9]+)/?$  products/?page=$1 [R=301,L]
 RewriteRule   ^products_detail/([0-9]+)/?$  products/products_detail.php?prod_id=$1 [NC,L]
+RewriteRule   ^products_detail/([A-Za-z0-9-]+)/?$  products/products_detail.php?prod_slug=$1 [NC,L]
 RewriteRule   ^dbproducts/search/([A-Za-z0-9-]+)/([0-9]+)/?$  products/search/$1/ [R=301,L]
 RewriteRule   ^dbGallery/([0-9]+)/?$  dbGallery.php?page=$1 [NC,L]
 RewriteRule   ^gallery/([0-9]+)/?$  gallery.php?page=$1

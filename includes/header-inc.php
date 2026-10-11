@@ -29,7 +29,7 @@ if (isset($conn) && $conn) {
                 if ($fm_slug === '') { continue; }
                 $fm_nav_cats[] = array(
                     'label' => fm_cat_label($fm_c['Nom_cat']),
-                    'url'   => 'products/' . (int) $fm_c['Code_cat'] . '/' . $fm_slug . '/',
+                    'url'   => 'products/' . $fm_slug . '/',
                 );
             }
         }
@@ -38,17 +38,17 @@ if (isset($conn) && $conn) {
 /* Repli si la base ne repond pas : les familles et leurs identifiants. */
 if (!$fm_nav_cats) {
     $fm_nav_cats = array(
-        array('label' => 'Tomatoes',     'url' => 'products/7/Tomatoes/'),
-        array('label' => 'Citrus',       'url' => 'products/3/Citrus/'),
-        array('label' => 'Melons',       'url' => 'products/6/Melons/'),
-        array('label' => 'Peppers',      'url' => 'products/8/Peppers/'),
-        array('label' => 'Courgettes',   'url' => 'products/10/Courgettes/'),
-        array('label' => 'Berries',      'url' => 'products/4/Berries/'),
-        array('label' => 'Figs',         'url' => 'products/16/Figs/'),
-        array('label' => 'Dried Fruits', 'url' => 'products/14/Driedfruits/'),
-        array('label' => 'Eggplants',    'url' => 'products/11/Eggplants/'),
-        array('label' => 'Green Leaves', 'url' => 'products/15/Greenleaves/'),
-        array('label' => 'Stone fruits', 'url' => 'products/5/Pits/'),
+        array('label' => 'Tomatoes',     'url' => 'products/Tomatoes/'),
+        array('label' => 'Citrus',       'url' => 'products/Citrus/'),
+        array('label' => 'Melons',       'url' => 'products/Melons/'),
+        array('label' => 'Peppers',      'url' => 'products/Peppers/'),
+        array('label' => 'Courgettes',   'url' => 'products/Courgettes/'),
+        array('label' => 'Berries',      'url' => 'products/Berries/'),
+        array('label' => 'Figs',         'url' => 'products/Figs/'),
+        array('label' => 'Dried Fruits', 'url' => 'products/Driedfruits/'),
+        array('label' => 'Eggplants',    'url' => 'products/Eggplants/'),
+        array('label' => 'Green Leaves', 'url' => 'products/Greenleaves/'),
+        array('label' => 'Stone fruits', 'url' => 'products/Pits/'),
     );
 }
 

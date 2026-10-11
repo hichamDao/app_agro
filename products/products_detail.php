@@ -4,7 +4,20 @@ require_once((__DIR__ . "/../includes/paths.php"));
 require_once((__DIR__ . "/../includes/seo.php"));
 
 /* ============================================================ entrees */
-$prod_id = isset($_GET['prod_id']) ? intval($_GET['prod_id']) : 0;
+$prod_id   = isset($_GET['prod_id'])   ? intval($_GET['prod_id'])     : 0;
+$prod_slug = (isset($_GET['prod_slug']) && is_string($_GET['prod_slug'])) ? $_GET['prod_slug'] : '';
+
+/* Le produit est demande par son nom : /products_detail/Fresh-Figs/ -> prod_slug=Fresh-Figs.
+   L'ancienne adresse avec numero (/products_detail/46/) est redirigee en 301 vers
+   l'adresse par nom, pour conserver le referencement. */
+if ($prod_slug !== '') {
+    $prod_id = fm_prod_par_slug($conn, $prod_slug);          /* 0 : inconnu -> page "Product not found" */
+    if ($prod_id > 0 && $prod_slug !== fm_prod_slug($conn, $prod_id)) {
+        fm_redirige(fm_prod_chemin($conn, $prod_id));          /* meme adresse, bonnes majuscules */
+    }
+} elseif ($prod_id > 0 && fm_prod_slug($conn, $prod_id) !== '') {
+    fm_redirige(fm_prod_chemin($conn, $prod_id));
+}
 
 /* URL d'une photo de produit, avec repli sur une image generique.
    Plusieurs references de la table produits pointent vers un dossier images/
@@ -36,7 +49,7 @@ function fd_lien_categorie($code, $slug)
     if ($slug === '') {
         return $fm_app . 'products/?idCat=' . (int) $code;
     }
-    return $fm_app . 'products/' . (int) $code . '/' . $slug . '/';
+    return $fm_app . 'products/' . $slug . '/';
 }
 
 /* Toutes les photos du produit, en ne gardant que celles reellement
@@ -176,7 +189,7 @@ $fm_desc  = $prod
     ? fm_seo_cut($prod['description'] !== '' ? $prod['description'] : $prod['Designation'] . ' from Morocco, packed for professional buyers. Ask us for availability and a quote.', 155)
     : 'This product is no longer in the FoodMax Group catalogue.';
 
-$fm_chemin = 'products_detail/' . (int) $prod_id . '/';
+$fm_chemin = fm_prod_chemin($conn, $prod_id);
 $fm_photoAbs = array();
 foreach ($photos as $ph) {
     $fm_photoAbs[] = rtrim(FM_SITE_URL, '/') . '/images/' . rawurlencode((string) $prod['Ref_prod']) . '/' . rawurlencode($ph);
@@ -203,7 +216,7 @@ if ($prod) {
     $fm_etapes = array(array('Home', ''), array('Products', 'products/'));
     if ($famille) {
         $fm_slugF = preg_replace('/[^A-Za-z0-9-]/', '', (string) $famille['slug']);
-        if ($fm_slugF !== '') { $fm_etapes[] = array($famille['label'], 'products/' . (int) $famille['Code_cat'] . '/' . $fm_slugF . '/'); }
+        if ($fm_slugF !== '') { $fm_etapes[] = array($famille['label'], 'products/' . $fm_slugF . '/'); }
     }
     $fm_etapes[] = array($prod['Designation'], $fm_chemin);
     $fm_seo['jsonld'] = array($fm_produit, fm_seo_breadcrumb($fm_etapes));
@@ -452,7 +465,7 @@ if ($prod) {
 
 					<div class="fm-pgrid">
 						<?php foreach ($lies as $p) {
-							$lien = $fm_app . 'products_detail/' . (int) $p['id_prod'] . '/';
+							$lien = fm_prod_url($p['id_prod']);
 							$prem = trim(explode(',', (string) $p['Photo'])[0]);
 						?>
 						<article class="fm-pcard">

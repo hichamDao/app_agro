@@ -56,10 +56,18 @@ foreach (fm_blog_recent($conn, 4) as $fm_r) {
 $relatedProducts = array();
 $lienProduit     = fm_blog_lien($fm_app, $post['product_link']);
 if ($lienProduit !== '') {
-    /* La categorie vient du lien saisi, par ex. "products/3/Citrus/". */
+    /* La categorie vient du lien saisi, par ex. "products/Citrus/" (ou l'ancien "products/3/Citrus/"). */
     $chemin    = preg_replace('~^https?://[^/]+/~i', '', trim((string) $post['product_link']));
     $linkParts = explode('/', trim($chemin, '/'));
-    $catId = (isset($linkParts[0], $linkParts[1]) && $linkParts[0] === 'products') ? (int) $linkParts[1] : 0;
+    $catId = 0;
+    if (isset($linkParts[0], $linkParts[1]) && $linkParts[0] === 'products') {
+        if (ctype_digit($linkParts[1])) {                         /* ancien format : products/3/Citrus/ */
+            $catId = (int) $linkParts[1];
+        } else {                                                  /* format actuel : products/Citrus/ */
+            $catTrouvee = fm_cat_par_slug($conn, $linkParts[1]);
+            $catId = $catTrouvee ? $catTrouvee['Code_cat'] : 0;
+        }
+    }
     if ($catId > 0) {
         $stmtP = mysqli_prepare(
             $conn,
@@ -228,7 +236,7 @@ $fm_seo = array(
 
 	<div class="fm-pgrid">
 		<?php foreach ($relatedProducts as $prod):
-			$lien = $fm_app . 'products_detail/' . (int) $prod['id_prod'] . '/';
+			$lien = fm_prod_url($prod['id_prod']);
 			$resume = fm_blog_resume(isset($prod['description']) ? $prod['description'] : '', 110);
 		?>
 		<article class="fm-pcard">

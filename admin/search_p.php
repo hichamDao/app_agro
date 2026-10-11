@@ -23,6 +23,6 @@ if (isset($_POST["Search"]) && is_string($_POST["Search"])) {
         mysqli_stmt_close($stmt);
     }
 
-    header('Location: ' . $fm_app . ($id > 0 ? 'products_detail/' . $id . '/' : 'products/'));
+    header('Location: ' . $fm_app . ($id > 0 ? fm_prod_chemin($conn, $id) : 'products/'));
     exit;
 }

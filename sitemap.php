@@ -49,17 +49,17 @@ $lire = function ($sql, $fn) use ($conn) {
 /* ------------------------------------------------ familles de produits */
 $lire('SELECT c.Code_cat, c.Nom_cat FROM categories c WHERE EXISTS (SELECT 1 FROM produits p WHERE p.Code_cat = c.Code_cat) ORDER BY c.Code_cat ASC', function ($r) use ($ajout) {
     $slug = preg_replace('/[^A-Za-z0-9-]/', '', str_replace('_', '', (string) $r['Nom_cat']));
-    if ($slug !== '') { $ajout('products/' . (int) $r['Code_cat'] . '/' . $slug . '/', '', 'weekly', '0.8'); }
+    if ($slug !== '') { $ajout('products/' . $slug . '/', '', 'weekly', '0.8'); }
 });
 
 /* ------------------------------------------------ fiches produit SEO */
 $lire("SELECT slug, updated_at FROM product_seo WHERE status = 'published' ORDER BY slug ASC", function ($r) use ($ajout) {
-    $ajout('products/' . rawurlencode($r['slug']) . '/', $r['updated_at'], 'monthly', '0.8');
+    $ajout(fm_guide_chemin($r['slug']), $r['updated_at'], 'monthly', '0.8');
 });
 
 /* ------------------------------------------------ produits du catalogue */
-$lire('SELECT id_prod FROM produits ORDER BY id_prod ASC LIMIT 5000', function ($r) use ($ajout) {
-    $ajout('products_detail/' . (int) $r['id_prod'] . '/', '', 'monthly', '0.6');
+$lire('SELECT id_prod FROM produits ORDER BY id_prod ASC LIMIT 5000', function ($r) use ($ajout, $conn) {
+    $ajout(fm_prod_chemin($conn, $r['id_prod']), '', 'monthly', '0.6');
 });
 
 /* ------------------------------------------------ articles de blog */

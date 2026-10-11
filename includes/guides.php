@@ -47,7 +47,7 @@ if (!function_exists('fm_guides_bloc')) {
 	</div>
 	<div class="fm-explore-grid">
 		<?php foreach ($guides as $g) { ?>
-		<a class="fm-explore-card" href="<?php echo $fm_app . "products/" . $h(rawurlencode($g["slug"])); ?>/">
+		<a class="fm-explore-card" href="<?php echo $h(fm_guide_url($g['slug'])); ?>">
 			<span class="fm-explore-icon"><i class="fa fa-fw fa-leaf" aria-hidden="true"></i></span>
 			<h3><?php echo $h($g['title']); ?></h3>
 			<p><?php echo $h($g['subtitle']); ?></p>
@@ -57,5 +57,26 @@ if (!function_exists('fm_guides_bloc')) {
 	</div>
 </section>
 <?php
+    }
+}
+
+if (!function_exists('fm_guide_existe')) {
+    /** Vrai si un guide acheteur publie porte ce nom d'adresse. */
+    function fm_guide_existe($conn, $slug)
+    {
+        if (!$conn || !preg_match('/^[A-Za-z0-9-]+$/', (string) $slug)) { return false; }
+        $ok = false;
+        try {
+            $slug = strtolower($slug);
+            $stmt = mysqli_prepare($conn, "SELECT 1 FROM product_seo WHERE slug = ? AND status = 'published' LIMIT 1");
+            if ($stmt) {
+                mysqli_stmt_bind_param($stmt, 's', $slug);
+                mysqli_stmt_execute($stmt);
+                $res = mysqli_stmt_get_result($stmt);
+                $ok = ($res && mysqli_fetch_assoc($res)) ? true : false;
+                mysqli_stmt_close($stmt);
+            }
+        } catch (Throwable $e) { $ok = false; }
+        return $ok;
     }
 }

@@ -82,7 +82,7 @@ if (isset($categoryMap[$slug])) {
             if (in_array($norm($c['Nom_cat']), $voulus, true)) {
                 $catCode      = (int) $c['Code_cat'];
                 $nomUrl       = preg_replace('/[^A-Za-z0-9-]/', '', str_replace('_', '', $c['Nom_cat']));
-                $categoryLink = $fm_app . 'products/' . $catCode . '/' . rawurlencode($nomUrl) . '/';
+                $categoryLink = $fm_app . 'products/' . rawurlencode($nomUrl) . '/';
                 break;
             }
         }
@@ -120,7 +120,7 @@ $fm_desc  = ($post['meta_description'] !== '' && $post['meta_description'] !== n
     ? $post['meta_description']
     : fm_blog_texte($post['subtitle'], 158);
 $fm_imgAbs = fm_img_absolue($fm_app, $imageFiche);
-$fm_chemin = 'products/' . $post['slug'] . '/';
+$fm_chemin = fm_guide_chemin($post['slug']);
 
 $fm_seo = array(
     'path'        => $fm_chemin,
@@ -288,7 +288,7 @@ $recents = fm_blog_recent($conn, 3);
 
 	<div class="fm-pgrid">
 		<?php foreach ($produitsFamille as $prod) {
-			$lien = $fm_app . 'products_detail/' . (int) $prod['id_prod'] . '/';
+			$lien = fm_prod_url($prod['id_prod']);
 		?>
 		<article class="fm-pcard">
 			<a class="fm-pcard-media" href="<?php echo $lien; ?>" tabindex="-1" aria-hidden="true">

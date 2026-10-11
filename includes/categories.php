@@ -52,7 +52,7 @@ if (!$categoriesAdmin) {
 
 echo '<ul class="fm-adm-catlist">' . "\n";
 foreach ($categoriesAdmin as $cat) {
-    $lien = $fm_app . 'products/' . (int) $cat['Code_cat'] . '/' . rawurlencode($cat['Nom_cat']) . '/';
+    $lien = function_exists('fm_cat_url') ? fm_cat_url($cat['Nom_cat']) : $fm_app . 'products/' . rawurlencode($cat['Nom_cat']) . '/';
     echo '  <li>'
         . '<a href="' . fm_admin_echapper_legacy($lien) . '">' . htmlspecialchars($cat['Nom_cat'], ENT_QUOTES, 'UTF-8') . '</a>'
         . '<span>(' . (int) $cat['nombre_prod'] . ')</span>'

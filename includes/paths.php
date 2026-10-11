@@ -104,3 +104,6 @@ if (!function_exists('fm_img_attrs')) {
         return $attrs . ' srcset="' . implode(', ', $set) . '" sizes="' . htmlspecialchars($sizes, ENT_QUOTES, 'UTF-8') . '"';
     }
 }
+
+/* Adresses lisibles des familles, produits et guides (voir urls.php). */
+require_once(__DIR__ . '/urls.php');

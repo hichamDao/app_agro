@@ -114,9 +114,9 @@ VALUES (
 <h2>Packing</h2>
 <p>Tomatoes are usually packed loose in cartons, in trays, or in punnets and baskets for retail, depending on the type. We can discuss the format that suits your customers, including private label.</p>
 
-<p>You can read our <a href="products/tomatoes/">buyer''s guide to tomatoes</a>, see <a href="products/7/Tomatoes/">the tomatoes in our catalogue</a>, or <a href="contact/">ask us for a quote</a>.</p>',
+<p>You can read our <a href="guides/tomatoes/">buyer''s guide to tomatoes</a>, see <a href="products/Tomatoes/">the tomatoes in our catalogue</a>, or <a href="contact/">ask us for a quote</a>.</p>',
     'Tomatoes',
-    'products/7/Tomatoes/',
+    'products/Tomatoes/',
     'Moroccan Tomatoes',
     'blog-tomatoes.jpg',
     'Moroccan Tomatoes: Types, Season and How They Travel',
@@ -177,9 +177,9 @@ VALUES (
 <h2>Packing and keeping</h2>
 <p>Citrus is a hardy fruit and travels well when it is kept cool and the air can move around it, which is why ventilated packing matters. We can talk about mesh bags, cartons and trays, retail packs, or bulk for processing and foodservice, whatever fits the way you sell.</p>
 
-<p>Read our guides to <a href="products/oranges/">oranges</a> and <a href="products/lemons/">lemons</a>, browse <a href="products/3/Citrus/">the citrus in our catalogue</a>, or <a href="contact/">send us your request</a>.</p>',
+<p>Read our guides to <a href="guides/oranges/">oranges</a> and <a href="guides/lemons/">lemons</a>, browse <a href="products/Citrus/">the citrus in our catalogue</a>, or <a href="contact/">send us your request</a>.</p>',
     'Citrus',
-    'products/3/Citrus/',
+    'products/Citrus/',
     'Moroccan Citrus',
     'blog-citrus.jpg',
     'Moroccan Citrus: Oranges, Lemons and the Citrus Season',
@@ -228,7 +228,7 @@ VALUES (
 <p>A watermelon is heavy and bulky, so loading matters as much as temperature. Fruit needs to be well supported on the pallet, with nothing pressing on it, to avoid cracks and bruises. As for temperature, around 10 to 15 degrees is a good range, because watermelon can be damaged by storage that is too cold.</p>
 <p>Formats range from loose fruit on pallets and bulk bins to cartons for mini watermelons, and individual labelling for retail can be discussed.</p>
 
-<p>Read our <a href="products/watermelon/">buyer''s guide to watermelon</a>, see <a href="products/">our products</a>, or <a href="contact/">write to us</a> for availability.</p>',
+<p>Read our <a href="guides/watermelon/">buyer''s guide to watermelon</a>, see <a href="products/">our products</a>, or <a href="contact/">write to us</a> for availability.</p>',
     'Watermelon',
     'products/',
     'Moroccan Watermelon',

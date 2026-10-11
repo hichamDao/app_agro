@@ -129,7 +129,7 @@ function fm_export_grid()
 		<?php foreach ($familles as $f) { ?>
 		<article class="fm-export">
 			<span class="fm-export-icon"><i class="fa fa-fw fa-circle" aria-hidden="true"></i></span>
-			<h3><?php if (isset($existants[$f[1]])) { ?><a href="<?php echo $fm_app . 'products/' . $f[1]; ?>/"><?php echo htmlspecialchars($f[0], ENT_QUOTES, 'UTF-8'); ?></a><?php } else { echo htmlspecialchars($f[0], ENT_QUOTES, 'UTF-8'); } ?></h3>
+			<h3><?php if (isset($existants[$f[1]])) { ?><a href="<?php echo $fm_app . 'guides/' . $f[1]; ?>/"><?php echo htmlspecialchars($f[0], ENT_QUOTES, 'UTF-8'); ?></a><?php } else { echo htmlspecialchars($f[0], ENT_QUOTES, 'UTF-8'); } ?></h3>
 			<p><?php echo htmlspecialchars($f[2], ENT_QUOTES, 'UTF-8'); ?></p>
 		</article>
 		<?php } ?>

@@ -28,6 +28,30 @@ if ($rsCat) {
     }
 }
 
+/* ------------------------------------------------ famille demandee par son nom
+   /products/Figs/ arrive ici avec catslug=Figs (voir .htaccess). */
+$fm_catslug = (isset($_GET['catslug']) && is_string($_GET['catslug'])) ? $_GET['catslug'] : '';
+if ($fm_catslug !== '') {
+    $trouvee = null;
+    foreach ($categories as $c) {
+        if (fm_cle(fm_slug_cat($c['Nom_cat'])) === fm_cle($fm_catslug)) { $trouvee = $c; break; }
+    }
+    if ($trouvee !== null) {
+        $idCat = $trouvee['Code_cat'];
+        /* /products/figs/ ou /products/FIGS/ : une seule adresse, avec les bonnes majuscules. */
+        if ($fm_catslug !== fm_slug_cat($trouvee['Nom_cat'])) {
+            fm_redirige(fm_cat_chemin($trouvee['Nom_cat'], $page));
+        }
+    } elseif (fm_guide_existe($conn, $fm_catslug)) {
+        /* Ancienne adresse d'un guide acheteur (products/oranges/) : il est maintenant sous /guides/. */
+        fm_redirige(fm_guide_chemin(strtolower($fm_catslug)));
+    } else {
+        http_response_code(404);
+        require_once(__DIR__ . "/../includes/_404.php");
+        exit;
+    }
+}
+
 $catCourante = null;
 if ($idCat > 0) {
     foreach ($categories as $c) {
@@ -193,24 +217,24 @@ if ($seoSlug !== '') {
     } catch (Throwable $fm_e) { $fm_guideOk = false; }
     if (!$fm_guideOk) { $seoSlug = ''; }
 }
-$seoLink = $seoSlug ? $fm_app . 'products/' . $seoSlug . '/' : '';
+$seoLink = $seoSlug ? fm_guide_url($seoSlug) : '';
 
 /* Filtre actif, pour surligner le bon lien dans la barre de navigation. */
 $fm_lienActif = 'products/';
-if ($catCourante) { $fm_lienActif = 'products/' . $catCourante['Code_cat'] . '/'; }
+if ($catCourante) { $fm_lienActif = fm_cat_chemin($catCourante['Nom_cat']); }
 if ($motCle !== '' || $tag !== '' || $featured) { $fm_lienActif = 'products/'; }
 
 /* ------------------------------------------------------------------ SEO
    Une seule adresse par contenu : la categorie utilise sa forme lisible
-   /products/8/Peppers/, et les resultats de recherche, les tags et la
+   /products/Peppers/, et les resultats de recherche, les tags et la
    selection ne sont pas indexes (ce sont des pages sans contenu propre qui
    dupliqueraient le catalogue). */
 $fm_estFiltre = ($motCle !== '' || $tag !== '' || $featured);
 $fm_suffixe   = $page > 1 ? ' (page ' . $page . ')' : '';
 if ($catCourante && !$fm_estFiltre) {
     $fm_slugCat  = preg_replace('/[^A-Za-z0-9-]/', '', $catCourante['slug']);
-    $fm_seoPath  = 'products/' . $catCourante['Code_cat'] . '/' . $fm_slugCat . '/' . ($page > 1 ? $page . '/' : '');
-    $fm_seoBase  = 'products/' . $catCourante['Code_cat'] . '/' . $fm_slugCat . '/';
+    $fm_seoPath  = 'products/' . $fm_slugCat . '/' . ($page > 1 ? $page . '/' : '');
+    $fm_seoBase  = 'products/' . $fm_slugCat . '/';
     $fm_seoTitle = 'Moroccan ' . $catCourante['label'] . ' for export: our range' . $fm_suffixe . ' | ' . FM_SITE_NAME;
     $fm_seoDesc  = 'Our ' . strtolower($catCourante['label']) . ' range from Morocco, packed for professional buyers. See the products and ask us for availability and a quote.';
 } elseif (!$fm_estFiltre) {
@@ -227,7 +251,7 @@ if ($catCourante && !$fm_estFiltre) {
 $fm_pageSuiv = isset($nombreDePages) ? $nombreDePages : 1;
 $fm_lienSeo  = function ($p) use ($catCourante, $fm_estFiltre) {
     if ($catCourante && !$fm_estFiltre) {
-        return 'products/' . $catCourante['Code_cat'] . '/' . preg_replace('/[^A-Za-z0-9-]/', '', $catCourante['slug']) . '/' . ($p > 1 ? $p . '/' : '');
+        return 'products/' . preg_replace('/[^A-Za-z0-9-]/', '', $catCourante['slug']) . '/' . ($p > 1 ? $p . '/' : '');
     }
     return 'products/' . ($p > 1 ? '?page=' . $p : '');
 };
@@ -299,8 +323,8 @@ function fm_lien_produit($qs, $page) {
     return $base . '?' . $qs . ($page > 1 ? '&page=' . $page : '');
 }
 
-/* URL d'une categorie, sous forme lisible : /products/8/Peppers/ et
-   /products/8/Peppers/2/ pour la page suivante (route ajoutee dans .htaccess).
+/* URL d'une categorie, sous forme lisible : /products/Peppers/ et
+   /products/Peppers/2/ pour la page suivante (route dans .htaccess).
    Si le libelle ne contient aucun caractere utilisable dans une URL, on
    retombe sur la forme avec parametres, qui fonctionne toujours. */
 function fm_lien_categorie($code, $slug, $page) {
@@ -310,7 +334,7 @@ function fm_lien_categorie($code, $slug, $page) {
     if ($slug === '') {
         return fm_lien_produit('idCat=' . $code, $page);
     }
-    return $fm_app . 'products/' . $code . '/' . $slug . '/' . ($page > 1 ? $page . '/' : '');
+    return $fm_app . 'products/' . $slug . '/' . ($page > 1 ? $page . '/' : '');
 }
 
 function fm_echapper($v) { return htmlspecialchars((string) $v, ENT_QUOTES, 'UTF-8'); }
@@ -445,7 +469,7 @@ function fm_resume($texte, $long = 96) {
 						<ul>
 							<?php foreach ($suggestions as $s) { ?>
 								<li>
-									<a href="<?php echo $fm_app; ?>products_detail/<?php echo (int) $s['id_prod']; ?>/">
+									<a href="<?php echo fm_prod_url($s['id_prod']); ?>">
 										<?php echo fm_echapper($s['Designation']); ?>
 									</a>
 								</li>
@@ -459,7 +483,7 @@ function fm_resume($texte, $long = 96) {
 				<div class="fm-pgrid">
 					<?php foreach ($produits as $prod) {
 						$id       = (int) $prod['id_prod'];
-						$lien     = $fm_app . 'products_detail/' . $id . '/';
+						$lien     = fm_prod_url($id);
 						$famille  = isset($catLabels[(int) $prod['Code_cat']])
 						          ? $catLabels[(int) $prod['Code_cat']] : '';
 					?>
