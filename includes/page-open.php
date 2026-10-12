@@ -50,6 +50,8 @@ if (isset($fm_page_path) && $fm_page_path !== '') {
 		gtag('js', new Date());
 		gtag('config', 'G-ZPRWMT85SP');
 	</script>
+
+	<?php require_once(__DIR__ . "/matomo-tracker.php"); ?>
 </head>
 
 <?php require_once(__DIR__ . "/header-inc.php"); /* ouvre <body> et affiche le menu */ ?>

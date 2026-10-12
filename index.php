@@ -164,6 +164,7 @@ fm_seo_head(array(
 		gtag('js', new Date());
 		gtag('config', 'G-ZPRWMT85SP');
 	</script>
+	<?php require_once(__DIR__ . "/includes/matomo-tracker.php"); ?>
 </head>
 
 <?php /* header-inc.php ouvre <body id="url_div"> et affiche le menu. */
@@ -335,4 +336,5 @@ require_once(__DIR__ . "/includes/header-inc.php"); ?>
 <?php require_once((__DIR__ . "/includes/footer.php")); ?>
 <?php require_once((__DIR__ . "/includes/analyticstracking.php")); ?>
 </body>
+
 </html>

@@ -307,10 +307,11 @@ $fm_seo = array(
 		gtag('js', new Date());
 		gtag('config', 'G-ZPRWMT85SP');
 	</script>
+	<?php require_once(__DIR__ . "/../includes/matomo-tracker.php"); ?>
 </head>
 
 <?php
-/* $fm_app est calcule par header-inc.php : toutes les URL ci-dessous l'utilise. */
+/* $fm_app est calcule par header-inc.php : toutes les URL ci-dessois l'utilise. */
 require_once((__DIR__ . "/../includes/header-inc.php"));
 
 /* Construit une URL de catalogue ; la page 1 reste sur /products/. */
