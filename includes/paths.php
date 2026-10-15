@@ -92,8 +92,9 @@ if (!function_exists('fm_img_attrs')) {
      * la miniature adaptee a son ecran. A utiliser ainsi :
      *   <img<?php echo fm_img_attrs($url, '(min-width: 900px) 33vw, 100vw'); ?> alt="...">
      */
-    function fm_img_attrs($url, $sizes = '100vw', $largeurs = array(320, 480, 640))
+    function fm_img_attrs($url, $sizes = '100vw', $largeurs = null)
     {
+        if (!is_array($largeurs) || !$largeurs) { $largeurs = fm_thumb_cfg('carte'); }   /* reglage : includes/thumb-config.php */
         $src = fm_thumb($url, $largeurs[(int) floor(count($largeurs) / 2)]);
         $attrs = ' src="' . $src . '"';
         if ($src === htmlspecialchars((string) $url, ENT_QUOTES, 'UTF-8')) {
@@ -107,3 +108,4 @@ if (!function_exists('fm_img_attrs')) {
 
 /* Adresses lisibles des familles, produits et guides (voir urls.php). */
 require_once(__DIR__ . '/urls.php');
+require_once(__DIR__ . '/photos.php');

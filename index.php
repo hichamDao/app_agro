@@ -34,14 +34,8 @@ function fm_echapper($v) { return htmlspecialchars((string) $v, ENT_QUOTES, 'UTF
    a la ligne ; certains fichiers disparu, on les ignore donc. */
 function fm_premiere_photo($ref_prod, $champ_photo)
 {
-    $fichiers = preg_split('/[\r\n,]+/', (string) $champ_photo);
-    foreach ($fichiers as $f) {
-        $f = trim($f);
-        if ($f === '') { continue; }
-        $chemin = FM_IMG_DIR . DIRECTORY_SEPARATOR . $ref_prod . DIRECTORY_SEPARATOR . $f;
-        if (is_file($chemin)) { return $f; }
-    }
-    return null;
+    /* Colonne Photo d'abord, sinon les images du dossier images/<reference>/ (includes/photos.php). */
+    return fm_prod_premiere_photo($ref_prod, $champ_photo);
 }
 
 /* Libelle lisible a partir du nom de la colonne : Green_leaves -> Green leaves */

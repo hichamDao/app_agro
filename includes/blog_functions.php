@@ -343,14 +343,10 @@ if (!function_exists('fm_prod_photo')) {
     /** Photo d'un produit (images/REF/fichier) avec repli sur une image generique. */
     function fm_prod_photo($fm_app, $ref, $photo)
     {
-        $liste = explode(',', (string) $photo);
-        foreach ($liste as $ph) {
-            $ph = trim($ph);
-            if ($ph !== '' && is_file(__DIR__ . '/../images/' . $ref . '/' . $ph)) {
-                return $fm_app . 'images/' . rawurlencode((string) $ref) . '/' . rawurlencode($ph);
-            }
-        }
-        return $fm_app . 'img/product-placeholder.svg';
+ $ph = fm_prod_premiere_photo($ref, $photo);
+        return $ph !== null
+            ? $fm_app . 'images/' . rawurlencode((string) $ref) . '/' . rawurlencode($ph)
+            : $fm_app . 'img/product-placeholder.svg';
     }
 }
 

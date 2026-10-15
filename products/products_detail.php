@@ -56,14 +56,8 @@ function fd_lien_categorie($code, $slug)
    presentes sur le disque. Si aucune ne l'est, on renverra le placeholder. */
 function fd_photos($prod)
 {
-    $liste = array();
-    foreach (explode(',', (string) $prod['Photo']) as $ph) {
-        $ph = trim($ph);
-        if ($ph === '') { continue; }
-        $disk = __DIR__ . '/../images/' . $prod['Ref_prod'] . '/' . $ph;
-        if (is_file($disk)) { $liste[] = $ph; }
-    }
-    return $liste;
+    /* Colonne Photo d'abord, sinon les images du dossier images/<reference>/ (includes/photos.php). */
+    return fm_prod_fichiers($prod['Ref_prod'], $prod['Photo']);
 }
 
 /* ============================================================= produit */
@@ -317,20 +311,22 @@ if ($prod) {
 			<div class="fm-pdetail-media">
 				<?php if ($photos) { ?>
 					<div class="fm-pdetail-main">
-						<img id="fdMain" src="<?php echo $fm_app; ?>images/<?php echo $prod['Ref_prod'] . '/' . $photos[0]; ?>"
-						     alt="<?php echo fd_echapper($prod['Designation']); ?>">
+						<?php /* Photo principale : miniature de taille adaptee a l'ecran (reglage : includes/thumb-config.php) */ ?>
+						<img id="fdMain"<?php echo fm_img_attrs($fm_app . 'images/' . rawurlencode((string) $prod['Ref_prod']) . '/' . rawurlencode($photos[0]), '(min-width: 900px) 560px, 100vw', fm_thumb_cfg('grande')); ?>
+						     alt="<?php echo fd_echapper($prod['Designation']); ?>" fetchpriority="high" decoding="async">
 					</div>
 
 					<?php if (count($photos) > 1) { ?>
 						<div class="fm-pdetail-thumbs" role="group" aria-label="Other photos">
-							<?php foreach ($photos as $i => $ph) { ?>
+							<?php foreach ($photos as $i => $ph) {
+								$fd_url = $fm_app . 'images/' . rawurlencode((string) $prod['Ref_prod']) . '/' . rawurlencode($ph); ?>
 								<button type="button"
 								        class="fm-thumb<?php echo $i === 0 ? ' is-active' : ''; ?>"
-								        data-full="<?php echo $fm_app; ?>images/<?php echo $prod['Ref_prod'] . '/' . $ph; ?>"
+								        data-full="<?php echo fm_thumb($fd_url, 1000); ?>"
 								        aria-label="Photo <?php echo $i + 1; ?>">
-									<img src="<?php echo $fm_app; ?>images/<?php echo $prod['Ref_prod'] . '/' . $ph; ?>"
+									<img src="<?php echo fm_thumb($fd_url, 240); ?>"
 									     alt="<?php echo fd_echapper($prod['Designation']); ?> photo <?php echo $i + 1; ?>"
-									     loading="lazy">
+									     loading="lazy" decoding="async">
 								</button>
 							<?php } ?>
 						</div>
@@ -526,7 +522,8 @@ if ($prod) {
 		$thumbs.on('click', '.fm-thumb', function () {
 			var src = $(this).attr('data-full');
 			if (!src) { return; }
-			$main.attr('src', src);
+			/* srcset retire : sinon le navigateur garderait l'ancienne photo */
+			$main.removeAttr('srcset').removeAttr('sizes').attr('src', src);
 			$thumbs.find('.fm-thumb').removeClass('is-active');
 			$(this).addClass('is-active');
 		});

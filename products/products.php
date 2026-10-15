@@ -341,14 +341,11 @@ function fm_echapper($v) { return htmlspecialchars((string) $v, ENT_QUOTES, 'UTF
 
 /* Premiere photo du produit, avec repli sur une image generique. */
 function fm_photo_produit($prod, $up) {
-    $photos = array_filter(array_map('trim', explode(',', (string) $prod['Photo'])));
-    if ($photos) {
-        foreach ($photos as $ph) {
-            $f = $up . 'images/' . $prod['Ref_prod'] . '/' . $ph;
-	if (is_file(__DIR__ . '/../images/' . $prod['Ref_prod'] . '/' . $ph)) { return $f; }
-        }
-    }
-    return $up . 'img/product-placeholder.svg';
+    /* Colonne Photo d'abord, sinon les images du dossier images/<reference>/ (includes/photos.php). */
+    $ph = fm_prod_premiere_photo($prod['Ref_prod'], $prod['Photo']);
+    return $ph !== null
+        ? $up . 'images/' . rawurlencode((string) $prod['Ref_prod']) . '/' . rawurlencode($ph)
+        : $up . 'img/product-placeholder.svg';
 }
 
 /* Extrait lisible d'une description, sans casser les balises eventuelles. */

@@ -37,7 +37,11 @@ if (!is_file($source)) {
 }
 
 /* ---- largeur : la plus proche valeur autorisee, vers le haut */
-$permises = array(240, 320, 480, 640, 800, 1000, 1200);
+$cfg      = is_file(__DIR__ . '/includes/thumb-config.php') ? include __DIR__ . '/includes/thumb-config.php' : array();
+$permises = (isset($cfg['largeurs']) && is_array($cfg['largeurs']) && $cfg['largeurs']) ? array_map('intval', $cfg['largeurs']) : array(240, 320, 480, 640, 800, 1000, 1200);
+sort($permises);
+$qWebp    = isset($cfg['qualite_webp']) ? max(30, min(95, (int) $cfg['qualite_webp'])) : 80;
+$qJpeg    = isset($cfg['qualite_jpeg']) ? max(30, min(95, (int) $cfg['qualite_jpeg'])) : 82;
 $choisie  = end($permises);
 foreach ($permises as $p) { if ($w <= $p) { $choisie = $p; break; } }
 $w = $choisie;
@@ -92,7 +96,7 @@ if (is_file($fichier) && filemtime($fichier) >= $mtimeSrc) {
     imagedestroy($img);
 
     ob_start();
-    if ($webp) { imagewebp($dst, null, 80); } else { imageinterlace($dst, true); imagejpeg($dst, null, 82); }
+    if ($webp) { imagewebp($dst, null, $qWebp); } else { imageinterlace($dst, true); imagejpeg($dst, null, $qJpeg); }
     $octets = ob_get_clean();
     imagedestroy($dst);
     if ($octets === false || $octets === '') { $repli(); }

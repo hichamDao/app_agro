@@ -202,7 +202,7 @@ $recents = fm_blog_recent($conn, 3);
 
 		<?php if ($imageFiche !== '') { ?>
 		<div class="fm-article-hero">
-			<img<?php echo fm_img_attrs($imageFiche, '(min-width: 900px) 800px, 100vw', array(640, 800, 1000)); ?>
+			<img<?php echo fm_img_attrs($imageFiche, '(min-width: 900px) 800px, 100vw', fm_thumb_cfg('grande')); ?>
 			     alt="<?php echo fm_blog_echapper($post['title']); ?>" loading="lazy">
 		</div>
 		<?php } ?>
@@ -329,7 +329,7 @@ $recents = fm_blog_recent($conn, 3);
 		?>
 		<article class="fm-pcard">
 			<a class="fm-pcard-media" href="<?php echo $fm_app; ?>blog/<?php echo $rSlug; ?>/" tabindex="-1" aria-hidden="true">
-				<img<?php echo fm_img_attrs($rImg, '(min-width: 900px) 33vw, 100vw', array(320, 480, 640)); ?>
+				<img<?php echo fm_img_attrs($rImg, '(min-width: 900px) 33vw, 100vw'); ?>
 				     alt="<?php echo fm_blog_echapper($r['title']); ?>" loading="lazy" decoding="async">
 			</a>
 			<div class="fm-pcard-body">

@@ -194,7 +194,7 @@ $fm_seo = array(
 		<?php if ($fm_ogImage !== $fm_app . 'img/blog-placeholder.svg') { ?>
 		<div class="fm-article-hero">
 			<!-- Premiere image visible de la page : chargee en priorite (pas de lazy). -->
-			<img<?php echo fm_img_attrs($fm_ogImage, '(min-width: 900px) 800px, 100vw', array(640, 800, 1000)); ?>
+			<img<?php echo fm_img_attrs($fm_ogImage, '(min-width: 900px) 800px, 100vw', fm_thumb_cfg('grande')); ?>
 			     alt="<?php echo fm_blog_echapper($post['title']); ?>" fetchpriority="high" decoding="async">
 		</div>
 		<?php } ?>
@@ -275,7 +275,7 @@ $fm_seo = array(
 		?>
 		<article class="fm-pcard">
 			<a class="fm-pcard-media" href="<?php echo $fm_app; ?>blog/<?php echo $rSlug; ?>/" aria-hidden="true">
-				<img<?php echo fm_img_attrs($rImg, '(min-width: 900px) 33vw, 100vw', array(320, 480, 640)); ?>
+				<img<?php echo fm_img_attrs($rImg, '(min-width: 900px) 33vw, 100vw'); ?>
 				     alt="<?php echo fm_blog_echapper($r['title']); ?>" loading="lazy" decoding="async">
 			</a>
 			<div class="fm-pcard-body">

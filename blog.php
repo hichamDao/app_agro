@@ -194,7 +194,7 @@ $fm_seo = array(
 		?>
 		<article class="fm-bcard">
 			<a class="fm-bcard-media" href="<?php echo $fm_app; ?>blog/<?php echo $slug; ?>/">
-				<img<?php echo fm_img_attrs($img, '(min-width: 1000px) 380px, (min-width: 600px) 50vw, 100vw', array(320, 480, 640)); ?>
+				<img<?php echo fm_img_attrs($img, '(min-width: 1000px) 380px, (min-width: 600px) 50vw, 100vw'); ?>
 				     alt="<?php echo fm_blog_echapper($post['title']); ?>" loading="lazy" decoding="async">
 			</a>
 			<div class="fm-bcard-body">
