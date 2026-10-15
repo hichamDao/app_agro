@@ -20,23 +20,6 @@
     }
   })();
 
-  (function() {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'https://ipwho.is/?output=json', true);
-    xhr.timeout = 2500;
-    xhr.onload = function() {
-      if (xhr.status === 200) {
-        try {
-          var data = JSON.parse(xhr.responseText);
-          if (data && data.ip) {
-            _paq.push(['appendToTrackingUrl', 'cip=' + encodeURIComponent(data.ip)]);
-          }
-        } catch (e) {}
-      }
-    };
-    xhr.onerror = function() {};
-    xhr.ontimeout = function() {};
-    xhr.send();
-  })();
+();
 </script>
 <!-- End Matomo Code -->

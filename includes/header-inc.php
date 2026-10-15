@@ -148,3 +148,4 @@ $fm_about_actif    = in_array($fm_segment, array('about-us', 'quality', 'morocco
 </header>
 
 <script type="text/javascript" src="<?php echo $fm_app; ?>js/nav.js<?php echo fm_ver('js/nav.js'); ?>"></script>
+<script>window.fm_app = '<?php echo $fm_app; ?>';</script>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test jQuery</title>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+
+    <h2 id="message">Bonjour !</h2>
+    <button id="btn">Cliquer ici</button>
+
+    <script>
+        $(document).ready(function () {
+            $("#btn").on("click", function () {
+                $("#message").text("jQuery fonctionne !");
+            });
+        });
+    </script>
+<div id="visitor-info">Chargement...</div>
+
+<script>
+async function getVisitorInfo() {
+    try {
+        const response = await fetch('https://ipwho.is/');
+        const data = await response.json();
+
+        if (!data.success) {
+            throw new Error('Impossible de récupérer les informations');
+        }
+
+        document.getElementById('visitor-info').innerHTML = `
+            <p>Adresse IP : ${data.ip}</p>
+            <p>Pays : ${data.country}</p>
+            <p>Ville : ${data.city}</p>
+            <p>Région : ${data.region}</p>
+            <p>Fournisseur : ${data.connection?.isp || 'Inconnu'}</p>
+        `;
+    } catch (error) {
+        document.getElementById('visitor-info').textContent =
+            'Erreur lors de la récupération de l’adresse IP.';
+        console.error(error);
+    }
+}
+
+getVisitorInfo();
+</script>
+</body>
+</html>

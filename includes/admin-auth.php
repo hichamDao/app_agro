@@ -126,12 +126,13 @@ function fm_admin_menu_visible() {
         'categories' => array('Categories',      'fa-tags',       'GestionCategories.php'),
         'galerie'    => array('Galerie',         'fa-picture-o',  'GestionGaleries.php'),
         'contacts'   => array('Messages',        'fa-envelope',   'GestionContacts.php'),
+        'chatbot'    => array('Chatbot',         'fa-comments',   'GestionChatbot.php'),
         'blog'       => array('Blog',            'fa-book',       'GestionBlog.php'),
         'utilisateurs' => array('Utilisateurs',   'fa-users',      'GestionUtilisateurs.php'),
     );
     $droits = fm_admin_droits();
     foreach ($menu as $cle => $item) {
-        $besoin = $cle === 'utilisateurs' ? 'utilisateurs' : ($cle === 'index' ? 'produits' : $cle);
+        $besoin = $cle === 'utilisateurs' ? 'utilisateurs' : ($cle === 'index' ? 'produits' : ($cle === 'chatbot' ? 'contacts' : $cle));
         if ($besoin === 'index' || in_array($besoin, $droits, true)) {
             $menu[$cle][] = $besoin;
         } else {

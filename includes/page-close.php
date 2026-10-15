@@ -3,6 +3,5 @@
 require_once(__DIR__ . "/footer.php");
 require_once(__DIR__ . "/analyticstracking.php");
 ?>
-
 </body>
 </html>

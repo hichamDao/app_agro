@@ -140,3 +140,4 @@ $fm_social = array(
 <script type="text/javascript" src="<?php echo $fm_app; ?>js/newsletter.js<?php echo fm_ver('js/newsletter.js'); ?>"></script>
 <script type="text/javascript" src="<?php echo $fm_app; ?>js/reveal.js<?php echo fm_ver('js/reveal.js'); ?>"></script>
 <script type="text/javascript" src="<?php echo $fm_app; ?>js/slider.js<?php echo fm_ver('js/slider.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo $fm_app; ?>js/chatbot.js"></script>

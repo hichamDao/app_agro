@@ -1,48 +1,22 @@
-# Activer la réécriture d'URL
-RewriteEngine On
+#Options +FollowSymlinks
+RewriteEngine on
 
-# Redirection HTTPS désactivée en local
-# RewriteCond %{HTTPS} !=on
-# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+# Pas de redirection HTTPS pour localhost / IP locale
+RewriteCond %{HTTP_HOST} ^(localhost|127\.0\.0\.1|::1)(:\d+)?$ [NC]
+RewriteRule ^ - [L]
+RewriteCond %{HTTPS} !=on
+RewriteRule (.*) https://%{SERVER_NAME}/$1 [R=301] 
 
-# Performance : compression des textes et cache navigateur.
-# Chaque bloc ne s'active que si le module existe : jamais d'erreur 500.
-<IfModule mod_deflate.c>
-    AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml application/xml application/json
-    AddOutputFilterByType DEFLATE application/javascript text/javascript image/svg+xml
-</IfModule>
-<IfModule mod_expires.c>
-    ExpiresActive On
-    ExpiresByType image/webp "access plus 1 month"
-    ExpiresByType image/png  "access plus 1 month"
-    ExpiresByType image/jpeg "access plus 1 month"
-    ExpiresByType image/gif  "access plus 1 month"
-    ExpiresByType image/svg+xml "access plus 1 month"
-    ExpiresByType image/x-icon "access plus 1 month"
-    ExpiresByType font/woff2 "access plus 1 year"
-    ExpiresByType font/woff "access plus 1 year"
-    ExpiresByType text/css "access plus 1 month"
-    ExpiresByType application/javascript "access plus 1 month"
-    ExpiresByType text/javascript "access plus 1 month"
-</IfModule>
-
-# Sécurité
 <IfModule mod_headers.c>
     Header set Content-Security-Policy "upgrade-insecure-requests;"
 </IfModule>
 
-# Scripts de diagnostic et d'installation : jamais accessibles depuis Internet.
-# (test.php = phpinfo() ; install-matomo*.php = installateurs sans mot de passe.)
-# Pour en relancer un : retirer temporairement son nom de la liste, puis le remettre.
-<FilesMatch "^(test|php_info_test|test_conn|install-matomo|install-matomo-v2|install-matomo-prod)\.php$">
-    <IfModule mod_authz_core.c>
-        Require all denied
-    </IfModule>
-    <IfModule !mod_authz_core.c>
-        Order allow,deny
-        Deny from all
-    </IfModule>
-</FilesMatch>
+# CORS fonts
+<IfModule mod_headers.c>
+    <FilesMatch "\.(woff|woff2|ttf|eot|otf)$">
+        Header set Access-Control-Allow-Origin "*"
+    </FilesMatch>
+</IfModule>
 
 # L'ancienne page catalogue n'est plus indexee (remplacee par products.php)
 <IfModule mod_headers.c>
@@ -91,6 +65,7 @@ RewriteRule ^why-foodmax/?$   why-foodmax.php [L]
 RewriteRule ^fresh-produce-exporter-morocco/?$   fresh-produce-exporter-morocco.php [L]
 RewriteRule ^export-services/?$   export-services.php [L]
 RewriteRule ^for-importers/?$   for-importers.php [L]
+RewriteRule ^api/chatbot/?$   api/chatbot.php [L]
 RewriteRule   ^privacy-policy/?$  privacy-policy.php [L]
 RewriteRule   ^terms/?$  terms.php [L]
 RewriteRule   shop-cart/$   Shop-cart.php [L]
