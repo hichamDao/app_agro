@@ -22,6 +22,7 @@ if (!isset($fm_app)) {
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,600i,700,700i&display=swap">
 	<link rel="stylesheet" type="text/css" href="<?php echo $fm_app; ?>css/font-awesome.min.css<?php echo fm_ver('css/font-awesome.min.css'); ?>">
+	<?php require_once(__DIR__ . "/matomo-tracker.php"); ?>
 </head>
 <?php require_once((__DIR__ . "/header-inc.php")); ?>
 

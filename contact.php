@@ -39,6 +39,7 @@ require_once(__DIR__ . "/includes/_header.php"); ?>
 		gtag('js', new Date());
 		gtag('config', 'G-ZPRWMT85SP');
 	</script>
+	<?php require_once(__DIR__ . "/includes/matomo-tracker.php"); ?>
 </head>
 
 <?php require_once((__DIR__ . "/includes/paths.php"));
