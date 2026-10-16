@@ -39,8 +39,8 @@ if (mb_strlen($message, 'UTF-8') < 20) {
 
 $stmt = mysqli_prepare(
     $conn,
-    'INSERT INTO contact (name, email, phone, message, date, company, country, product)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
+    'INSERT INTO contact (name, email, phone, message, date, company, country, product, status)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
 );
 if (!$stmt) {
     exit('<div class="fm-form-alert fm-form-alert-error" id="message">'
@@ -50,7 +50,8 @@ if (!$stmt) {
         . '</div>');
 }
 
-mysqli_stmt_bind_param($stmt, 'ssssssss', $name, $email, $phone, $message, $date, $company, $country, $product);
+$status = 'new';
+mysqli_stmt_bind_param($stmt, 'sssssssss', $name, $email, $phone, $message, $date, $company, $country, $product, $status);
 
 if (mysqli_stmt_execute($stmt)) {
     /* Envoi de l'email de confirmation (auto-reponse) au visiteur.

@@ -69,6 +69,13 @@ function admin_entete($titre, $actif = '', array $actions = array()) {
             <h1><?php echo fm_admin_echapper($titre); ?></h1>
             <div class="fm-adm-top-actions">
                 <?php foreach ($actions as $a) { echo $a . "\n"; } ?>
+                <?php if (fm_admin_peut('contacts')) { 
+                    $pending = fm_admin_pending_contact_count();
+                    if ($pending > 0) { ?>
+                    <a class="fm-adm-btn is-alert is-sm" href="GestionContacts.php" title="<?php echo $pending; ?> message(s) en attente de réponse depuis > 1 jour ouvré">
+                        <i class="fa fa-bell" aria-hidden="true"></i> <span class="fm-adm-badge-alert"><?php echo (int) $pending; ?></span>
+                    </a>
+                <?php } } ?>
                 <span class="fm-adm-who">Session : <b><?php echo fm_admin_echapper(fm_admin_login()); ?></b></span>
                 <span class="fm-adm-badge <?php echo fm_admin_role() === 'admin' ? '' : 'is-off'; ?>"><?php echo fm_admin_echapper(fm_admin_role_libelle()); ?></span>
                 <a class="fm-adm-btn is-light is-sm" href="logout.php">Deconnexion</a>

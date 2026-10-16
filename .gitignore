@@ -5,6 +5,7 @@ includes/smtp.secret.php
 *.env
 *.pem
 *.key
+.htaccess
 
 # Sauvegardes et fichiers temporaires
 *.bak

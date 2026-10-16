@@ -25,30 +25,11 @@ if (!empty($geo)) {
     $_SESSION['fm_chatbot_geo'] = $geo;
 }
 
-$chatbot = new FM_Chatbot();
-
 switch ($action) {
     case 'send':
-        // Allow empty message for initial welcome
-        if ($message === '' && $chatbot->getSession()['step'] !== 'welcome') {
-            echo json_encode(['error' => 'Empty message']);
-            exit;
-        }
-        $result = $chatbot->processMessage($message);
-        echo json_encode($result);
-        break;
-
     case 'history':
-        echo json_encode([
-            'history' => $chatbot->getHistory(),
-            'lead_data' => $chatbot->getLeadData(),
-            'qualified' => $chatbot->isQualified(),
-        ]);
-        break;
-
     case 'reset':
-        $chatbot->reset();
-        echo json_encode(['success' => true]);
+        $chatbot = new FM_Chatbot();
         break;
 
     case 'init':
@@ -105,4 +86,31 @@ switch ($action) {
         http_response_code(400);
         echo json_encode(['error' => 'Invalid action']);
         break;
+}
+
+if (isset($chatbot)) {
+    switch ($action) {
+        case 'send':
+            // Allow empty message for initial welcome
+            if ($message === '' && $chatbot->getSession()['step'] !== 'welcome') {
+                echo json_encode(['error' => 'Empty message']);
+                exit;
+            }
+            $result = $chatbot->processMessage($message);
+            echo json_encode($result);
+            break;
+
+        case 'history':
+            echo json_encode([
+                'history' => $chatbot->getHistory(),
+                'lead_data' => $chatbot->getLeadData(),
+                'qualified' => $chatbot->isQualified(),
+            ]);
+            break;
+
+        case 'reset':
+            $chatbot->reset();
+            echo json_encode(['success' => true]);
+            break;
+    }
 }

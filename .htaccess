@@ -1,6 +1,12 @@
 #Options +FollowSymlinks
 RewriteEngine on
 
+# Redirige /products/ID/slug vers /products/slug (sans ID)
+RewriteRule ^products/([0-9]+)/([^/]+)/?$ https://foodmax-group.com/products/$2/ [R=301,L,NC]
+
+# Redirige /home vers /
+RewriteRule ^home/?$ https://foodmax-group.com/ [R=301,L,NC]
+
 # Pas de redirection HTTPS pour localhost / IP locale
 RewriteCond %{HTTP_HOST} ^(localhost|127\.0\.0\.1|::1)(:\d+)?$ [NC]
 RewriteRule ^ - [L]
@@ -25,7 +31,7 @@ RewriteRule (.*) https://%{SERVER_NAME}/$1 [R=301]
     </Files>
 </IfModule>
 
-# Bloquer l'accès direct aux includes
+# Bloquer l'acc??s direct aux includes
 RewriteRule ^includes/ - [F,L]
 
 # Routes du site : familles et produits en adresses lisibles
@@ -38,7 +44,7 @@ RewriteRule ^includes/ - [F,L]
 RewriteRule ^products/search/([A-Za-z0-9-]+)/?$  products/products.php?motCle=$1 [NC,L]
 RewriteRule ^products/tags/([A-Za-z0-9-]+)/?$  products/products.php?tags=$1 [NC,L]
 
-# 2) Anciennes adresses avec numero (products/16/Figs/) : redirigees definitivement (301)
+# 2) Anciennes adresses avec numero (products/Figs/) : redirigees definitivement (301)
 #    vers l'adresse par nom, pour conserver le referencement.
 RewriteRule ^products/[0-9]+/([A-Za-z0-9-]+)/([0-9]+)/?$  products/$1/$2/ [R=301,L]
 RewriteRule ^products/[0-9]+/([A-Za-z0-9-]+)/?$  products/$1/ [R=301,L]
@@ -80,20 +86,8 @@ RewriteRule   ^blog/([A-Za-z0-9-]+)/?$  blog-post.php?slug=$1 [L,QSA]
 RewriteRule   ^dbproducts/?$  products/ [R=301,L]
 RewriteRule   products/$  products/products.php [L]
 RewriteRule   products$  products/products.php [L]
-RewriteRule   offers/$  offers.php [L]
-RewriteRule  offers-online/$ offers-online.php [L]
-RewriteRule  offers/Tomatoes/$  products/Tomatoes-detail.php [L]
-RewriteRule  offers/Citrus/$  products/Citrus-detail.php [L]
-RewriteRule  offers/Cereals/$  products/Cereals-detail.php [L]
-RewriteRule  offers/Watermelon/$  products/Watermelon-detail.php [L]
-RewriteRule  offers/Fish/$  products/Fish-detail.php [L]
-RewriteRule  offers/Olives/$  products/Olives-detail.php [L]
-RewriteRule  offers/Peppers/$  products/Peppers-detail.php [L]
-RewriteRule  offers/Valencia/$  products/Valencia-detail.php [L]
-RewriteRule  offers/Canned_fish/$  products/canned_fish.php [L]
-RewriteRule  offers/Cashew/$  products/Cashew-detail.php [L]
 RewriteRule   ^dbproducts/tags/([A-Za-z0-9-]+)/([0-9]+)/?$  products/tags/$1/ [R=301,L]
-RewriteRule   ^dbproducts/([0-9]+)/([A-Za-z0-9-]+)/?$  products/$2/ [R=301,L]
+RewriteRule   ^dbproducts/([0-9]+)/([A-Za-z0-9-]+)/?$  https://foodmax-group.com/products/$2/ [R=301,L]
 RewriteRule   ^dbproducts/([0-9]+)/([A-Za-z0-9-]+)/([0-9]+)/?$  products/$2/$3/ [R=301,L]
 RewriteRule   ^dbproducts/([0-9]+)/?$  products/?page=$1 [R=301,L]
 RewriteRule   ^products_detail/([0-9]+)/?$  products/products_detail.php?prod_id=$1 [NC,L]
@@ -101,9 +95,4 @@ RewriteRule   ^products_detail/([A-Za-z0-9-]+)/?$  products/products_detail.php?
 RewriteRule   ^dbproducts/search/([A-Za-z0-9-]+)/([0-9]+)/?$  products/search/$1/ [R=301,L]
 RewriteRule   ^dbGallery/([0-9]+)/?$  dbGallery.php?page=$1 [NC,L]
 RewriteRule   ^gallery/([0-9]+)/?$  gallery.php?page=$1
-RewriteRule   ^offers/([0-9]+)/?$  offers.php?page=$1 [NC,L]
-RewriteRule   ^offers-online/([0-9]+)/?$  offers-online.php?page=$1 [NC,L]
-RewriteRule   ^offers-online/([A-Za-z0-9-]+)/([0-9]+)/?$  offers-online.php?update=$1&page=$2 [NC,L]
-RewriteRule   ^offers-online/([A-Za-z0-9-]+)/?$  offers-online.php?update [NC,L]
-RewriteRule   ^detail-view/([0-9]+)/([A-Za-z0-9-]+)/?$  products/detail-view.php?w=$1&name=$2 [NC,L]
 

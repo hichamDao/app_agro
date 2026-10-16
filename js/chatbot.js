@@ -120,7 +120,8 @@
             if (res.has_qualified_conversation) {
                 badgeEl.style.display = 'none';
             }
-            if (res.step === 'welcome' && sessionData && sessionData.history && sessionData.history.length > 0) {
+            // Always reset to welcome on page load - clear localStorage if server says welcome
+            if (res.step === 'welcome') {
                 localStorage.removeItem(STORAGE_KEY);
                 sessionData = null;
             }
@@ -156,11 +157,42 @@
         function sendMessage() {
             const text = inputEl.value.trim();
             if (!text) return;
+            // Check if last message has options - prevent free text
+            const lastBotMsg = document.querySelector('.fm-msg.bot:last-of-type');
+            const hasOptions = lastBotMsg && lastBotMsg.querySelector('.fm-msg-options');
+            if (hasOptions) {
+                // Show hint
+                addMessage('bot', "please choose one of the options above");
+                inputEl.value = '';
+                sendBtn.disabled = true;
+                // Remove hint after 2 seconds
+                setTimeout(() => {
+                    const lastMsg = messagesEl.querySelector('.fm-msg.bot:last-of-type');
+                    if (lastMsg && lastMsg.textContent.toLowerCase().includes('please choose')) {
+                        lastMsg.remove();
+                    }
+                }, 2000);
+                return;
+            }
             addMessage('user', text);
             inputEl.value = '';
             sendBtn.disabled = true;
             showTyping();
-            callAPI('send', { message: text }).then(res => {
+            
+            const needsGeo = sessionData?.needsGeo === true;
+            const sendData = { message: text };
+            if (needsGeo) {
+                fetchGeoInfo().then(geo => {
+                    sendData.geo = geo;
+                    doSend(sendData);
+                });
+            } else {
+                doSend(sendData);
+            }
+        }
+
+        function doSend(data) {
+            callAPI('send', data).then(res => {
                 hideTyping();
                 if (res.error) {
                     addMessage('bot', 'Sorry, something went wrong. Please try again.');
@@ -176,7 +208,10 @@
 
         sendBtn.addEventListener('click', sendMessage);
         inputEl.addEventListener('input', () => {
-            sendBtn.disabled = !inputEl.value.trim();
+            // Disable if options are present
+            const lastBotMsg = document.querySelector('.fm-msg.bot:last-of-type');
+            const hasOptions = lastBotMsg && lastBotMsg.querySelector('.fm-msg-options');
+            sendBtn.disabled = hasOptions || !inputEl.value.trim();
         });
         inputEl.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') sendMessage();
@@ -211,18 +246,30 @@
                     });
                     return;
                 }
-                // Regular message
+                // Regular message - fetch geo if first interaction
                 addMessage('user', text);
                 showTyping();
-                callAPI('send', { message: text }).then(res => {
-                    hideTyping();
-                    if (res.error) {
-                        addMessage('bot', 'Sorry, something went wrong. Please try again.');
-                    } else {
-                        addMessage('bot', res.message, res.options);
-                        updateSession(res);
-                    }
-                });
+                const needsGeo = sessionData?.needsGeo === true;
+                const sendData = { message: text };
+                if (needsGeo) {
+                    fetchGeoInfo().then(geo => {
+                        sendData.geo = geo;
+                        doSend(sendData);
+                    });
+                } else {
+                    doSend(sendData);
+                }
+            }
+        });
+
+        // Disable input if last bot message has options? Show placeholder hint
+        inputEl.addEventListener('focus', () => {
+            const lastBotMsg = document.querySelector('.fm-msg.bot:last-of-type');
+            const hasOptions = lastBotMsg && lastBotMsg.querySelector('.fm-msg-options');
+            if (hasOptions) {
+                inputEl.placeholder = 'please select an option above';
+            } else {
+                inputEl.placeholder = 'type your message...';
             }
         });
 
@@ -232,17 +279,33 @@
     }
 
     function startConversation() {
-        // Fetch geo only when conversation actually starts (first message)
-        fetchGeoInfo().then(geo => {
-            showTyping();
-            callAPI('send', { message: '', geo }).then(res => {
-                hideTyping();
-                if (!res.error) {
-                    addMessage('bot', res.message, res.options);
-                    updateSession(res);
-                }
-            });
-        });
+        // Show welcome message locally FIRST (no API call)
+        // API will be called on first real user interaction
+        const welcomeMsg = "hi there welcome to foodmax group 👋 i'm here to help you find the best moroccan fruits and vegetables for your market\n\nto give you the right recommendations could you tell me where you're based";
+        const welcomeOptions = [
+            'europe (eu)',
+            'middle east / gulf',
+            'north america',
+            'asia / pacific',
+            'africa',
+            'other'
+        ];
+        addMessage('bot', welcomeMsg, welcomeOptions);
+        // Mark that we need to send geo on first real interaction
+        sessionData = {
+            step: 'welcome',
+            lead_data: {
+                'origin': '',
+                'domain': '',
+                'products': [],
+                'volume': '',
+                'timeline': '',
+                'contact': '',
+            },
+            history: [],
+            needsGeo: true
+        };
+        saveSession();
     }
 
     function addMessage(role, text, options = null) {
@@ -319,7 +382,8 @@
             history: [...(sessionData?.history || []),
                 { role: 'user', message: '' }, // placeholder
                 { role: 'bot', message: res.message, options: res.options }
-            ]
+            ],
+            needsGeo: false  // Geo sent, no longer needed
         };
         saveSession();
     }

@@ -287,10 +287,37 @@ class FM_Chatbot {
     }
 
     private function handleOrigin($message, $leadData) {
-        $leadData['origin'] = $message;
-
+        $validOrigins = [
+            'europe (eu)',
+            'middle east / gulf',
+            'north america',
+            'asia / pacific',
+            'africa',
+            'other'
+        ];
+        $match = null;
+        foreach ($validOrigins as $v) {
+            if (strpos(strtolower($message), strtolower(substr($v, 0, 3))) !== false) {
+                $match = $v;
+                break;
+            }
+        }
+        if (!$match) {
+            foreach ($validOrigins as $v) {
+                if (strpos(strtolower($message), strtolower($v)) !== false) { $match = $v; break; }
+            }
+        }
+        if (!$match) {
+            return [
+                'message' => "please choose one of the options below",
+                'options' => $validOrigins,
+                'next_step' => 'ask_origin',
+                'lead_data' => $leadData,
+            ];
+        }
+        $leadData['origin'] = $match;
         return [
-            'message' => "got it you're in **$message** that helps us plan the best shipping routes and seasonal availability for you\n\nwhat type of business are you",
+            'message' => "got it you're in **$match** that helps us plan the best shipping routes and seasonal availability for you\n\nwhat type of business are you",
             'options' => [
                 'importer / distributor',
                 'wholesaler',
@@ -304,11 +331,41 @@ class FM_Chatbot {
         ];
     }
 
-    private function handleDomain($message, $leadData) {
-        $leadData['domain'] = $message;
-
+private function handleDomain($message, $leadData) {
+        // If no options expected in this context? but we have options - validate
+        $validDomains = [
+            'importer / distributor',
+            'wholesaler',
+            'retailer / supermarket',
+            'food service / horeca',
+            'processing industry',
+            'other'
+        ];
+        $match = null;
+        foreach ($validDomains as $v) {
+            if (strpos($message, strtolower(substr($v, 0, 4))) !== false || $message === strtolower($v)) {
+                $match = $v;
+                break;
+            }
+        }
+        if (!$match && count($validDomains)) {
+            // Try exact substring
+            foreach ($validDomains as $v) {
+                if (strpos($message, strtolower($v)) !== false) { $match = $v; break; }
+            }
+        }
+        if (!$match) {
+            // Invalid - ask again
+            return [
+                'message' => "please choose one of the options below",
+                'options' => $validDomains,
+                'next_step' => 'ask_domain',
+                'lead_data' => $leadData,
+            ];
+        }
+        $leadData['domain'] = $match;
         return [
-            'message' => "perfect a **$message** looking for moroccan produce we work with lots of partners in your space\n\nwhich products interest you most pick as many as you like",
+            'message' => "perfect a **$match** looking for moroccan produce we work with lots of partners in your space\n\nwhich products interest you most pick as many as you like",
             'options' => [
                 'tomatoes (cherry plum round coloured)',
                 'citrus (oranges lemons mandarins)',
@@ -318,7 +375,9 @@ class FM_Chatbot {
                 'berries (strawberries raspberries blueberries)',
                 'figs (fresh & dried)',
                 'dried fruits (apricots raisins dates almonds)',
-                'eggplants green leaves other'
+                'greenhouse vegetables',
+                'dates & nuts',
+                'other / specify'
             ],
             'next_step' => 'ask_products',
             'lead_data' => $leadData,

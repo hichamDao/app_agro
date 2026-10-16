@@ -230,6 +230,71 @@ function fm_admin_date_contact($brut) {
     return $d ? $d->format('d/m/Y à H:i') : $brut;
 }
 
+/**
+ * Compte les messages de contact non répondus depuis plus d'un jour ouvré.
+ * Jour ouvré = lundi-vendredi, exclus week-end.
+ */
+function fm_admin_pending_contact_count() {
+    global $conn;
+    if (!$conn) return 0;
+    
+    $stmt = mysqli_prepare($conn, "SELECT COUNT(*) FROM `contact` WHERE `status` = 'new'");
+    if (!$stmt) return 0;
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_bind_result($stmt, $count);
+    mysqli_stmt_fetch($stmt);
+    mysqli_stmt_close($stmt);
+    
+    $pending = 0;
+    if ($count > 0) {
+        // Récupérer les dates pour vérifier le délai d'1 jour ouvré
+        $stmt2 = mysqli_prepare($conn, "SELECT `date` FROM `contact` WHERE `status` = 'new'");
+        if ($stmt2) {
+            mysqli_stmt_execute($stmt2);
+            $res = mysqli_stmt_get_result($stmt2);
+            while ($row = mysqli_fetch_assoc($res)) {
+                if (fm_is_past_business_day($row['date'])) {
+                    $pending++;
+                }
+            }
+            mysqli_stmt_close($stmt2);
+        }
+    }
+    return $pending;
+}
+
+/**
+ * Vérifie si une date est dépassée de plus d'un jour ouvré.
+ * Format attendu: 'd-m-Y H:i:s' ou 'Y-m-d H:i:s'
+ */
+function fm_is_past_business_day($dateStr) {
+    $dateStr = trim((string) $dateStr);
+    $d = DateTime::createFromFormat('d-m-Y H:i:s', $dateStr);
+    if (!$d) {
+        $d = DateTime::createFromFormat('Y-m-d H:i:s', $dateStr);
+    }
+    if (!$d) return false;
+    
+    $now = new DateTime();
+    $diff = $now->diff($d);
+    $days = (int) $diff->format('%a');
+    
+    if ($days < 1) return false;
+    
+    // Compter les jours ouvrés entre les deux dates
+    $businessDays = 0;
+    $checkDate = clone $d;
+    while ($checkDate < $now) {
+        $dayOfWeek = (int) $checkDate->format('N'); // 1=Lundi, 7=Dimanche
+        if ($dayOfWeek >= 1 && $dayOfWeek <= 5) {
+            $businessDays++;
+        }
+        $checkDate->modify('+1 day');
+    }
+    
+    return $businessDays >= 1;
+}
+
 /* ------------------------------------------------------- fin de script */
 
 register_shutdown_function(function () {

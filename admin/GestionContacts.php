@@ -48,6 +48,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: GestionContacts.php');
         exit;
     }
+
+    if ($operation === 'marquer_repondu') {
+        $id = isset($_POST['contact_id']) ? (int) $_POST['contact_id'] : 0;
+        if ($id > 0) {
+            $stmt = mysqli_prepare($conn, "UPDATE contact SET status = 'replied', replied_at = NOW() WHERE contact_id = ?");
+            if ($stmt) {
+                mysqli_stmt_bind_param($stmt, 'i', $id);
+                mysqli_stmt_execute($stmt);
+                $ok = mysqli_stmt_affected_rows($stmt) > 0;
+                mysqli_stmt_close($stmt);
+                fm_admin_flash($ok ? 'ok' : 'err', $ok ? 'Marque comme repondu.' : 'Message introuvable.');
+            }
+        }
+        header('Location: GestionContacts.php');
+        exit;
+    }
 }
 
 /* ------------------------------------------------------------------ lecture */
@@ -92,9 +108,9 @@ $offset = ($page - 1) * FM_CONTACTS_PAR_PAGE;
 $contacts = array();
 $stmt = mysqli_prepare(
     $conn,
-    'SELECT contact_id, name, email, phone, message, date, company, country, product
+    'SELECT contact_id, name, email, phone, message, date, company, country, product, status
      FROM contact' . $sqlWhere
-        . ' ORDER BY contact_id DESC LIMIT ? OFFSET ?'
+         . ' ORDER BY contact_id DESC LIMIT ? OFFSET ?'
 );
 if ($stmt) {
     $limit = FM_CONTACTS_PAR_PAGE;
@@ -157,7 +173,8 @@ admin_entete(
                     <th>Expediteur</th>
                     <th>Message</th>
                     <th style="width:150px;">Date</th>
-                    <th class="fm-adm-actions" style="width:225px;">Actions</th>
+                    <th style="width:110px;">Statut</th>
+                    <th class="fm-adm-actions" style="width:280px;">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -176,10 +193,21 @@ admin_entete(
                     <td>
                         <?php echo fm_admin_echapper(mb_strimwidth(trim((string) $c['message']), 0, 110, '...', 'UTF-8')); ?>
                     </td>
-                    <td><?php echo fm_admin_echapper($formatDate($c['date'])); ?></td>
+<td><?php echo fm_admin_echapper($formatDate($c['date'])); ?></td>
+                    <td>
+                        <?php if ($c['status'] === 'replied') { ?>
+                        <span class="fm-adm-badge is-ok">Repondu</span>
+                        <?php } else {
+                            $isPending = fm_is_past_business_day($c['date']);
+                        ?>
+                        <span class="fm-adm-badge <?php echo $isPending ? 'is-promo' : ''; ?>">
+                            Nouveau <?php echo $isPending ? '(> 1 jour ouvré)' : ''; ?>
+                        </span>
+                        <?php } ?>
+                    </td>
                     <td class="fm-adm-actions">
                         <a class="fm-adm-btn is-light is-sm"
-                           href="GestionContacts.php?<?php echo $motCle !== '' ? 'q=' . rawurlencode($motCle) . '&amp;' : ''; ?>voir=<?php echo (int) $c['contact_id']; ?>#msg<?php echo (int) $c['contact_id']; ?>"
+                           href="GestionContacts.php?<?php echo $motCle !== '' ? 'q=' . rawurlencode($motCle) . '&' : ''; ?>voir=<?php echo (int) $c['contact_id']; ?>#msg<?php echo (int) $c['contact_id']; ?>"
                            title="Lire"><i class="fa fa-eye" aria-hidden="true"></i></a>
                         <a class="fm-adm-btn is-light is-sm"
                            href="mailto:<?php echo fm_admin_echapper($c['email']); ?>?subject=<?php echo rawurlencode('Re: votre demande - Foodmax'); ?>"
@@ -188,6 +216,17 @@ admin_entete(
                            href="contact_print.php?id=<?php echo (int) $c['contact_id']; ?>"
                            target="_blank" rel="noopener"
                            title="Extrait PDF de ce message"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></a>
+                        <?php if ($c['status'] === 'new') { ?>
+                        <form method="post" action="GestionContacts.php" style="display:inline;"
+                              onsubmit="return confirm('Marquer ce message comme repondu ?');">
+                            <?php echo fm_admin_champ_csrf(); ?>
+                            <input type="hidden" name="operation" value="marquer_repondu">
+                            <input type="hidden" name="contact_id" value="<?php echo (int) $c['contact_id']; ?>">
+                            <button class="fm-adm-btn is-sm" style="background:#4a7a18;border-color:#4a7a18;" type="submit" title="Marquer comme repondu">
+                                <i class="fa fa-check" aria-hidden="true"></i> Repondu
+                            </button>
+                        </form>
+                        <?php } ?>
                         <form method="post" action="GestionContacts.php" style="display:inline;"
                               onsubmit="return confirm('Supprimer ce message ?');">
                             <?php echo fm_admin_champ_csrf(); ?>
@@ -202,7 +241,7 @@ admin_entete(
 
                 <?php if ($voirId === (int) $c['contact_id']) { ?>
                 <tr id="msg<?php echo (int) $c['contact_id']; ?>">
-                    <td colspan="5" style="background:#fbfcfa;">
+                    <td colspan="6" style="background:#fbfcfa;">
                         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px;">
                             <a class="fm-adm-btn is-light is-sm"
                                href="contact_print.php?id=<?php echo (int) $c['contact_id']; ?>"
@@ -213,6 +252,17 @@ admin_entete(
                                href="mailto:<?php echo fm_admin_echapper($c['email']); ?>?subject=<?php echo rawurlencode('Re: votre demande - Foodmax'); ?>">
                                 <i class="fa fa-reply" aria-hidden="true"></i> Repondre
                             </a>
+                            <?php if ($c['status'] === 'new') { ?>
+                            <form method="post" action="GestionContacts.php" style="display:inline;"
+                                  onsubmit="return confirm('Marquer ce message comme repondu ?');">
+                                <?php echo fm_admin_champ_csrf(); ?>
+                                <input type="hidden" name="operation" value="marquer_repondu">
+                                <input type="hidden" name="contact_id" value="<?php echo (int) $c['contact_id']; ?>">
+                                <button class="fm-adm-btn is-sm" style="background:#4a7a18;border-color:#4a7a18;" type="submit" title="Marquer comme repondu">
+                                    <i class="fa fa-check" aria-hidden="true"></i> Marquer comme repondu
+                                </button>
+                            </form>
+                            <?php } ?>
                         </div>
                         <div class="fm-adm-detail" style="grid-template-columns:130px 1fr;margin-bottom:12px;">
 <dt>Expediteur</dt><dd><?php echo fm_admin_echapper($c['name']); ?></dd>
@@ -227,6 +277,15 @@ admin_entete(
                         <?php if (trim((string) $c['product']) !== '') { ?>
                         <dt>Produit</dt><dd><?php echo fm_admin_echapper($c['product']); ?></dd>
                         <?php } ?>
+                        <dt>Statut</dt><dd>
+                            <?php if ($c['status'] === 'replied') { ?>
+                            <span class="fm-adm-badge is-ok">Repondu</span>
+                            <?php } else { ?>
+                            <span class="fm-adm-badge <?php echo fm_is_past_business_day($c['date']) ? 'is-promo' : ''; ?>">
+                                Nouveau <?php echo fm_is_past_business_day($c['date']) ? '(> 1 jour ouvré)' : ''; ?>
+                            </span>
+                            <?php } ?>
+                        </dd>
                         <dt>Recu le</dt><dd><?php echo fm_admin_echapper($formatDate($c['date'])); ?></dd>
                         </div>
                         <div class="fm-adm-message"><?php echo fm_admin_echapper(trim((string) $c['message'])); ?></div>
